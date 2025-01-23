@@ -16,7 +16,7 @@ const Layout = () => {
         <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
         <NavItems mt={56} pr={47} />
       </AppShell.Navbar>
-      <AppShell.Main style={{ backgroundColor: '#f7f8fa' }}>
+      <AppShell.Main w={'100%'} style={{ backgroundColor: 'pink' }}>
         <NavHeader />
         <Outlet />
       </AppShell.Main>

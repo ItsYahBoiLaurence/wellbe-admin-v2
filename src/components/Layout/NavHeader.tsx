@@ -15,18 +15,7 @@ const UserInfo = () => {
 
 const NavHeader = () => {
   return (
-    <Flex align="center" px={51} py={30} style={{ backgroundColor: '#fff' }}>
-      <Box flex={1}>
-        <TextInput
-          leftSectionPointerEvents="none"
-          leftSection={<SearchIcon />}
-          placeholder="Search here..."
-          radius={30}
-          style={{
-            width: 596,
-          }}
-        />
-      </Box>
+    <Flex align="center" px={51} py={30} style={{ backgroundColor: '#fff' }} justify={'flex-end'}>
       <Flex gap={48} align="center" mr={49}>
         <ActionIcon size="lg" variant="white" radius="50%">
           <HelpIcon size={32} color="#A5A5A5" />

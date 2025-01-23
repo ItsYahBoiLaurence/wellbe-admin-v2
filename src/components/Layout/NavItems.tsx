@@ -10,23 +10,18 @@ const ITEMS = [
   {
     label: 'Dashboard',
     icon: DashboardIcon,
-    href: '/dashboard',
+    href: '/',
   },
   {
-    label: 'Clients',
+    label: 'Employees',
     icon: ClientsIcons,
-    href: '/clients',
+    href: '/employees',
   },
-  {
-    label: 'Questions',
-    icon: QuestionsIcon,
-    href: '/questions',
-  },
-  {
-    label: 'Users',
-    icon: UsersIcon,
-    href: '/users',
-  },
+  // {
+  //   label: 'Users',
+  //   icon: UsersIcon,
+  //   href: '/users',
+  // },
 ];
 
 const NavItems = (props: FlexProps) => {
@@ -41,7 +36,7 @@ const NavItems = (props: FlexProps) => {
           style={{
             padding: '18.33px 25.33px',
             borderRadius: '60px',
-            '& .mantine-NavLink-section': { marginRight: 24 },
+            '& .mantineNavLinkSection': { marginRight: 24 },
           }}
         />
       ))}

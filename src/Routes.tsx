@@ -2,6 +2,7 @@ import { useRoutes } from 'react-router-dom';
 import Layout from './components/Layout';
 import PageNotFound from './pages/404';
 import Dashboard from './pages/dashboard';
+import Employees from './pages/employees';
 
 function Routes() {
   return useRoutes([
@@ -12,6 +13,10 @@ function Routes() {
         {
           path: '/',
           element: <Dashboard />,
+        },
+        {
+          path: '/employees',
+          element: <Employees />
         },
       ],
     },
