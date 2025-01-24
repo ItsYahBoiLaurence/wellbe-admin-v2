@@ -14,7 +14,7 @@ const data = [
     },
     {
         title: "Connectedness",
-        stanine: 3,
+        stanine: 2,
         score: 80,
     },
     {

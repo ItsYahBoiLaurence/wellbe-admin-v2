@@ -1,11 +1,11 @@
-import { Avatar, Box, Button, Flex, Grid, GridCol, NativeSelect, Paper, Text, Title } from '@mantine/core';
+import { Avatar, Box, Button, Flex, FLEX_STYLE_PROPS_DATA, Grid, GridCol, NativeSelect, Paper, Text, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import DomainCard from '../../components/DataVisualization/DomainCard';
 import AllDomain from '../../components/DataVisualization/AllDomain';
 import AreaChartComponent from '../../components/DataVisualization/AreaChart';
-
+import Department from '../../components/DataVisualization/Department'
 
 const data = [
   { label: 'Company Wide', value: 'OverALLCompany' },
@@ -27,12 +27,19 @@ const domain = [
   { label: 'Connectedness', value: 'Connectedness' },
   { label: 'Career', value: 'Career' },
   { label: 'Contentment', value: 'Contentment' },
-
 ]
+
+const departments = [
+  { name: "Finance", wellbeingScore: 90 },
+  { name: "Marketing", wellbeingScore: 80 },
+  { name: "Sales", wellbeingScore: 50 },
+  { name: "Engineering", wellbeingScore: 70 },
+]
+
 
 const Dashboard = () => {
 
-  const { control, setValue, watch } = useForm({
+  const { control, watch } = useForm({
     defaultValues: {
       data: 'OverALLCompany',
       time: 'Annually'
@@ -111,12 +118,12 @@ const Dashboard = () => {
         <GridCol span={9}>
           <Box>
             <Flex direction={'row'} gap={20} mb={12}>
-              <Paper w={'50%'} radius={'lg'} p={'lg'}>
-                <Text fw={700}>Company Wide Well-being Index</Text>
+              <Paper w={'50%'} radius={'lg'} p={'lg'} shadow='sm'>
+                <Text fw={700} mb={'xs'}>Company Wide Well-being Index</Text>
                 <AreaChartComponent />
               </Paper>
-              <Paper w={'50%'} radius={'lg'} p={'lg'}>
-                <Text fw={700}>Company Wide Well-being Index</Text>
+              <Paper w={'50%'} radius={'lg'} p={'lg'} shadow='sm'>
+                <Text mb={'xs'} fw={700}>Company Wide Well-being Index</Text>
                 <AreaChartComponent />
               </Paper>
             </Flex>
@@ -125,7 +132,7 @@ const Dashboard = () => {
         </GridCol>
 
         <GridCol span={3}>
-          <Paper radius={'lg'} h={'100%'} p={12}>
+          <Paper radius={'lg'} h={'100%'} p={12} shadow='sm'>
             <Flex direction={'row'} align={'center'} columnGap={12}>
               <Avatar>J</Avatar>
               <Title order={3}>Wellbe Tips</Title>
@@ -138,15 +145,19 @@ const Dashboard = () => {
               data={domain}
               rightSection={<IconChevronDown size={16} />}
             />
-            <Paper shadow="md" radius="lg" withBorder p="xl" mt={'md'}>
+            <Paper radius="lg" p="xl" mt={'md'}>
               <Text fw={700}>Promote Growth Mindset:</Text>
               <Text>Encourage a growth mindset where employees believe that their abilities can be developed through effort and perseverance. Provide resources and opportunities for learning and growth, and celebrate the process of learning and improvement.</Text>
             </Paper>
-
           </Paper>
         </GridCol>
       </Grid>
 
+      <Flex direction={'row'} w={'100%'} gap={'md'} mt={'md'}>
+        {departments.map((deparment) => (
+          <Department department={deparment.name} wellbeingScore={deparment.wellbeingScore} />
+        ))}
+      </Flex>
     </Box >
   );
 };

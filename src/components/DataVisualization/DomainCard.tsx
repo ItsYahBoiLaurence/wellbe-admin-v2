@@ -29,7 +29,7 @@ const DomainCard = ({ title, stanine, score }) => {
     }
 
     return (
-        <Paper p={'xl'} radius={'lg'}>
+        <Paper p={'xl'} radius={'lg'} shadow={'sm'}>
             <Flex justify={'space-between'} align={'center'}>
                 <Flex direction={'row'} align={'center'} gap={20}>
                     <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(stanine))} />

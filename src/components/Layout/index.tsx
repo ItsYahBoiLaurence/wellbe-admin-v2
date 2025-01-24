@@ -1,7 +1,6 @@
 import { AppShell, Burger, Group } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
 import Logo from '../../assets/logo.svg';
-import NavHeader from './NavHeader';
 import NavItems from './NavItems';
 import { useDisclosure } from '@mantine/hooks';
 
@@ -28,31 +27,10 @@ const Layout = () => {
         <NavItems />
       </AppShell.Navbar>
 
-      <AppShell.Main style={{ backgroundColor: 'pink' }}>
+      <AppShell.Main style={{ backgroundColor: '#F7F8FA' }}>
         <Outlet />
       </AppShell.Main>
     </AppShell>
-
-
-
-
-
-
-    // <AppShell
-    //   navbar={{
-    //     width: 345,
-    //     breakpoint: 'sm',
-    //   }}
-    // >
-    //   <AppShell.Navbar pl={46} pt={41} style={{ backgroundColor: '#fff' }}>
-    //     
-    //     <NavItems mt={56} pr={47} />
-    //   </AppShell.Navbar>
-    //   <AppShell.Main w={'100%'} style={{ backgroundColor: 'pink' }}>
-    //     <NavHeader />
-    //     
-    //   </AppShell.Main>
-    // </AppShell>
   );
 };
 
