@@ -1,10 +1,11 @@
-import { Flex, FlexProps, NavLink } from '@mantine/core';
+import { Flex, FlexProps, NavLink, Tabs, TabsList } from '@mantine/core';
 import {
   DashboardIcon,
   ClientsIcons,
   QuestionsIcon,
   UsersIcon,
 } from '../icons';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const ITEMS = [
   {
@@ -25,21 +26,30 @@ const ITEMS = [
 ];
 
 const NavItems = (props: FlexProps) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   return (
     <Flex direction="column" gap={6} {...props}>
-      {ITEMS.map((item) => (
-        <NavLink
-          key={`nav-item-${item.label}`}
-          href={item.href}
-          label={item.label}
-          leftSection={<item.icon size={32} color="#A5A5A5" />}
-          style={{
-            padding: '18.33px 25.33px',
-            borderRadius: '60px',
-            '& .mantineNavLinkSection': { marginRight: 24 },
-          }}
-        />
-      ))}
+      <Tabs
+        value={location.pathname}
+        onChange={(value) => navigate(value!)}
+        orientation='vertical'
+        variant='pills'
+        color='gray'
+      >
+        <Tabs.List>
+          {ITEMS.map((i) => (
+            <Tabs.Tab
+              key={i.href}
+              value={i.href}
+            >
+              {i.label}
+            </Tabs.Tab>
+          ))}
+        </Tabs.List>
+      </Tabs>
+
     </Flex>
   );
 };
