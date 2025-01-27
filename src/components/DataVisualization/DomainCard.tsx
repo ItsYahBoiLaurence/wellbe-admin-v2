@@ -3,7 +3,7 @@ import DECREASE from '../../assets/decrease.png'
 import INCREASE from '../../assets/increase.png'
 import MAINTAIN from '../../assets/maintained.png'
 
-const DomainCard = ({ title, stanine, score }) => {
+const DomainCard = ({ title, score }) => {
 
     const getLabel = (value) => {
 
@@ -16,6 +16,27 @@ const DomainCard = ({ title, stanine, score }) => {
                     : "Invalid Value";
 
         return result
+    }
+
+    const getStanineScore = (value) => {
+        const stanineScore = (value >= 96 && value <= 100)
+            ? 9
+            : (value >= 90 && value <= 95)
+                ? 8
+                : (value >= 77 && value <= 89)
+                    ? 7
+                    : (value >= 60 && value <= 76)
+                        ? 6
+                        : (value >= 40 && value <= 59)
+                            ? 5
+                            : (value >= 23 && value <= 39)
+                                ? 4
+                                : (value >= 11 && value <= 22)
+                                    ? 3
+                                    : (value >= 4 && value <= 10)
+                                        ? 2
+                                        : 1
+        return stanineScore
     }
 
     const stanineLabelColor = (label) => {
@@ -32,14 +53,14 @@ const DomainCard = ({ title, stanine, score }) => {
         <Paper p={'xl'} radius={'lg'} shadow={'sm'}>
             <Flex justify={'space-between'} align={'center'}>
                 <Flex direction={'row'} align={'center'} gap={20}>
-                    <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(stanine))} />
+                    <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(getStanineScore(score)))} />
                     <Box>
                         <Text fw={500}>{title}</Text>
-                        <Text fw={700}>{getLabel(stanine)}</Text>
+                        <Text fw={700}>{getLabel(getStanineScore(score))}</Text>
                         <Text
                             size="xs"
-                            c={stanineLabelColor(getLabel(stanine))}
-                        >Stanine: {stanine}</Text>
+                            c={stanineLabelColor(getLabel(getStanineScore(score)))}
+                        >Stanine: {getStanineScore(score)}</Text>
                     </Box>
                 </Flex>
                 <Title order={2}>{score}%</Title>

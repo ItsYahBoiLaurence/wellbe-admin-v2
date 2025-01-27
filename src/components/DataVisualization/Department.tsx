@@ -32,7 +32,7 @@ const DepartmentWellbeing = ({ department, wellbeingScore }) => {
 
     return (
         <Paper shadow="xs" radius="md" p="xl" w={'100%'}>
-            <Stack>
+            <Box>
                 <Flex align={'center'} gap={12}>
                     <Avatar>{department[0]}</Avatar>
                     <Text>{department}</Text>
@@ -44,7 +44,7 @@ const DepartmentWellbeing = ({ department, wellbeingScore }) => {
                     </Box>
                     <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(wellbeingScore))} />
                 </Flex>
-            </Stack>
+            </Box>
         </Paper>
     )
 }

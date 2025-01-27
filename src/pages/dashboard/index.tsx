@@ -1,11 +1,10 @@
-import { Avatar, Box, Button, Flex, FLEX_STYLE_PROPS_DATA, Grid, GridCol, NativeSelect, Paper, Text, Title } from '@mantine/core';
+import { Avatar, Box, Button, Flex, LoadingOverlay, NativeSelect, Paper, Text, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
-import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import DomainCard from '../../components/DataVisualization/DomainCard';
 import AllDomain from '../../components/DataVisualization/AllDomain';
-import AreaChartComponent from '../../components/DataVisualization/AreaChart';
-import Department from '../../components/DataVisualization/Department'
+import { useQuery } from 'react-query';
+import { getCompanyDomainStatistics } from '../../api/apiService';
+
 
 const data = [
   { label: 'Company Wide', value: 'OverALLCompany' },
@@ -39,6 +38,7 @@ const departments = [
 
 const Dashboard = () => {
 
+
   const { control, watch } = useForm({
     defaultValues: {
       data: 'OverALLCompany',
@@ -48,10 +48,10 @@ const Dashboard = () => {
 
   const selectedValues = watch(['data', 'time'])
 
-  useEffect(() => {
-    console.log(`Current filter: ${selectedValues}`)
-  }, [selectedValues])
-
+  const { data: domainData, isLoading: isDomainLoading } = useQuery({
+    queryKey: ['AllDomain', "Mayan Solutions Inc.", selectedValues[1]],
+    queryFn: getCompanyDomainStatistics
+  })
 
   return (
     <Box>
@@ -113,52 +113,15 @@ const Dashboard = () => {
           </Flex>
         </Flex>
       </Paper >
-      <Grid grow columns={12}>
-        {/* Data Visualization */}
-        <GridCol span={9}>
-          <Box>
-            <Flex direction={'row'} gap={20} mb={12}>
-              <Paper w={'50%'} radius={'lg'} p={'lg'} shadow='sm'>
-                <Text fw={700} mb={'xs'}>Company Wide Well-being Index</Text>
-                <AreaChartComponent />
-              </Paper>
-              <Paper w={'50%'} radius={'lg'} p={'lg'} shadow='sm'>
-                <Text mb={'xs'} fw={700}>Company Wide Well-being Index</Text>
-                <AreaChartComponent />
-              </Paper>
-            </Flex>
-            <AllDomain />
-          </Box>
-        </GridCol>
-
-        <GridCol span={3}>
-          <Paper radius={'lg'} h={'100%'} p={12} shadow='sm'>
-            <Flex direction={'row'} align={'center'} columnGap={12}>
-              <Avatar>J</Avatar>
-              <Title order={3}>Wellbe Tips</Title>
-            </Flex>
-            <Text mt={'md'}>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod </Text>
-            <NativeSelect
-              mt={'md'}
-              radius={'lg'}
-              size='md'
-              data={domain}
-              rightSection={<IconChevronDown size={16} />}
-            />
-            <Paper radius="lg" p="xl" mt={'md'}>
-              <Text fw={700}>Promote Growth Mindset:</Text>
-              <Text>Encourage a growth mindset where employees believe that their abilities can be developed through effort and perseverance. Provide resources and opportunities for learning and growth, and celebrate the process of learning and improvement.</Text>
-            </Paper>
-          </Paper>
-        </GridCol>
-      </Grid>
-
-      <Flex direction={'row'} w={'100%'} gap={'md'} mt={'md'}>
-        {departments.map((deparment) => (
-          <Department department={deparment.name} wellbeingScore={deparment.wellbeingScore} />
-        ))}
-      </Flex>
-    </Box >
+      <Box style={{ position: 'relative' }}>
+        <LoadingOverlay visible={isDomainLoading}
+          zIndex={1000}
+          overlayProps={{ radius: 'sm', blur: 2 }}
+          loaderProps={{ color: 'pink', type: 'bars' }}
+        />
+        {!isDomainLoading && <AllDomain domains={domainData} />}
+      </Box>
+    </Box>
   );
 };
 

@@ -1,9 +1,8 @@
-import { Avatar, Box, Button, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Flex, NativeSelect, Paper, SimpleGrid, Text, Title } from "@mantine/core"
+import { Box, Button, Center, Drawer, Flex, NativeSelect, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import Employee from '../../components/Employee/Employee'
-import { useDisclosure } from "@mantine/hooks";
 
 const departments = [
     {
@@ -83,8 +82,6 @@ const data = [
 
 const Employees = () => {
     const [activeDepartment, setActiveDepartment] = useState([])
-    const [opened, { open, close }] = useDisclosure(false);
-
     const { control, watch } = useForm({
         defaultValues: {
             department: "Human Resources"
@@ -99,12 +96,120 @@ const Employees = () => {
         setActiveDepartment(department?.employees as [])
     }, [selectedDepartment])
 
+    const stack = useDrawersStack(['inviteEmployee', 'manageEmployee'])
+
+
+    const { register: registerEmployee, handleSubmit: submitInviteEmployee, setValue: inviteEmployeeForm, reset: resetInviteForm } = useForm({
+        defaultValues: {
+            department: 'Human Resources',
+            employeeName: '',
+            companyEmail: ''
+        }
+    });
+
+    const submitInvite = (data) => {
+        console.log(data)
+        resetInviteForm()
+    }
+
     return (
         <Box>
-            <Drawer opened={opened} onClose={close} position={'right'} size={'md'} style={{ backgroundColor: '#515977' }} p={0} withCloseButton={false}>
-                <DrawerHeader style={{ backgroundColor: '#515977' }}>aasdasdasd</DrawerHeader>
-                <DrawerCloseButton style={{ backgroundColor: '#515977' }}></DrawerCloseButton>
-            </Drawer>
+            <div>
+                <Drawer.Root
+                    key={1}
+                    position={'right'}
+                    size={'md'}
+                    {...stack.register('inviteEmployee')}
+                >
+                    <Drawer.Overlay />
+                    <Drawer.Content>
+                        <Drawer.Header style={{ backgroundColor: '#515977' }}>
+                            <Drawer.Title style={{ color: 'white', }}>
+                                <Text size="xl">Invite Employee</Text>
+                            </Drawer.Title>
+                            <Drawer.CloseButton
+                                style={{
+                                    color: 'white',
+                                    transition: 'none',
+                                    background: 'none',
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </Drawer.Header>
+                        <Drawer.Body h={'90%'}>
+                            <Box h={'95%'}>
+                                <form onSubmit={submitInviteEmployee(submitInvite)} style={{ height: '100%' }}>
+                                    <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
+                                        <Flex direction={'column'} gap={'lg'}>
+                                            <Box>
+                                                <Text mb={'xs'} fw={700}>Department</Text>
+                                                <NativeSelect radius={'md'}
+                                                    style={{ width: '100%' }}
+                                                    size='md'
+                                                    data={data}
+                                                    rightSection={<IconChevronDown size={16} />}
+                                                    onChange={(e) => {
+                                                        inviteEmployeeForm('department', e.target.value)
+                                                    }}>
+                                                </NativeSelect>
+                                            </Box>
+                                            <Box>
+                                                <Text mb={'xs'} fw={700}>
+                                                    Employee Name
+                                                </Text>
+                                                <TextInput  {...registerEmployee('employeeName')} />
+                                            </Box>
+                                            <Box>
+                                                <Text mb={'xs'} fw={700}>
+                                                    Company Email
+                                                </Text>
+                                                <TextInput {...registerEmployee('companyEmail')} />
+                                            </Box>
+                                            <Text ta={'center'} size="sm">
+                                                Newly added employees will receive a notification to download our Well be companion app and receives updates from your company
+                                            </Text>
+                                        </Flex>
+                                        <Button type="submit" size="lg" color="#515977">
+                                            Save
+                                        </Button>
+                                    </Flex>
+                                </form>
+                            </Box>
+
+                        </Drawer.Body>
+                    </Drawer.Content>
+                </Drawer.Root>
+
+                <Drawer.Root
+                    key={2}
+                    position={'right'}
+                    size={'md'}
+                    {...stack.register('manageEmployee')}
+                >
+                    <Drawer.Overlay />
+                    <Drawer.Content>
+                        <Drawer.Header style={{ backgroundColor: '#515977' }}>
+                            <Drawer.Title style={{ color: 'white', }}>
+                                <Text size="xl">Manage Employee</Text>
+                            </Drawer.Title>
+                            <Drawer.CloseButton
+                                style={{
+                                    color: 'white',
+                                    transition: 'none',
+                                    background: 'none',
+                                    border: 'none',
+                                    boxShadow: 'none',
+                                    cursor: 'pointer',
+                                }}
+                            />
+                        </Drawer.Header>
+                        <Drawer.Body>Drawer Manage</Drawer.Body>
+                    </Drawer.Content>
+                </Drawer.Root>
+            </div>
+
             <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
                 <Flex direction={'row'} justify={'space-between'} align={'center'}>
                     <Box>
@@ -132,25 +237,16 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align={'center'}>
-                        <Button color="#515977" size="md" radius={'xl'} onClick={open}>+ Invite</Button>
-                        <Button color="#82BC66" size="md" radius={'xl'}>+ Department</Button>
+                        <Button color="#515977" size="md" radius={'xl'} onClick={() => stack.open('inviteEmployee')}>+ Invite</Button>
+                        <Button color="#82BC66" size="md" radius={'xl'} onClick={() => stack.open('manageEmployee')}>+ Department</Button>
                     </Flex>
                 </Flex>
             </Paper >
-            {/* <Paper shadow="xs" p="xl">
-                <Text>Paper is the most basic ui component</Text>
-                <Text>
-                    Use it to create cards, dropdowns, modals and other components that require background
-                    with shadow
-                </Text>
-            </Paper> */}
             <SimpleGrid cols={4}>
                 {activeDepartment.map((perDepartment) => (
-                    <Employee department={selectedDepartment} employeeName={perDepartment.name} />
+                    <Employee key={perDepartment.name} department={selectedDepartment} employeeName={perDepartment.name} />
                 ))}
             </SimpleGrid>
-
-
         </Box>
     )
 }

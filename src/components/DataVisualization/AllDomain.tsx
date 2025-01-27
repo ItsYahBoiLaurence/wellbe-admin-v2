@@ -1,35 +1,12 @@
-import { SimpleGrid } from "@mantine/core"
+import { SimpleGrid, Text } from "@mantine/core"
 import DomainCard from "./DomainCard"
 
-const data = [
-    {
-        title: "Character",
-        stanine: 9,
-        score: 80,
-    },
-    {
-        title: "Career",
-        stanine: 5,
-        score: 80,
-    },
-    {
-        title: "Connectedness",
-        stanine: 2,
-        score: 80,
-    },
-    {
-        title: "Contentment",
-        stanine: 3,
-        score: 80,
-    }
-]
-
-
-const AllDomain = () => {
+const AllDomain = ({ domains }) => {
+    console.log(domains)
     return (
         <SimpleGrid cols={2}>
-            {data.map((domain) => (
-                <DomainCard title={domain.title} stanine={domain.stanine} score={domain.score} />
+            {Object.entries(domains).map(([key, value]) => (
+                <DomainCard key={key} title={key} score={value} />
             ))}
         </SimpleGrid>
     )
