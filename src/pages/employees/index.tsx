@@ -1,8 +1,9 @@
-import { Avatar, Box, Button, Flex, NativeSelect, Paper, SimpleGrid, Text, Title } from "@mantine/core"
+import { Avatar, Box, Button, Drawer, DrawerCloseButton, DrawerContent, DrawerHeader, Flex, NativeSelect, Paper, SimpleGrid, Text, Title } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import Employee from '../../components/Employee/Employee'
+import { useDisclosure } from "@mantine/hooks";
 
 const departments = [
     {
@@ -82,6 +83,7 @@ const data = [
 
 const Employees = () => {
     const [activeDepartment, setActiveDepartment] = useState([])
+    const [opened, { open, close }] = useDisclosure(false);
 
     const { control, watch } = useForm({
         defaultValues: {
@@ -99,6 +101,10 @@ const Employees = () => {
 
     return (
         <Box>
+            <Drawer opened={opened} onClose={close} position={'right'} size={'md'} style={{ backgroundColor: '#515977' }} p={0} withCloseButton={false}>
+                <DrawerHeader style={{ backgroundColor: '#515977' }}>aasdasdasd</DrawerHeader>
+                <DrawerCloseButton style={{ backgroundColor: '#515977' }}></DrawerCloseButton>
+            </Drawer>
             <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
                 <Flex direction={'row'} justify={'space-between'} align={'center'}>
                     <Box>
@@ -126,7 +132,7 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align={'center'}>
-                        <Button color="#515977" size="md" radius={'xl'}>+ Invite</Button>
+                        <Button color="#515977" size="md" radius={'xl'} onClick={open}>+ Invite</Button>
                         <Button color="#82BC66" size="md" radius={'xl'}>+ Department</Button>
                     </Flex>
                 </Flex>
