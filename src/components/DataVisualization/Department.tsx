@@ -1,11 +1,11 @@
-import { Avatar, Box, Flex, Paper, Stack, Text } from "@mantine/core"
-import DECREASE from '../../assets/decrease.png'
-import INCREASE from '../../assets/increase.png'
-import MAINTAIN from '../../assets/maintained.png'
+import { Avatar, Box, Flex, Image, Paper, Stack, Text } from "@mantine/core"
+import DECREASE from '../../assets/LowAverage.png'
+import INCREASE from '../../assets/AboveAverage.png'
+import MAINTAIN from '../../assets/MaintainedScore.png'
 
 
 
-const DepartmentWellbeing = ({ department, wellbeingScore }) => {
+const DepartmentWellbeing = ({ departments }) => {
 
     const getLabel = (value) => {
 
@@ -21,7 +21,7 @@ const DepartmentWellbeing = ({ department, wellbeingScore }) => {
     }
 
     const labelColor = (label) => {
-        const color = label == "Below Average" ? 'red' : label == "Average" ? '#94B8FB' : label == "Above Average" ? '#82BC66' : 'black'
+        const color = label == "Below Average" ? 'red' : label == "Average" ? '#94B8FB' : label == "Above Average" ? '#00A389' : 'black'
         return color
     }
 
@@ -31,21 +31,28 @@ const DepartmentWellbeing = ({ department, wellbeingScore }) => {
     }
 
     return (
-        <Paper shadow="xs" radius="md" p="xl" w={'100%'}>
-            <Box>
-                <Flex align={'center'} gap={12}>
-                    <Avatar>{department[0]}</Avatar>
-                    <Text>{department}</Text>
-                </Flex>
-                <Flex justify={'space-between'} align={"center"}>
+        <Flex direction={'row'} gap={'md'}>
+            {departments.map((department) => (
+                <Paper shadow="xs" radius="md" p="xl" w={'50%'}>
                     <Box>
-                        <Text>{getLabel(wellbeingScore)}</Text>
-                        <Text c={labelColor(getLabel(wellbeingScore))}>{wellbeingScore}%</Text>
+                        <Flex align={'center'} gap={12}>
+                            <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
+                            <Text fw={700} size="lg">{department.departmentName}</Text>
+                        </Flex>
+                        <Flex justify={'space-between'} align={"center"} my={"md"}>
+                            <Box>
+                                <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
+                                <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
+                            </Box>
+                            <Box>
+                                <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
+                            </Box>
+                        </Flex>
                     </Box>
-                    <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(wellbeingScore))} />
-                </Flex>
-            </Box>
-        </Paper>
+                </Paper>
+            ))}
+        </Flex>
+
     )
 }
 

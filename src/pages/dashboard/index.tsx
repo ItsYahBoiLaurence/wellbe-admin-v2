@@ -3,7 +3,8 @@ import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
-import { getCompanyDomainStatistics } from '../../api/apiService';
+import { getCompanyDomainStatistics, getDepartmentStatics } from '../../api/apiService';
+import Department from '../../components/DataVisualization/Department'
 
 
 const data = [
@@ -51,6 +52,11 @@ const Dashboard = () => {
   const { data: domainData, isLoading: isDomainLoading } = useQuery({
     queryKey: ['AllDomain', "Mayan Solutions Inc.", selectedValues[1]],
     queryFn: getCompanyDomainStatistics
+  })
+
+  const { data: departmentData, isLoading: isDepartmentLoading } = useQuery({
+    queryKey: ['DepartmentWellBeing', "Mayan Solutions Inc.", selectedValues[1]],
+    queryFn: getDepartmentStatics
   })
 
   return (
@@ -113,13 +119,11 @@ const Dashboard = () => {
           </Flex>
         </Flex>
       </Paper >
-      <Box style={{ position: 'relative' }}>
-        <LoadingOverlay visible={isDomainLoading}
-          zIndex={1000}
-          overlayProps={{ radius: 'sm', blur: 2 }}
-          loaderProps={{ color: 'pink', type: 'bars' }}
-        />
-        {!isDomainLoading && <AllDomain domains={domainData} />}
+      <Box>
+        {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
+      </Box>
+      <Box my={'md'}>
+        {isDepartmentLoading ? <Text ta={'center'}>Loading...</Text> : <Department departments={departmentData} />}
       </Box>
     </Box>
   );

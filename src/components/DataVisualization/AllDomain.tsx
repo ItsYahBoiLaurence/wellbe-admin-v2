@@ -2,7 +2,6 @@ import { SimpleGrid, Text } from "@mantine/core"
 import DomainCard from "./DomainCard"
 
 const AllDomain = ({ domains }) => {
-    console.log(domains)
     return (
         <SimpleGrid cols={2}>
             {Object.entries(domains).map(([key, value]) => (

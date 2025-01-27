@@ -18,6 +18,16 @@ export const getCompanyDomainStatistics = async ({ queryKey }) => {
     }
 }
 
-export const getDepartmentStatics = async () => {
-    return
+export const getDepartmentStatics = async ({ queryKey }) => {
+    const [, company, viewType] = queryKey
+    const params = {
+        company: company,
+        viewType: viewType
+    }
+    try {
+        const response = await api.get('/api/company-admin/latestDepartmentStatisticsAll/', { params })
+        return response.data
+    } catch (error) {
+        throw error
+    }
 }
