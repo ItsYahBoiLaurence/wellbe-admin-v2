@@ -31,3 +31,17 @@ export const getDepartmentStatics = async ({ queryKey }) => {
         throw error
     }
 }
+
+export const addDepartment = async ({ queryKey }) => {
+    const [, company, department] = queryKey
+    const data = {
+        company: company,
+        department: department
+    }
+    try {
+        const response = await api.post('/api/company-admin/addDepartment/', data)
+        if (response) { return response.data }
+    } catch (error) {
+        throw error
+    }
+}

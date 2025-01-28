@@ -1,8 +1,9 @@
-import { Box, Button, Center, Drawer, Flex, NativeSelect, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
+import { Box, Button, Center, Container, Drawer, Flex, NativeSelect, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import Employee from '../../components/Employee/Employee'
+import { useDisclosure } from "@mantine/hooks";
 
 const departments = [
     {
@@ -81,6 +82,10 @@ const data = [
 ]
 
 const Employees = () => {
+
+    const [openedEmployeeInvite, { open: openEmployeeInvite, close: closeEmployeeInvite }] = useDisclosure(false);
+    const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
+
     const [activeDepartment, setActiveDepartment] = useState([])
     const { control, watch } = useForm({
         defaultValues: {
@@ -114,12 +119,12 @@ const Employees = () => {
 
     return (
         <Box>
-            <div>
+            <Drawer.Stack>
                 <Drawer.Root
                     key={1}
                     position={'right'}
                     size={'md'}
-                    {...stack.register('inviteEmployee')}
+                    opened={openedEmployeeInvite} onClose={closeEmployeeInvite}
                 >
                     <Drawer.Overlay />
                     <Drawer.Content>
@@ -186,7 +191,7 @@ const Employees = () => {
                     key={2}
                     position={'right'}
                     size={'md'}
-                    {...stack.register('manageEmployee')}
+                    opened={openedAddDepartment} onClose={closeAddDepartment}
                 >
                     <Drawer.Overlay />
                     <Drawer.Content>
@@ -208,7 +213,7 @@ const Employees = () => {
                         <Drawer.Body>Drawer Manage</Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
-            </div>
+            </Drawer.Stack>
 
             <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
                 <Flex direction={'row'} justify={'space-between'} align={'center'}>
@@ -237,8 +242,8 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align={'center'}>
-                        <Button color="#515977" size="md" radius={'xl'} onClick={() => stack.open('inviteEmployee')}>+ Invite</Button>
-                        <Button color="#82BC66" size="md" radius={'xl'} onClick={() => stack.open('manageEmployee')}>+ Department</Button>
+                        <Button color="#515977" size="md" radius={'xl'} onClick={openEmployeeInvite}>+ Invite</Button>
+                        <Button color="#82BC66" size="md" radius={'xl'} onClick={openAddDepartment}>+ Department</Button>
                     </Flex>
                 </Flex>
             </Paper >
