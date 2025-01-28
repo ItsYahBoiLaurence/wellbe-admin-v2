@@ -1,9 +1,12 @@
-import { Box, Button, Center, Container, Drawer, Flex, NativeSelect, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
+import { Box, Button, Center, Container, Drawer, Flex, Loader, NativeSelect, Notification, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import Employee from '../../components/Employee/Employee'
 import { useDisclosure } from "@mantine/hooks";
+import { useMutation } from "react-query";
+import { addDepartment } from "../../api/apiService";
+import { notifications } from '@mantine/notifications';
 
 const departments = [
     {
@@ -72,8 +75,6 @@ const departments = [
     },
 ];
 
-
-
 const data = [
     { label: 'Human Resources Department', value: 'Human Resources' },
     { label: 'Engineering Department', value: 'Engineering' },
@@ -93,18 +94,11 @@ const Employees = () => {
         }
     })
 
-    const selectedDepartment = watch('department')
-
-    useEffect(() => {
-        const department = departments.find(department => department.name === selectedDepartment);
-        console.log(department?.employees)
-        setActiveDepartment(department?.employees as [])
-    }, [selectedDepartment])
-
-    const stack = useDrawersStack(['inviteEmployee', 'manageEmployee'])
-
-
-    const { register: registerEmployee, handleSubmit: submitInviteEmployee, setValue: inviteEmployeeForm, reset: resetInviteForm } = useForm({
+    const { register: registerEmployee,
+        handleSubmit: submitInviteEmployee,
+        setValue: inviteEmployeeForm,
+        reset: resetInviteForm
+    } = useForm({
         defaultValues: {
             department: 'Human Resources',
             employeeName: '',
@@ -112,18 +106,57 @@ const Employees = () => {
         }
     });
 
-    const submitForm = (data) => {
-        console.log(data)
-        resetInviteForm()
-    }
 
-
-    const { register: registerDepartment, handleSubmit: submitDepartment } = useForm({
+    const { register: registerDepartment,
+        handleSubmit: submitDepartment,
+        reset: resetAddDepartment,
+        formState: {
+            isSubmitting: departmentSubmitting,
+            errors
+        },
+        setError: departmentError
+    } = useForm({
         defaultValues: {
             department: '',
             company: 'Mayan Solutions Inc.'
         }
     })
+
+
+    const { mutateAsync: addNewDepartment } = useMutation({
+        mutationFn: addDepartment
+    })
+
+
+    const submitForm = (data) => {
+        console.log(data)
+        resetInviteForm()
+    }
+
+    const submitNewDepartment = async (data) => {
+        try {
+            await addNewDepartment(data)
+            resetAddDepartment()
+        } catch (error) {
+            if (error?.status === 409) {
+                departmentError('department', {
+                    type: 'manual',
+                    message: 'Department Already Exist!'
+                })
+            }
+        }
+    }
+
+
+    const selectedDepartment = watch('department')
+
+
+    useEffect(() => {
+        const department = departments.find(department => department.name === selectedDepartment);
+        console.log(department?.employees)
+        setActiveDepartment(department?.employees as [])
+    }, [selectedDepartment])
+
 
     return (
         <Box>
@@ -220,16 +253,20 @@ const Employees = () => {
                         </Drawer.Header>
                         <Drawer.Body h={'90%'}>
                             <Box h={'95%'}>
-                                <form onSubmit={submitDepartment(submitForm)} style={{ height: '100%' }}>
+                                <form onSubmit={submitDepartment(submitNewDepartment)} style={{ height: '100%' }}>
                                     <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
                                         <Box>
                                             <Text mb={'md'} fw={700}>
                                                 Department Name
                                             </Text>
-                                            <TextInput size="lg" {...registerDepartment('department')} />
+                                            <TextInput size="lg" {...registerDepartment('department', {
+                                                required: 'Departmet name is required',
+                                            })
+                                            }
+                                                error={errors.department?.message} />
                                         </Box>
-                                        <Button type="submit" size="lg" color="#515977">
-                                            Save
+                                        <Button disabled={departmentSubmitting} type="submit" size="lg" color="#515977">
+                                            {departmentSubmitting ? <Loader color="blue" /> : "Save"}
                                         </Button>
                                     </Flex>
                                 </form>
@@ -266,7 +303,7 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align={'center'}>
-                        <Button color="#515977" size="md" radius={'xl'} onClick={openEmployeeInvite}>+ Invite</Button>
+                        <Button color="#515977" size="md" radius={'xl'} onClick={openEmployeeInvite}  >+ Invite</Button>
                         <Button color="#82BC66" size="md" radius={'xl'} onClick={openAddDepartment}>+ Department</Button>
                     </Flex>
                 </Flex>

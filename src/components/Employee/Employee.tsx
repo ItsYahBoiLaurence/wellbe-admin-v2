@@ -2,7 +2,7 @@ import { Avatar, Box, Flex, Paper, Text } from "@mantine/core"
 
 const UserCard = ({ department, employeeName }) => {
     return (
-        <Paper radius={'md'} p={'xl'}>
+        <Paper radius={'md'} p={'xl'} onClick={() => console.log(`You clicked ${employeeName} from ${department}`)}>
             <Flex align={'center'} gap={'lg'}>
                 <Avatar size={'lg'}>{employeeName[0]}</Avatar>
                 <Box>

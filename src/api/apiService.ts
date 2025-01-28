@@ -32,11 +32,10 @@ export const getDepartmentStatics = async ({ queryKey }) => {
     }
 }
 
-export const addDepartment = async ({ queryKey }) => {
-    const [, company, department] = queryKey
+export const addDepartment = async (newDepartmentData) => {
     const data = {
-        company: company,
-        department: department
+        company: newDepartmentData.company,
+        department: newDepartmentData.department
     }
     try {
         const response = await api.post('/api/company-admin/addDepartment/', data)

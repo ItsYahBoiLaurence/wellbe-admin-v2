@@ -583,12 +583,12 @@
   resolved "https://registry.npmjs.org/@mantine/modals/-/modals-7.10.1.tgz"
   integrity sha512-2riQSNpVV7f0baizlqcggz9hx9/+y6SQTnW3zEkl/RIkuyK9dpeMFUG6M+M8ntwP79b7x9n7Em9PMWxRbgi28A==
 
-"@mantine/notifications@^7.10.1":
-  version "7.10.1"
-  resolved "https://registry.npmjs.org/@mantine/notifications/-/notifications-7.10.1.tgz"
-  integrity sha512-cx3JR3BJzEzH6t2EF1ysrWVY/rdJk0WbSBQo/qFamJd2sbU+8XAHriI8Cx6hNo7uRGCwd8VGAj7Cf3aWK2VC5A==
+"@mantine/notifications@^7.16.2":
+  version "7.16.2"
+  resolved "https://registry.yarnpkg.com/@mantine/notifications/-/notifications-7.16.2.tgz#b565000043bd7503280926744ba487103403ef20"
+  integrity sha512-U342XWiiRI1NvOlLsI6PH/pSNe0rxNClJ2w5orvjOMXvaAfDe52mhnzRmtzRxYENp06++3b/G7MjPH+466rF9Q==
   dependencies:
-    "@mantine/store" "7.10.1"
+    "@mantine/store" "7.16.2"
     react-transition-group "4.4.5"
 
 "@mantine/nprogress@^7.10.1":
@@ -602,6 +602,11 @@
   version "7.10.1"
   resolved "https://registry.npmjs.org/@mantine/store/-/store-7.10.1.tgz"
   integrity sha512-KrGBsSoMsfrYeLxPwf5rFv0s2Nl/4wf+AaF/U1SpQrMgPI8vYokPXx52Wp3jCmlo12NCZnCIG+/6YHAdTWH1qQ==
+
+"@mantine/store@7.16.2":
+  version "7.16.2"
+  resolved "https://registry.yarnpkg.com/@mantine/store/-/store-7.16.2.tgz#0c1699c9c3f7871f5b1f25d3999516ad990f5351"
+  integrity sha512-9dEGLosrYSePlAwhfx3CxTLcWu2M98TtuYnelAiHEdNEkyafirvZxNt4paMoFXLKR1XPm5wdjDK7bdTaE0t7Og==
 
 "@nodelib/fs.scandir@2.1.5":
   version "2.1.5"
