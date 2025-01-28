@@ -112,10 +112,18 @@ const Employees = () => {
         }
     });
 
-    const submitInvite = (data) => {
+    const submitForm = (data) => {
         console.log(data)
         resetInviteForm()
     }
+
+
+    const { register: registerDepartment, handleSubmit: submitDepartment } = useForm({
+        defaultValues: {
+            department: '',
+            company: 'Mayan Solutions Inc.'
+        }
+    })
 
     return (
         <Box>
@@ -145,7 +153,7 @@ const Employees = () => {
                         </Drawer.Header>
                         <Drawer.Body h={'90%'}>
                             <Box h={'95%'}>
-                                <form onSubmit={submitInviteEmployee(submitInvite)} style={{ height: '100%' }}>
+                                <form onSubmit={submitInviteEmployee(submitForm)} style={{ height: '100%' }}>
                                     <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
                                         <Flex direction={'column'} gap={'lg'}>
                                             <Box>
@@ -210,7 +218,23 @@ const Employees = () => {
                                 }}
                             />
                         </Drawer.Header>
-                        <Drawer.Body>Drawer Manage</Drawer.Body>
+                        <Drawer.Body h={'90%'}>
+                            <Box h={'95%'}>
+                                <form onSubmit={submitDepartment(submitForm)} style={{ height: '100%' }}>
+                                    <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
+                                        <Box>
+                                            <Text mb={'md'} fw={700}>
+                                                Department Name
+                                            </Text>
+                                            <TextInput size="lg" {...registerDepartment('department')} />
+                                        </Box>
+                                        <Button type="submit" size="lg" color="#515977">
+                                            Save
+                                        </Button>
+                                    </Flex>
+                                </form>
+                            </Box>
+                        </Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
             </Drawer.Stack>
