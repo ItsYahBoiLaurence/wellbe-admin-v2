@@ -44,3 +44,16 @@ export const addDepartment = async (newDepartmentData) => {
         throw error
     }
 }
+
+export const getEmployees = async ({ queryKey }) => {
+    const [, company] = queryKey
+    const params = {
+        company: company
+    }
+    try {
+        const response = api.get('/api/company-admin/employeesList/', { params })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}

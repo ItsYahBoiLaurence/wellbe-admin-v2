@@ -61,29 +61,12 @@ const Dashboard = () => {
 
   return (
     <Box>
-      <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
-        <Flex direction={'row'} justify={'space-between'} align={'center'}>
-          <Box>
+      <Paper mb={'md'} shadow="md" radius="md" px="lg" py='md'>
+        <Flex direction={'row'} justify={'space-between'} align={'center'} gap={'xs'}>
+          <Box w='70%'>
             <form>
-              <Flex direction={'row'} align={'center'} gap={56}>
+              <Flex direction={'row'} align={'center'} gap={'xs'} justify={'space-between'}>
                 <Title order={4} fw={700}>Well-being Overview</Title>
-                <Controller
-                  name='data'
-                  control={control}
-                  render={({ field }) => (
-                    <NativeSelect
-                      {...field}
-                      radius={'lg'}
-                      style={{ width: '300px' }}
-                      size='md'
-                      data={data}
-                      rightSection={<IconChevronDown size={16} />}
-                      onChange={(e) => {
-                        field.onChange(e.target.value)
-                      }}
-                    />
-                  )}
-                />
                 <Controller
                   name='time'
                   control={control}

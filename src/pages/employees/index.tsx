@@ -6,7 +6,6 @@ import Employee from '../../components/Employee/Employee'
 import { useDisclosure } from "@mantine/hooks";
 import { useMutation } from "react-query";
 import { addDepartment } from "../../api/apiService";
-import { notifications } from '@mantine/notifications';
 
 const departments = [
     {

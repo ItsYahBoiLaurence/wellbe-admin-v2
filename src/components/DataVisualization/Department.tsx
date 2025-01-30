@@ -1,4 +1,4 @@
-import { Avatar, Box, Flex, Image, Paper, Stack, Text } from "@mantine/core"
+import { Avatar, Box, Drawer, Flex, Image, Paper, ScrollArea, Stack, Text } from "@mantine/core"
 import DECREASE from '../../assets/LowAverage.png'
 import INCREASE from '../../assets/AboveAverage.png'
 import MAINTAIN from '../../assets/MaintainedScore.png'
@@ -31,27 +31,31 @@ const DepartmentWellbeing = ({ departments }) => {
     }
 
     return (
-        <Flex direction={'row'} gap={'md'}>
-            {departments.map((department) => (
-                <Paper shadow="xs" radius="md" p="xl" w={'50%'}>
-                    <Box>
-                        <Flex align={'center'} gap={12}>
-                            <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
-                            <Text fw={700} size="lg">{department.departmentName}</Text>
-                        </Flex>
-                        <Flex justify={'space-between'} align={"center"} my={"md"}>
+        <Box>
+            <ScrollArea w={'100%'}>
+                <Flex direction={'row'} gap={'md'}>
+                    {departments.map((department) => (
+                        <Paper key={department.departmentName} shadow="xs" radius="md" p="xl" w={'350px'} >
                             <Box>
-                                <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
-                                <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
+                                <Flex align={'center'} gap={12}>
+                                    <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
+                                    <Text fw={700} size="lg">{department.departmentName}</Text>
+                                </Flex>
+                                <Flex justify={'space-between'} align={"center"} my={"md"}>
+                                    <Box>
+                                        <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
+                                        <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
+                                    </Box>
+                                    <Box>
+                                        <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
+                                    </Box>
+                                </Flex>
                             </Box>
-                            <Box>
-                                <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
-                            </Box>
-                        </Flex>
-                    </Box>
-                </Paper>
-            ))}
-        </Flex>
+                        </Paper>
+                    ))}
+                </Flex>
+            </ScrollArea>
+        </Box>
 
     )
 }

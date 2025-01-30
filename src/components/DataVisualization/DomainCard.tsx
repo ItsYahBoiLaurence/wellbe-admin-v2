@@ -50,7 +50,7 @@ const DomainCard = ({ title, score }) => {
     }
 
     return (
-        <Paper p={'xl'} radius={'lg'} shadow={'sm'}>
+        <Paper p={'xl'} radius={'md'} shadow={'sm'}>
             <Flex justify={'space-between'} align={'center'}>
                 <Flex direction={'row'} align={'center'} gap={20}>
                     <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(getStanineScore(score)))} />
