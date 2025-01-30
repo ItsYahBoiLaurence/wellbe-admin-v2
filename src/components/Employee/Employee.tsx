@@ -5,8 +5,6 @@ import { useForm } from "react-hook-form"
 const UserCard = ({ department, dataEmployee }) => {
 
     const [opened, { open, close }] = useDisclosure(false)
-
-    console.log(dataEmployee)
     return (
         <Box>
             <Drawer.Stack>

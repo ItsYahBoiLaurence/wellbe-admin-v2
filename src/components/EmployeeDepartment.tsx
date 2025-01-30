@@ -15,7 +15,7 @@ const EmployeeDepartment = ({ dataToRender, currentDepartment }) => {
         <Box>
             {employee === null ? <Text>Loading...</Text> : (<SimpleGrid cols={4}>
                 {employee.map((person) => (
-                    <Employee key={person.name} department={currentDepartment} dataEmployee={person} />
+                    <Employee key={person.id} department={currentDepartment} dataEmployee={person} />
                 ))}
             </SimpleGrid>)}
         </Box>

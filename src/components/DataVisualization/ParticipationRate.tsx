@@ -1,8 +1,6 @@
 import { Box, Flex, Paper, RingProgress, Text } from "@mantine/core"
 
 const ParticipationRate = ({ participationRateData }) => {
-    console.log(participationRateData)
-    const rate = 80
     return (
         <Paper p='md' radius='md' my={'md'}>
             <Flex direction={'row'} justify={'space-between'} align={'center'} >
@@ -13,11 +11,11 @@ const ParticipationRate = ({ participationRateData }) => {
                 <Flex align={'center'} gap={'md'}>
                     <Box>
                         <Text fw={700}>Employee Participation</Text>
-                        <Text size="xl">{rate}%</Text>
+                        <Text size="xl">{participationRateData?.participationRate}%</Text>
                     </Box>
                     <RingProgress
                         thickness={20}
-                        sections={[{ value: rate, color: '#FFA903' }]}
+                        sections={[{ value: participationRateData?.participationRate, color: '#FFA903' }]}
                     />
                 </Flex>
             </Flex>

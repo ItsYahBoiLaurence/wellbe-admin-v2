@@ -76,7 +76,7 @@ const departments = [
 ];
 
 const data = [
-    { label: 'Human Resources Department', value: 'Engineering Sample' },
+    { label: 'Human Resources Department', value: 'Human Resources' },
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
     { label: 'Finance Department', value: 'Finance' },
@@ -88,6 +88,7 @@ const Employees = () => {
     const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
 
     const [activeDepartment, setActiveDepartment] = useState([])
+
     const { control, watch } = useForm({
         defaultValues: {
             department: "Human Resources"
