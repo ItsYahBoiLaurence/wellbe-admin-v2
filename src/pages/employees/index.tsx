@@ -80,6 +80,7 @@ const data = [
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
     { label: 'Finance Department', value: 'Finance' },
+    { label: 'Engineering Sample', value: 'Engineering Sample' }
 ]
 
 const Employees = () => {
@@ -164,10 +165,6 @@ const Employees = () => {
         queryFn: getEmployees
     })
 
-    const { data: participationData, isLoading: isParticipationDataLoading } = useQuery({
-        queryKey: ['participation', 'Mayan Solutions Inc.', selectedDepartment],
-        queryFn: getParticipationRate
-    })
 
     return (
         <Box>
@@ -320,8 +317,8 @@ const Employees = () => {
                     </Flex>
                 </Flex>
             </Paper >
-            {isParticipationDataLoading ? <Text>Loading...</Text> : <ParticipationRate participationRateData={participationData} />}
-            {isDepartmentDataLoading ? <div>loading component... </div> : <EmployeeDepartment dataToRender={departmentData?.data} currentDepartment={selectedDepartment} />}
+            <ParticipationRate selectedDepartment={selectedDepartment} />
+            {isDepartmentDataLoading ? <div>loading component... </div> : <EmployeeDepartment dataToRender={departmentData?.data} currentDepartment={selectedDepartment} dropdownData={data} />}
         </Box>
     )
 }

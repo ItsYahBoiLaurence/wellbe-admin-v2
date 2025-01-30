@@ -1,16 +1,17 @@
-import { Avatar, Box, Button, Drawer, Flex, Paper, Text, TextInput } from "@mantine/core"
+import { Avatar, Box, Button, Drawer, Flex, NativeSelect, Paper, Text, TextInput } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { useForm } from "react-hook-form"
 import { useMutation } from 'react-query';
 import { updateEmployee } from "../../api/apiService";
 import queryClient from "../../queryClient";
+import { IconChevronDown } from "@tabler/icons-react";
 
-const UserCard = ({ department, dataEmployee }) => {
+const UserCard = ({ department, dataEmployee, dropdownData }) => {
 
 
     const [opened, { open, close }] = useDisclosure(false)
 
-    const { register, handleSubmit } = useForm({
+    const { register, handleSubmit, setValue } = useForm({
         defaultValues: {
             department: dataEmployee.department,
             firstName: dataEmployee.firstName,
@@ -64,37 +65,33 @@ const UserCard = ({ department, dataEmployee }) => {
                         <Drawer.Body h={'90%'}>
                             <Box h={'95%'}>
                                 <form onSubmit={handleSubmit(onsubmit)}>
-                                    <Text my={'lg'} fw={700}>Employee Details</Text>
+                                    <Text my={'lg'} size="lg" fw={700}>Employee Details</Text>
                                     <Flex direction={'column'} gap={'md'}>
-                                        <Box>
-                                            <Text fw={700} >Department</Text>
-                                            <TextInput
-                                                {...register('department')}
-                                                placeholder={dataEmployee.department}
-                                            />
-                                        </Box>
+                                        <NativeSelect
+                                            label={<Text fw={700} >Department</Text>}
+                                            data={dropdownData}
+                                            rightSection={<IconChevronDown size={16} />}
+                                            defaultValue={department}
+                                            onChange={(e) => setValue('department', e.target.value)}
+                                        />
 
-                                        <Box>
-                                            <Text fw={700}>First Name</Text>
-                                            <TextInput
-                                                {...register('firstName')}
-                                                placeholder={dataEmployee.firstName}
-                                            />
-                                        </Box>
-                                        <Box>
-                                            <Text fw={700}>Last Name</Text>
-                                            <TextInput
-                                                {...register('lastName')}
-                                                placeholder={dataEmployee.lastName}
-                                            />
-                                        </Box>
-                                        <Box>
-                                            <Text fw={700}>Company Email</Text>
-                                            <TextInput
-                                                {...register('email')}
-                                                placeholder={dataEmployee.email}
-                                            />
-                                        </Box>
+                                        <TextInput
+                                            label={<Text fw={700}>First Name</Text>}
+                                            {...register('firstName')}
+                                            placeholder={dataEmployee.firstName}
+                                        />
+
+                                        <TextInput
+                                            label={<Text fw={700}>Lastname</Text>}
+                                            {...register('lastName')}
+                                            placeholder={dataEmployee.lastName}
+                                        />
+
+                                        <TextInput
+                                            label={<Text fw={700}>Email</Text>}
+                                            {...register('email')}
+                                            placeholder={dataEmployee.email}
+                                        />
                                     </Flex>
                                     <Button type="submit">Save</Button>
                                     <Button>Delete</Button>

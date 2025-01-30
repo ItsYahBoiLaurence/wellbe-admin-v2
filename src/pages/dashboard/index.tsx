@@ -103,10 +103,10 @@ const Dashboard = () => {
         </Flex>
       </Paper >
       <Box>
-        {/* {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />} */}
+        {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
       </Box>
       <Box my={'md'}>
-        {isDepartmentLoading ? <Text ta={'center'}>Loading...</Text> : <Department departments={departmentData} />}
+        {isDepartmentLoading ? <Text ta={'center'}>Department Loading....</Text> : <Department departments={departmentData} />}
       </Box>
     </Box>
   );

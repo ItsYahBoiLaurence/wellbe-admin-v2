@@ -1,8 +1,8 @@
-import { Box, SimpleGrid, Text } from "@mantine/core"
+import { Box, Paper, SimpleGrid, Text } from "@mantine/core"
 import { useEffect, useState } from "react"
 import Employee from './Employee/Employee'
 
-const EmployeeDepartment = ({ dataToRender, currentDepartment }) => {
+const EmployeeDepartment = ({ dataToRender, currentDepartment, dropdownData }) => {
 
     const [employee, setEmployee] = useState(null)
 
@@ -13,12 +13,26 @@ const EmployeeDepartment = ({ dataToRender, currentDepartment }) => {
 
     return (
         <Box>
-            {employee === null ? <Text>Loading...</Text> : (<SimpleGrid cols={4}>
-                {employee.map((person) => (
-                    <Employee key={person.id} department={currentDepartment} dataEmployee={person} />
-                ))}
-            </SimpleGrid>)}
+            {employee === null ? (
+                <Text>Loading...</Text>
+            ) : employee.length === 0 ? (
+                <Paper p={'md'} shadow="xs">
+                    <Text ta={'center'}>There's no employee on this Department!</Text>
+                </Paper>
+            ) : (
+                <SimpleGrid cols={4}>
+                    {employee.map((person) => (
+                        <Employee
+                            key={person.id}
+                            department={currentDepartment}
+                            dataEmployee={person}
+                            dropdownData={dropdownData}
+                        />
+                    ))}
+                </SimpleGrid>
+            )}
         </Box>
+
     )
 }
 
