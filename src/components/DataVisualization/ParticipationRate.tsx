@@ -1,6 +1,7 @@
 import { Box, Flex, Paper, RingProgress, Text } from "@mantine/core"
 
-const ParticipationRate = () => {
+const ParticipationRate = ({ participationRateData }) => {
+    console.log(participationRateData)
     const rate = 80
     return (
         <Paper p='md' radius='md' my={'md'}>

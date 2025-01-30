@@ -1,12 +1,12 @@
-import { Box, Button, Center, Container, Drawer, Flex, Loader, NativeSelect, Notification, Paper, SimpleGrid, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
+import { Box, Button, Drawer, Flex, Loader, NativeSelect, Paper, Text, TextInput, Title } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
-import Employee from '../../components/Employee/Employee'
 import { useDisclosure } from "@mantine/hooks";
-import { useMutation } from "react-query";
-import { addDepartment } from "../../api/apiService";
+import { useMutation, useQuery } from "react-query";
+import { addDepartment, getEmployees, getParticipationRate } from "../../api/apiService";
 import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
+import EmployeeDepartment from "../../components/EmployeeDepartment";
 
 const departments = [
     {
@@ -76,7 +76,7 @@ const departments = [
 ];
 
 const data = [
-    { label: 'Human Resources Department', value: 'Human Resources' },
+    { label: 'Human Resources Department', value: 'Engineering Sample' },
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
     { label: 'Finance Department', value: 'Finance' },
@@ -153,10 +153,20 @@ const Employees = () => {
 
     useEffect(() => {
         const department = departments.find(department => department.name === selectedDepartment);
-        console.log(department?.employees)
+        // console.log(department?.employees)
         setActiveDepartment(department?.employees as [])
     }, [selectedDepartment])
 
+
+    const { data: departmentData, isLoading: isDepartmentDataLoading } = useQuery({
+        queryKey: ['departmentData'],
+        queryFn: getEmployees
+    })
+
+    const { data: participationData, isLoading: isParticipationDataLoading } = useQuery({
+        queryKey: ['participation', 'Mayan Solutions Inc.', selectedDepartment],
+        queryFn: getParticipationRate
+    })
 
     return (
         <Box>
@@ -228,7 +238,6 @@ const Employees = () => {
                         </Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
-
                 {/* Add Department */}
                 <Drawer.Root
                     key={2}
@@ -277,10 +286,8 @@ const Employees = () => {
                         </Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
-
             </Drawer.Stack>
-
-            <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
+            <Paper shadow="md" radius="md" px="xl" py={'md'}>
                 <Flex direction={'row'} justify={'space-between'} align={'center'}>
                     <Box>
                         <form>
@@ -312,12 +319,8 @@ const Employees = () => {
                     </Flex>
                 </Flex>
             </Paper >
-            <ParticipationRate /*participationData={}*/ />
-            <SimpleGrid cols={4}>
-                {activeDepartment.map((perDepartment) => (
-                    <Employee key={perDepartment.name} department={selectedDepartment} employeeName={perDepartment.name} />
-                ))}
-            </SimpleGrid>
+            {isParticipationDataLoading ? <Text>Loading...</Text> : <ParticipationRate participationRateData={participationData} />}
+            {isDepartmentDataLoading ? <div>loading component... </div> : <EmployeeDepartment dataToRender={departmentData?.data} currentDepartment={selectedDepartment} />}
         </Box>
     )
 }

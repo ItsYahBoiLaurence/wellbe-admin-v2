@@ -45,13 +45,27 @@ export const addDepartment = async (newDepartmentData) => {
     }
 }
 
-export const getEmployees = async ({ queryKey }) => {
-    const [, company] = queryKey
+export const getEmployees = async () => {
+    const company = "Mayan Solutions Inc."
     const params = {
         company: company
     }
     try {
         const response = api.get('/api/company-admin/employeesList/', { params })
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export const getParticipationRate = async ({ queryKey }) => {
+    const [, company, department] = queryKey
+    const params = {
+        company: company,
+        department: department
+    }
+    try {
+        const response = await api.get('/api/company-admin/departmentParticipationRate/', { params })
         return response.data
     } catch (error) {
         throw error
