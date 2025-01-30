@@ -6,6 +6,7 @@ import Employee from '../../components/Employee/Employee'
 import { useDisclosure } from "@mantine/hooks";
 import { useMutation } from "react-query";
 import { addDepartment } from "../../api/apiService";
+import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
 
 const departments = [
     {
@@ -160,6 +161,7 @@ const Employees = () => {
     return (
         <Box>
             <Drawer.Stack>
+                {/* Invite */}
                 <Drawer.Root
                     key={1}
                     position={'right'}
@@ -227,6 +229,7 @@ const Employees = () => {
                     </Drawer.Content>
                 </Drawer.Root>
 
+                {/* Add Department */}
                 <Drawer.Root
                     key={2}
                     position={'right'}
@@ -263,6 +266,7 @@ const Employees = () => {
                                             })
                                             }
                                                 error={errors.department?.message} />
+                                            <Text mt="md" size="sm">Employees in this department will be notified  to download the Wellbe companion app  and receives company update. </Text>
                                         </Box>
                                         <Button disabled={departmentSubmitting} type="submit" size="lg" color="#515977">
                                             {departmentSubmitting ? <Loader color="blue" /> : "Save"}
@@ -273,6 +277,7 @@ const Employees = () => {
                         </Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
+
             </Drawer.Stack>
 
             <Paper mb={12} shadow="md" radius="md" px="xl" py={'md'}>
@@ -307,6 +312,7 @@ const Employees = () => {
                     </Flex>
                 </Flex>
             </Paper >
+            <ParticipationRate /*participationData={}*/ />
             <SimpleGrid cols={4}>
                 {activeDepartment.map((perDepartment) => (
                     <Employee key={perDepartment.name} department={selectedDepartment} employeeName={perDepartment.name} />
