@@ -7,7 +7,7 @@ const EmployeeDepartment = ({ dataToRender, currentDepartment }) => {
     const [employee, setEmployee] = useState(null)
 
     useEffect(() => {
-        const department = dataToRender.find(department => department.name === "Engineering Sample")
+        const department = dataToRender.find(department => department.name === currentDepartment)
         setEmployee(department?.employees)
     }, [currentDepartment])
 

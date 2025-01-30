@@ -71,3 +71,19 @@ export const getParticipationRate = async ({ queryKey }) => {
         throw error
     }
 }
+
+
+export const updateEmployee = async (newUserInfo) => {
+    const params = {
+        company: "Mayan Solutions Inc.",
+        email: newUserInfo.email
+    }
+
+    try {
+        const response = api.put('/api/company-admin/updateEmployee', newUserInfo, { params })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+
+}

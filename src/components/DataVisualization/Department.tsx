@@ -34,7 +34,7 @@ const DepartmentWellbeing = ({ departments }) => {
         <Box>
             <ScrollArea w={'100%'}>
                 <Flex direction={'row'} gap={'md'}>
-                    {departments.map((department) => (
+                    {departments === undefined ? <Text ta={"center"}>Loading....</Text> : departments.map((department) => (
                         <Paper key={department.departmentName} shadow="xs" radius="md" p="xl" w={'350px'} >
                             <Box>
                                 <Flex align={'center'} gap={12}>
