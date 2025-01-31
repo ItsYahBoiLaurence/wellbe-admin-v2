@@ -99,3 +99,19 @@ export const getDepartment = async () => {
         throw error
     }
 }
+
+export const sendEmail = async (inviteInformation) => {
+    const data = {
+        company: "Mayan Solutions Inc.",
+        department: inviteInformation.department,
+        firstName: inviteInformation.firstName,
+        lastName: inviteInformation.lastName,
+        email: inviteInformation.email
+    }
+    try {
+        const response = await api.post('/api/company-admin/inviteEmployee', data)
+        return response.data
+    } catch (error) {
+        throw error
+    }
+} 

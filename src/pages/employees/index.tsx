@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
 import { useDisclosure } from "@mantine/hooks";
 import { useMutation, useQuery } from "react-query";
-import { addDepartment, getEmployees, getParticipationRate } from "../../api/apiService";
+import { addDepartment, getEmployees, getParticipationRate, sendEmail } from "../../api/apiService";
 import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
 import EmployeeDepartment from "../../components/EmployeeDepartment";
 
@@ -79,8 +79,7 @@ const data = [
     { label: 'Human Resources Department', value: 'Human Resources' },
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
-    { label: 'Finance Department', value: 'Finance' },
-    { label: 'Engineering Sample', value: 'Engineering Sample' }
+    { label: 'Finance Department', value: 'Finance' }
 ]
 
 const Employees = () => {
@@ -88,7 +87,6 @@ const Employees = () => {
     const [openedEmployeeInvite, { open: openEmployeeInvite, close: closeEmployeeInvite }] = useDisclosure(false);
     const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
 
-    const [activeDepartment, setActiveDepartment] = useState([])
 
     const { control, watch } = useForm({
         defaultValues: {
@@ -103,8 +101,9 @@ const Employees = () => {
     } = useForm({
         defaultValues: {
             department: 'Human Resources',
-            employeeName: '',
-            companyEmail: ''
+            firstName: '',
+            lastName: '',
+            email: ''
         }
     });
 
@@ -129,10 +128,20 @@ const Employees = () => {
         mutationFn: addDepartment
     })
 
+    const { mutateAsync: sendEmailToUser, isLoading: inviteSending } = useMutation({
+        mutationFn: sendEmail,
+        onSuccess: () => console.log('Email Sent')
+    })
 
-    const submitForm = (data) => {
+
+    const submitForm = async (data) => {
         console.log(data)
-        resetInviteForm()
+        try {
+            await sendEmailToUser(data)
+            resetInviteForm()
+        } catch (error) {
+            throw error
+        }
     }
 
     const submitNewDepartment = async (data) => {
@@ -153,18 +162,11 @@ const Employees = () => {
     const selectedDepartment = watch('department')
 
 
-    useEffect(() => {
-        const department = departments.find(department => department.name === selectedDepartment);
-        // console.log(department?.employees)
-        setActiveDepartment(department?.employees as [])
-    }, [selectedDepartment])
-
 
     const { data: departmentData, isLoading: isDepartmentDataLoading } = useQuery({
         queryKey: ['departmentData'],
         queryFn: getEmployees
     })
-
 
     return (
         <Box>
@@ -198,35 +200,35 @@ const Employees = () => {
                                 <form onSubmit={submitInviteEmployee(submitForm)} style={{ height: '100%' }}>
                                     <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
                                         <Flex direction={'column'} gap={'lg'}>
-                                            <Box>
-                                                <Text mb={'xs'} fw={700}>Department</Text>
-                                                <NativeSelect radius={'md'}
-                                                    style={{ width: '100%' }}
-                                                    size='md'
-                                                    data={data}
-                                                    rightSection={<IconChevronDown size={16} />}
-                                                    onChange={(e) => {
-                                                        inviteEmployeeForm('department', e.target.value)
-                                                    }}>
-                                                </NativeSelect>
-                                            </Box>
-                                            <Box>
-                                                <Text mb={'xs'} fw={700}>
-                                                    Employee Name
-                                                </Text>
-                                                <TextInput  {...registerEmployee('employeeName')} />
-                                            </Box>
-                                            <Box>
-                                                <Text mb={'xs'} fw={700}>
+                                            <NativeSelect radius={'md'}
+                                                label={<Text mb={'xs'} fw={700}>Department</Text>}
+                                                style={{ width: '100%' }}
+                                                size='md'
+                                                data={data}
+                                                defaultValue={selectedDepartment}
+                                                rightSection={<IconChevronDown size={16} />}
+                                                onChange={(e) => {
+                                                    inviteEmployeeForm('department', e.target.value)
+                                                }}>
+                                            </NativeSelect>
+                                            <TextInput  {...registerEmployee('firstName')}
+                                                label={<Text mb={'xs'} fw={700}>
+                                                    First Name
+                                                </Text>} />
+                                            <TextInput  {...registerEmployee('lastName')}
+                                                label={<Text mb={'xs'} fw={700}>
+                                                    Last Name
+                                                </Text>} />
+                                            <TextInput {...registerEmployee('email')}
+                                                label={<Text mb={'xs'} fw={700}>
                                                     Company Email
-                                                </Text>
-                                                <TextInput {...registerEmployee('companyEmail')} />
-                                            </Box>
+                                                </Text>} />
+
                                             <Text ta={'center'} size="sm">
                                                 Newly added employees will receive a notification to download our Well be companion app and receives updates from your company
                                             </Text>
                                         </Flex>
-                                        <Button type="submit" size="lg" color="#515977">
+                                        <Button type="submit" disabled={inviteSending} size="lg" color="#515977">
                                             Save
                                         </Button>
                                     </Flex>

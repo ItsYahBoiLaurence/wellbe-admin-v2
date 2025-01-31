@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, LoadingOverlay, NativeSelect, Paper, Text, Title } from '@mantine/core';
+import { Avatar, Box, Button, Drawer, Flex, Group, LoadingOverlay, NativeSelect, Paper, Text, TextInput, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
@@ -63,45 +63,30 @@ const Dashboard = () => {
   return (
     <Box>
       <Paper mb={'md'} shadow="md" radius="md" px="lg" py='md'>
-        <Flex direction={'row'} justify={'space-between'} align={'center'} gap={'xs'}>
-          <Box w='70%'>
-            <form>
-              <Flex direction={'row'} align={'center'} gap={'xs'} justify={'space-between'}>
-                <Title order={4} fw={700}>Well-being Overview</Title>
-                <Controller
-                  name='time'
-                  control={control}
-                  render={({ field }) => (
-                    <NativeSelect
-                      {...field}
-                      style={{ width: '250px' }}
-                      radius={'lg'}
-                      size='md'
-                      data={time}
-                      rightSection={<IconChevronDown size={16} />}
-                      onChange={(e) => {
-                        field.onChange(e.target.value)
-                      }}
-                    />
-                  )}
-                />
-              </Flex>
-            </form>
-          </Box>
-          <Flex gap={24} align={'center'}>
-            <Box>
-              <Text>People with Access</Text>
-              <Avatar.Group>
-                <Avatar>J</Avatar>
-                <Avatar>A</Avatar>
-                <Avatar>C</Avatar>
-                <Avatar>K</Avatar>
-                <Avatar>+5</Avatar>
-              </Avatar.Group>
-            </Box>
-            <Button color="#515977" size="md" radius={'xl'}>+ Invite</Button>
-          </Flex>
-        </Flex>
+        <Group justify='space-between'>
+          <Title order={4} fw={700}>Well-being Overview</Title>
+          <form>
+            <Flex direction={'row'} align={'center'} gap={'xs'} justify={'space-between'}>
+              <Controller
+                name='time'
+                control={control}
+                render={({ field }) => (
+                  <NativeSelect
+                    {...field}
+                    style={{ width: '250px' }}
+                    radius={'md'}
+                    size='md'
+                    data={time}
+                    rightSection={<IconChevronDown size={16} />}
+                    onChange={(e) => {
+                      field.onChange(e.target.value)
+                    }}
+                  />
+                )}
+              />
+            </Flex>
+          </form>
+        </Group>
       </Paper >
       <Box>
         {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}

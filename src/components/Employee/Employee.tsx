@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Drawer, Flex, NativeSelect, Paper, Text, TextInput } from "@mantine/core"
+import { Avatar, Box, Button, Drawer, Flex, NativeSelect, Paper, Stack, Text, TextInput } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { useForm } from "react-hook-form"
 import { useMutation } from 'react-query';
@@ -64,37 +64,41 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                         </Drawer.Header>
                         <Drawer.Body h={'90%'}>
                             <Box h={'95%'}>
-                                <form onSubmit={handleSubmit(onsubmit)}>
+                                <form onSubmit={handleSubmit(onsubmit)} style={{ height: '100%' }}  >
                                     <Text my={'lg'} size="lg" fw={700}>Employee Details</Text>
-                                    <Flex direction={'column'} gap={'md'}>
-                                        <NativeSelect
-                                            label={<Text fw={700} >Department</Text>}
-                                            data={dropdownData}
-                                            rightSection={<IconChevronDown size={16} />}
-                                            defaultValue={department}
-                                            onChange={(e) => setValue('department', e.target.value)}
-                                        />
+                                    <Stack justify="space-between" h={'95%'}>
+                                        <Flex direction={'column'} gap={'md'}>
+                                            <NativeSelect
+                                                label={<Text fw={700} >Department</Text>}
+                                                data={dropdownData}
+                                                rightSection={<IconChevronDown size={16} />}
+                                                defaultValue={department}
+                                                onChange={(e) => setValue('department', e.target.value)}
+                                            />
 
-                                        <TextInput
-                                            label={<Text fw={700}>First Name</Text>}
-                                            {...register('firstName')}
-                                            placeholder={dataEmployee.firstName}
-                                        />
+                                            <TextInput
+                                                label={<Text fw={700}>First Name</Text>}
+                                                {...register('firstName')}
+                                                placeholder={dataEmployee.firstName}
+                                            />
 
-                                        <TextInput
-                                            label={<Text fw={700}>Lastname</Text>}
-                                            {...register('lastName')}
-                                            placeholder={dataEmployee.lastName}
-                                        />
+                                            <TextInput
+                                                label={<Text fw={700}>Lastname</Text>}
+                                                {...register('lastName')}
+                                                placeholder={dataEmployee.lastName}
+                                            />
 
-                                        <TextInput
-                                            label={<Text fw={700}>Email</Text>}
-                                            {...register('email')}
-                                            placeholder={dataEmployee.email}
-                                        />
-                                    </Flex>
-                                    <Button type="submit">Save</Button>
-                                    <Button>Delete</Button>
+                                            <TextInput
+                                                label={<Text fw={700}>Email</Text>}
+                                                {...register('email')}
+                                                placeholder={dataEmployee.email}
+                                            />
+                                        </Flex>
+                                        <Stack gap={'sm'}>
+                                            <Button variant="filled" type="submit" color="#515977">Save</Button>
+                                            <Button color="#515977" variant="outline">Delete</Button>
+                                        </Stack>
+                                    </Stack>
                                 </form>
                             </Box>
                         </Drawer.Body>
