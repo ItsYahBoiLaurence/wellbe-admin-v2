@@ -30,6 +30,14 @@ const DepartmentWellbeing = ({ departments }) => {
         return icon
     }
 
+    const isDepartmentInvalid = (isInvalid) => {
+        if (isInvalid === "Invalid Value") {
+            return true
+        }
+        return false
+    }
+
+
     return (
         <Box>
             <ScrollArea w={'100%'}>
@@ -41,15 +49,17 @@ const DepartmentWellbeing = ({ departments }) => {
                                     <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
                                     <Text fw={700} size="lg">{department.departmentName}</Text>
                                 </Flex>
-                                <Flex justify={'space-between'} align={"center"} my={"md"}>
-                                    <Box>
-                                        <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
-                                        <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
-                                    </Box>
-                                    <Box>
-                                        <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
-                                    </Box>
-                                </Flex>
+                                {isDepartmentInvalid(getLabel(department.Wellbe)) ? <Text mt={'xl'} fw={700} size="lg" ta={'center'}>This department has no available information!</Text> : (
+                                    <Flex justify={'space-between'} align={"center"} my={"md"}>
+                                        <Box>
+                                            <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
+                                            <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
+                                        </Box>
+                                        <Box>
+                                            <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
+                                        </Box>
+                                    </Flex>
+                                )}
                             </Box>
                         </Paper>
                     ))}

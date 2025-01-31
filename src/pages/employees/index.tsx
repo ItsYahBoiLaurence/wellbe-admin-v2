@@ -80,7 +80,9 @@ const data = [
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
     { label: 'Finance Department', value: 'Finance' },
-    { label: 'Engineering Sample', value: 'Engineering Sample' }
+    { label: 'Engineering Sample', value: 'Engineering Sample' },
+    { label: 'Marketing Sample', value: 'Marketing Sample' }
+
 ]
 
 const Employees = () => {

@@ -4,7 +4,7 @@ import { QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 import queryClient from './queryClient';
 import Routes from './Routes';
-import { Notifications } from '@mantine/notifications';
+import { DepartmentProvider } from './context/DepartmentContext';
 
 const theme = createTheme({
   fontFamily:
@@ -38,11 +38,12 @@ function App() {
   return (
     <MantineProvider theme={theme} stylesTransform={emotionTransform}>
       <MantineEmotionProvider>
-        <Notifications />
         <QueryClientProvider client={queryClient}>
+
           <BrowserRouter>
             <Routes />
           </BrowserRouter>
+
         </QueryClientProvider>
       </MantineEmotionProvider>
     </MantineProvider>

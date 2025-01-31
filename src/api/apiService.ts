@@ -87,3 +87,15 @@ export const updateEmployee = async (newUserInfo) => {
     }
 
 }
+
+export const getDepartment = async () => {
+    const params = {
+        company: "Mayan Solutions Inc."
+    }
+    try {
+        const response = await api.get('/api/company-admin/allDepartment', { params })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}

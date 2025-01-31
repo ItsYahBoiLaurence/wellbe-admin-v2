@@ -11,6 +11,7 @@ const EmployeeDepartment = ({ dataToRender, currentDepartment, dropdownData }) =
         setEmployee(department?.employees)
     }, [currentDepartment])
 
+    console.log(employee)
     return (
         <Box>
             {employee === null ? (

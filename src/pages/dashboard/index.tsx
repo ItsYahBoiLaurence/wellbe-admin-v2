@@ -5,6 +5,8 @@ import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
+import { useContext } from 'react';
+import { DepartmentContext, useDepartment } from '../../context/DepartmentContext';
 
 
 const data = [
@@ -38,7 +40,6 @@ const departments = [
 
 
 const Dashboard = () => {
-
 
   const { control, watch } = useForm({
     defaultValues: {
