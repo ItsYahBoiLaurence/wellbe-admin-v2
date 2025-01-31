@@ -5,15 +5,16 @@ import { useMutation } from 'react-query';
 import { updateEmployee } from "../../api/apiService";
 import queryClient from "../../queryClient";
 import { IconChevronDown } from "@tabler/icons-react";
+import { useEffect, useState } from "react";
 
 const UserCard = ({ department, dataEmployee, dropdownData }) => {
 
 
     const [opened, { open, close }] = useDisclosure(false)
 
-    const { register, handleSubmit, setValue } = useForm({
+    const { register, handleSubmit, setValue, formState: { isSubmitting } } = useForm({
         defaultValues: {
-            department: dataEmployee.department,
+            department: department,
             firstName: dataEmployee.firstName,
             lastName: dataEmployee.lastName,
             email: dataEmployee.email,
@@ -23,18 +24,28 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
     const { mutateAsync: updateUserInfo } = useMutation({
         mutationFn: updateEmployee,
         onSuccess: () => {
-            queryClient.invalidateQueries('departmentData')
+            queryClient.invalidateQueries(['dataOfDepartment'])
         }
     })
+
+    const [notif, setNotif] = useState(false)
+
 
 
     const onsubmit = async (data) => {
         try {
             await updateUserInfo(data)
+            setNotif(true)
         } catch (error) {
             throw error
         }
     }
+
+    useEffect(() => {
+        setTimeout(() => {
+            setNotif(false)
+        }, 5000)
+    }, [notif])
 
     return (
         <Box>
@@ -93,9 +104,10 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                                                 {...register('email')}
                                                 placeholder={dataEmployee.email}
                                             />
+                                            {notif && <Text c={'green'}>Update Success!!</Text>}
                                         </Flex>
                                         <Stack gap={'sm'}>
-                                            <Button variant="filled" type="submit" color="#515977">Save</Button>
+                                            <Button variant="filled" type="submit" disabled={isSubmitting} color="#515977">{isSubmitting ? "Saving..." : "Save"}</Button>
                                             <Button color="#515977" variant="outline">Delete</Button>
                                         </Stack>
                                     </Stack>

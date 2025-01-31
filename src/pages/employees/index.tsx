@@ -97,7 +97,7 @@ const Employees = () => {
     const { register: registerEmployee,
         handleSubmit: submitInviteEmployee,
         setValue: inviteEmployeeForm,
-        reset: resetInviteForm
+        reset: resetInviteForm,
     } = useForm({
         defaultValues: {
             department: 'Human Resources',
@@ -164,7 +164,7 @@ const Employees = () => {
 
 
     const { data: departmentData, isLoading: isDepartmentDataLoading } = useQuery({
-        queryKey: ['departmentData'],
+        queryKey: ['dataOfDepartment'],
         queryFn: getEmployees
     })
 
