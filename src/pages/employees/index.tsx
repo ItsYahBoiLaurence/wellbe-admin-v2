@@ -86,7 +86,7 @@ const Employees = () => {
 
     const [openedEmployeeInvite, { open: openEmployeeInvite, close: closeEmployeeInvite }] = useDisclosure(false);
     const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
-
+    const [notif, setNotif] = useState(false)
 
     const { control, watch } = useForm({
         defaultValues: {
@@ -139,6 +139,7 @@ const Employees = () => {
         try {
             await sendEmailToUser(data)
             resetInviteForm()
+            setNotif(true)
         } catch (error) {
             throw error
         }
@@ -167,6 +168,12 @@ const Employees = () => {
         queryKey: ['dataOfDepartment'],
         queryFn: getEmployees
     })
+
+    useEffect(() => {
+        setTimeout(() => {
+            setNotif(false)
+        }, 5000)
+    }, [notif])
 
     return (
         <Box>
@@ -223,7 +230,7 @@ const Employees = () => {
                                                 label={<Text mb={'xs'} fw={700}>
                                                     Company Email
                                                 </Text>} />
-
+                                            {notif && <Text c={'green'}>Invite Success!!</Text>}
                                             <Text ta={'center'} size="sm">
                                                 Newly added employees will receive a notification to download our Well be companion app and receives updates from your company
                                             </Text>
