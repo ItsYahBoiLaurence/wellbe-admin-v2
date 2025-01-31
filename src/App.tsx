@@ -4,7 +4,6 @@ import { QueryClientProvider } from 'react-query';
 import { BrowserRouter } from 'react-router-dom';
 import queryClient from './queryClient';
 import Routes from './Routes';
-import { DepartmentProvider } from './context/DepartmentContext';
 
 const theme = createTheme({
   fontFamily:

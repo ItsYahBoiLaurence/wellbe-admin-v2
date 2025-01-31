@@ -39,34 +39,31 @@ const DepartmentWellbeing = ({ departments }) => {
 
 
     return (
-        <Box>
-            <ScrollArea w={'100%'}>
-                <Flex direction={'row'} gap={'md'}>
-                    {departments === undefined ? <Text ta={"center"}>Loading....</Text> : departments.map((department) => (
-                        <Paper key={department.departmentName} shadow="xs" radius="md" p="xl" w={'350px'} >
-                            <Box>
-                                <Flex align={'center'} gap={12}>
-                                    <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
-                                    <Text fw={700} size="lg">{department.departmentName}</Text>
+        <ScrollArea w={'100%'}>
+            <Flex direction={'row'} gap={'md'}>
+                {departments === undefined ? <Text ta={"center"}>Loading....</Text> : departments.map((department) => (
+                    <Paper key={department.departmentName} shadow="xs" radius="md" p="xl" w={'350px'} >
+                        <Box>
+                            <Flex align={'center'} gap={12}>
+                                <Avatar size={'lg'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
+                                <Text fw={700} size="lg">{department.departmentName}</Text>
+                            </Flex>
+                            {isDepartmentInvalid(getLabel(department.Wellbe)) ? <Text mt={'xl'} fw={700} size="lg" ta={'center'}>This department has no available information!</Text> : (
+                                <Flex justify={'space-between'} align={"center"} my={"md"}>
+                                    <Box>
+                                        <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
+                                        <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
+                                    </Box>
+                                    <Box>
+                                        <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
+                                    </Box>
                                 </Flex>
-                                {isDepartmentInvalid(getLabel(department.Wellbe)) ? <Text mt={'xl'} fw={700} size="lg" ta={'center'}>This department has no available information!</Text> : (
-                                    <Flex justify={'space-between'} align={"center"} my={"md"}>
-                                        <Box>
-                                            <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="xl">{getLabel(department.Wellbe)}</Text>
-                                            <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
-                                        </Box>
-                                        <Box>
-                                            <Avatar radius="xs" size={'xl'} src={setIcon(getLabel(department.Wellbe))} />
-                                        </Box>
-                                    </Flex>
-                                )}
-                            </Box>
-                        </Paper>
-                    ))}
-                </Flex>
-            </ScrollArea>
-        </Box>
-
+                            )}
+                        </Box>
+                    </Paper>
+                ))}
+            </Flex>
+        </ScrollArea>
     )
 }
 
