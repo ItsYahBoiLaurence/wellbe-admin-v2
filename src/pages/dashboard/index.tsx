@@ -1,13 +1,14 @@
-import { Avatar, Box, Button, Drawer, Flex, Group, LoadingOverlay, NativeSelect, Paper, Text, TextInput, Title } from '@mantine/core';
+import { Avatar, Box, Button, Drawer, Flex, Group, LoadingOverlay, NativeSelect, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
-import { useContext } from 'react';
-import { DepartmentContext, useDepartment } from '../../context/DepartmentContext';
+import AreaChartComponent from '../../components/DataVisualization/AreaChart'
+import DomainBarGraph from '../../components/DataVisualization/BarGraphDomain';
 import { BarChart } from '@mantine/charts';
+import { getLabel, getStanineScore, stanineLabelColor, setIcon } from "../../constants"
 
 
 const data = [
@@ -63,21 +64,18 @@ const Dashboard = () => {
 
   console.log(domainData)
 
-  function transformData(input) {
-    return Object.entries(input).map(([key, value]) => ({
-      label: key,
-      value: value,
-    }));
-  }
-  if (domainData) {
-    const transformedData = transformData(domainData);
-    console.log(transformedData);
-  }
 
+  const transformData = (data) => {
+    const newFormat = Object.entries(data).map(([key, value]) => ({
+      domain: key,
+      score: value
+    }))
+    return newFormat
+  }
 
   return (
     <Box>
-      <Paper mb={'md'} shadow="md" radius="md" px="lg" py='md'>
+      <Paper shadow="md" radius="md" px="lg" py='md'>
         <Group justify='space-between'>
           <Title order={4} fw={700}>Well-being Overview</Title>
           <form>
@@ -103,6 +101,32 @@ const Dashboard = () => {
           </form>
         </Group>
       </Paper >
+      {/* <Paper p={'xl'}>
+        <AreaChartComponent />
+      </Paper> */}
+
+      <Group grow>
+        {isDomainLoading ? <Paper ta={'center'}>Loading...</Paper> : (
+          <Paper p={'md'} my={'md'} radius={'md'}>
+            <Stack gap={'md'}>
+              <Title order={2}>Company Wide Domain Score</Title>
+              <BarChart
+                w={'100%'}
+                h={200}
+                data={transformData(domainData)}
+                dataKey="domain"
+                series={[{ name: 'score' }]}
+                getBarColor={(value) => stanineLabelColor(getLabel(getStanineScore(value)))}
+              />
+            </Stack>
+          </Paper>
+        )}
+        <Paper h={200} p={'md'}>
+          <Text ta={'center'}>NO DATA</Text>
+        </Paper>
+      </Group>
+      {/* Bar graph */}
+
       <Box>
         {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
       </Box>
