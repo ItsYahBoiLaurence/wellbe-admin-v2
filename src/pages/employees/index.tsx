@@ -79,7 +79,9 @@ const data = [
     { label: 'Human Resources Department', value: 'Human Resources' },
     { label: 'Engineering Department', value: 'Engineering' },
     { label: 'Marketing Department', value: 'Marketing' },
-    { label: 'Finance Department', value: 'Finance' }
+    { label: 'Finance Department', value: 'Finance' },
+    { label: 'IT Department', value: 'Information Technology' }
+
 ]
 
 const Employees = () => {

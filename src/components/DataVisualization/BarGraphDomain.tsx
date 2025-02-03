@@ -1,5 +1,4 @@
 import { BarChart } from "@mantine/charts"
-import { Paper } from "@mantine/core"
 import { getLabel, getStanineScore, stanineLabelColor, setIcon } from "../../constants"
 
 const DomainBarGraph = (domainData) => {

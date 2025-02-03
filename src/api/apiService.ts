@@ -72,7 +72,6 @@ export const getParticipationRate = async ({ queryKey }) => {
     }
 }
 
-
 export const updateEmployee = async (newUserInfo) => {
     const params = {
         company: "Mayan Solutions Inc.",
@@ -114,4 +113,32 @@ export const sendEmail = async (inviteInformation) => {
     } catch (error) {
         throw error
     }
-} 
+}
+
+export const getNormComparison = async ({ queryKey }) => {
+    const [, viewType] = queryKey
+    const params = {
+        company: "Mayan Solutions Inc.",
+        viewType: viewType
+    }
+    try {
+        const response = api.get('/api/company-admin/latestNormDomain/', { params })
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getWellbe = async ({ queryKey }) => {
+    const [, viewType] = queryKey
+    const params = {
+        company: "Mayan Solutions Inc.",
+        viewType: viewType
+    }
+    try {
+        const response = api.get('/api/company-admin/latestWellbeingStatistics/', { params })
+        return response
+    } catch (error) {
+        throw error
+    }
+}

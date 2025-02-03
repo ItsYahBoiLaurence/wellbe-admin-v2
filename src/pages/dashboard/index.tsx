@@ -1,14 +1,12 @@
-import { Avatar, Box, Button, Drawer, Flex, Group, LoadingOverlay, NativeSelect, Paper, Stack, Text, TextInput, Title } from '@mantine/core';
+import { Box, Flex, Group, NativeSelect, Paper, Stack, Text, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
-import { getCompanyDomainStatistics, getDepartmentStatics } from '../../api/apiService';
+import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
-import AreaChartComponent from '../../components/DataVisualization/AreaChart'
-import DomainBarGraph from '../../components/DataVisualization/BarGraphDomain';
-import { BarChart } from '@mantine/charts';
-import { getLabel, getStanineScore, stanineLabelColor, setIcon } from "../../constants"
+import { BarChart, LineChart } from '@mantine/charts';
+import { getLabel, getStanineScore, stanineLabelColor } from "../../constants"
 
 
 const data = [
@@ -62,15 +60,45 @@ const Dashboard = () => {
     queryFn: getDepartmentStatics
   })
 
-  console.log(domainData)
+  const { data: norm, isLoading: isNormLoading } = useQuery({
+    queryKey: ['NormDomain', selectedValues[1]],
+    queryFn: getNormComparison
+  })
 
+  const { data: wellBe, isLoading: isWellBeLoading } = useQuery({
+    queryKey: ['Wellbe', selectedValues[1]],
+    queryFn: getWellbe
+  })
 
   const transformData = (data) => {
-    const newFormat = Object.entries(data).map(([key, value]) => ({
-      domain: key,
-      score: value
+    const newData = Object.keys(data.domains).map(domain => ({
+      domain,
+      score: 60,  // Fixed score as per your requirement
+      norm: data.norms[domain] // Fetch norm value from data.norms
+    }));
+    return newData
+  }
+
+  const transformDate = (stringDate) => {
+    const date = new Date(stringDate)
+    const newDate = date.toLocaleDateString('en-US', {
+      month: 'long'
+    })
+    return newDate
+  }
+
+
+  const transformWellbeingData = (data) => {
+
+    const newData = data.map(entry => ({
+      date: transformDate(entry.Date),
+      wellbeing: entry.Wellbe
     }))
-    return newFormat
+    return newData
+  }
+
+  if (!isWellBeLoading) {
+    console.log(transformWellbeingData(wellBe?.data))
   }
 
   return (
@@ -104,26 +132,36 @@ const Dashboard = () => {
       {/* <Paper p={'xl'}>
         <AreaChartComponent />
       </Paper> */}
-
       <Group grow>
-        {isDomainLoading ? <Paper ta={'center'}>Loading...</Paper> : (
+        {isNormLoading ? <Paper ta={'center'}>Loading...</Paper> : (
           <Paper p={'md'} my={'md'} radius={'md'}>
-            <Stack gap={'md'}>
-              <Title order={2}>Company Wide Domain Score</Title>
+            <Stack gap={'xs'}>
+              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain Score</Title>
               <BarChart
                 w={'100%'}
-                h={200}
-                data={transformData(domainData)}
+                h={250}
+                data={transformData(norm?.data)}
                 dataKey="domain"
-                series={[{ name: 'score' }]}
-                getBarColor={(value) => stanineLabelColor(getLabel(getStanineScore(value)))}
+                series={[{ name: 'score', color: "lime" }, { name: 'norm', color: "gray" }]}
+                withLegend
               />
             </Stack>
           </Paper>
         )}
-        <Paper h={200} p={'md'}>
-          <Text ta={'center'}>NO DATA</Text>
-        </Paper>
+        {isWellBeLoading ? <Paper>Loading...</Paper> : (
+          <Paper p={'md'} my={'md'} radius={'md'}>
+            <Stack gap={'xs'}>
+              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain Score</Title>
+              <LineChart
+                h={250}
+                data={transformWellbeingData(wellBe?.data)}
+                dataKey="date"
+                yAxisProps={{ domain: [0, 100] }}
+                series={[{ name: "wellbeing", color: "gray" }]}
+              />
+            </Stack>
+          </Paper>
+        )}
       </Group>
       {/* Bar graph */}
 
