@@ -36,7 +36,7 @@ export const getStanineScore = (value) => {
     return stanineScore
 }
 
-export const stanineLabelColor = (label) => {
+export const labelColor = (label) => {
     const color = label == "Below Average" ? 'red' : label == "Average" ? '#94B8FB' : label == "Above Average" ? '#82BC66' : 'black'
     return color
 }

@@ -6,7 +6,7 @@ import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
 import { BarChart, LineChart } from '@mantine/charts';
-import { getLabel, getStanineScore, stanineLabelColor } from "../../constants"
+import { getLabel, getStanineScore, labelColor } from "../../constants"
 
 
 const data = [

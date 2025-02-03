@@ -1,5 +1,5 @@
 import { BarChart } from "@mantine/charts"
-import { getLabel, getStanineScore, stanineLabelColor, setIcon } from "../../constants"
+import { getLabel, getStanineScore, labelColor, setIcon } from "../../constants"
 
 const DomainBarGraph = (domainData) => {
 
@@ -18,7 +18,7 @@ const DomainBarGraph = (domainData) => {
             data={transformData(domainData)}
             dataKey="domain"
             series={[{ name: 'score' }]}
-            getBarColor={(value) => stanineLabelColor(getLabel(getStanineScore(value)))}
+            getBarColor={(value) => labelColor(getLabel(getStanineScore(value)))}
         />
     )
 }
