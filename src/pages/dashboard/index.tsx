@@ -7,6 +7,7 @@ import { getCompanyDomainStatistics, getDepartmentStatics } from '../../api/apiS
 import Department from '../../components/DataVisualization/Department'
 import { useContext } from 'react';
 import { DepartmentContext, useDepartment } from '../../context/DepartmentContext';
+import { BarChart } from '@mantine/charts';
 
 
 const data = [
@@ -59,6 +60,20 @@ const Dashboard = () => {
     queryKey: ['DepartmentWellBeing', "Mayan Solutions Inc.", selectedValues[1]],
     queryFn: getDepartmentStatics
   })
+
+  console.log(domainData)
+
+  function transformData(input) {
+    return Object.entries(input).map(([key, value]) => ({
+      label: key,
+      value: value,
+    }));
+  }
+  if (domainData) {
+    const transformedData = transformData(domainData);
+    console.log(transformedData);
+  }
+
 
   return (
     <Box>

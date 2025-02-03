@@ -87,7 +87,7 @@ const Employees = () => {
     const [openedEmployeeInvite, { open: openEmployeeInvite, close: closeEmployeeInvite }] = useDisclosure(false);
     const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
     const [notif, setNotif] = useState(false)
-
+    const [errorNotif, setErrorNotif] = useState(false)
     const { control, watch } = useForm({
         defaultValues: {
             department: "Human Resources"
@@ -98,6 +98,8 @@ const Employees = () => {
         handleSubmit: submitInviteEmployee,
         setValue: inviteEmployeeForm,
         reset: resetInviteForm,
+        formState: { errors: inviteError },
+        setError: setInviteError
     } = useForm({
         defaultValues: {
             department: 'Human Resources',
@@ -130,7 +132,15 @@ const Employees = () => {
 
     const { mutateAsync: sendEmailToUser, isLoading: inviteSending } = useMutation({
         mutationFn: sendEmail,
-        onSuccess: () => console.log('Email Sent')
+        onSuccess: () => console.log('Email Sent'),
+        onError: (e) => {
+            if (e.status == 409) {
+                setInviteError('email', {
+                    type: 'manual',
+                    message: 'Account Already Registered!'
+                })
+            }
+        }
     })
 
 
@@ -141,7 +151,9 @@ const Employees = () => {
             resetInviteForm()
             setNotif(true)
         } catch (error) {
-            throw error
+            if (error?.status === 409) {
+                setErrorNotif(true)
+            }
         }
     }
 
@@ -174,6 +186,12 @@ const Employees = () => {
             setNotif(false)
         }, 5000)
     }, [notif])
+
+    useEffect(() => {
+        setTimeout(() => {
+            setErrorNotif(false)
+        }, 5000)
+    }, [errorNotif])
 
     return (
         <Box>
@@ -229,8 +247,11 @@ const Employees = () => {
                                             <TextInput {...registerEmployee('email')}
                                                 label={<Text mb={'xs'} fw={700}>
                                                     Company Email
-                                                </Text>} />
-                                            {notif && <Text c={'green'}>Invite Success!!</Text>}
+                                                </Text>}
+                                                error={errors.email?.meesage}
+                                            />
+                                            {notif && <Text c={'green'}>Invite Success!</Text>}
+                                            {errorNotif && <Text c={'red'}>Account already registered!</Text>}
                                             <Text ta={'center'} size="sm">
                                                 Newly added employees will receive a notification to download our Well be companion app and receives updates from your company
                                             </Text>
@@ -241,7 +262,6 @@ const Employees = () => {
                                     </Flex>
                                 </form>
                             </Box>
-
                         </Drawer.Body>
                     </Drawer.Content>
                 </Drawer.Root>
