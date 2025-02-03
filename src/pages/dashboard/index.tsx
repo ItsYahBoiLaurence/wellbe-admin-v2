@@ -73,8 +73,8 @@ const Dashboard = () => {
   const transformData = (data) => {
     const newData = Object.keys(data.domains).map(domain => ({
       domain,
-      score: 60,  // Fixed score as per your requirement
-      norm: data.norms[domain] // Fetch norm value from data.norms
+      score: data.domains[domain], // Get the correct score
+      norm: data.norms[domain] // Get the corresponding norm
     }));
     return newData
   }
@@ -95,10 +95,6 @@ const Dashboard = () => {
       wellbeing: entry.Wellbe
     }))
     return newData
-  }
-
-  if (!isWellBeLoading) {
-    console.log(transformWellbeingData(wellBe?.data))
   }
 
   return (
