@@ -9,11 +9,11 @@ const DepartmentWellbeing = ({ departments }) => {
 
     const getLabel = (value) => {
 
-        const result = (value >= 1 && value <= 71)
+        const result = (value >= 1 && value <= 22)
             ? "Below Average"
-            : (value >= 72 && value <= 87)
+            : (value >= 23 && value <= 76)
                 ? "Average"
-                : (value >= 88 && value <= 100)
+                : (value >= 77 && value <= 100)
                     ? "Above Average"
                     : "Invalid Value";
 
@@ -39,13 +39,13 @@ const DepartmentWellbeing = ({ departments }) => {
 
 
     return (
-        <ScrollArea w={'100%'}>
+        <ScrollArea w={'100%'} p={'xs'}>
             <Flex direction={'row'} gap={'md'}>
                 {departments === undefined ? <Text ta={"center"}>Loading....</Text> : departments.map((department) => (
                     <Paper key={department.departmentName} shadow="xs" radius="md" p='md' w={'300px'} >
                         <Box>
                             <Flex align={'center'} gap={12}>
-                                <Avatar size={'md'} color={labelColor(getLabel(department.Wellbe))} >{department.departmentName[0]}</Avatar>
+                                <Avatar size={'md'}  >{department.departmentName[0]}</Avatar>
                                 <Text fw={700} size="md">{department.departmentName}</Text>
                             </Flex>
                             {isDepartmentInvalid(getLabel(department.Wellbe)) ? <Text mt={'lg'} fw={700} size="md" ta={'center'}>This department has no available information!</Text> : (

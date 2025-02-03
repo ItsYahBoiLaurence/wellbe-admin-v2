@@ -132,7 +132,7 @@ const Dashboard = () => {
         {isNormLoading ? <Paper ta={'center'}>Loading...</Paper> : (
           <Paper p={'md'} my={'md'} radius={'md'}>
             <Stack gap={'xs'}>
-              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain Score</Title>
+              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
               <BarChart
                 w={'100%'}
                 h={250}
@@ -147,7 +147,7 @@ const Dashboard = () => {
         {isWellBeLoading ? <Paper>Loading...</Paper> : (
           <Paper p={'md'} my={'md'} radius={'md'}>
             <Stack gap={'xs'}>
-              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain Score</Title>
+              <Title ta={'center'} order={2} fw={700}>Company Well Being Score</Title>
               <LineChart
                 h={250}
                 data={transformWellbeingData(wellBe?.data)}
