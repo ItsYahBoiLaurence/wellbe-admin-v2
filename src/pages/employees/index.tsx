@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Flex, Loader, NativeSelect, Paper, Text, TextInput, Title } from "@mantine/core"
+import { Box, Button, Drawer, Flex, Group, Loader, NativeSelect, Paper, Stack, Text, TextInput, Title } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
@@ -7,6 +7,7 @@ import { useMutation, useQuery } from "react-query";
 import { addDepartment, getEmployees, getParticipationRate, sendEmail } from "../../api/apiService";
 import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
 import EmployeeDepartment from "../../components/EmployeeDepartment";
+import FeedbackCard from "../../components/Cards/FeedbackCard";
 
 const departments = [
     {
@@ -350,6 +351,24 @@ const Employees = () => {
             </Paper >
             <ParticipationRate selectedDepartment={selectedDepartment} />
             {isDepartmentDataLoading ? <div>loading component... </div> : <EmployeeDepartment dataToRender={departmentData?.data} currentDepartment={selectedDepartment} dropdownData={data} />}
+
+
+
+            {/* Employee's Feedback */}
+            <Paper p="md" my='md' shadow="md">
+                <Group px='md' justify="space-between">
+                    <Title order={2} fw={700}>Employee's Feedback</Title>
+                    <Button variant="light" color="gray" radius="md">View More</Button>
+                </Group>
+                <Group grow m={'md'}>
+                    <FeedbackCard />
+                    <FeedbackCard />
+                    <FeedbackCard />
+                    <FeedbackCard />
+                    <FeedbackCard />
+                </Group>
+            </Paper>
+
         </Box>
     )
 }
