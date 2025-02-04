@@ -82,7 +82,7 @@ const Dashboard = () => {
   const transformDate = (stringDate) => {
     const date = new Date(stringDate)
     const newDate = date.toLocaleDateString('en-US', {
-      month: 'long'
+      month: 'short'
     })
     return newDate
   }
@@ -103,34 +103,32 @@ const Dashboard = () => {
         <Group justify='space-between'>
           <Title order={4} fw={700}>Well-being Overview</Title>
           <form>
-            <Flex direction={'row'} align={'center'} gap={'xs'} justify={'space-between'}>
-              <Controller
-                name='time'
-                control={control}
-                render={({ field }) => (
-                  <NativeSelect
-                    {...field}
-                    style={{ width: '250px' }}
-                    radius={'md'}
-                    size='md'
-                    data={time}
-                    rightSection={<IconChevronDown size={16} />}
-                    onChange={(e) => {
-                      field.onChange(e.target.value)
-                    }}
-                  />
-                )}
-              />
-            </Flex>
+            <Controller
+              name='time'
+              control={control}
+              render={({ field }) => (
+                <NativeSelect
+                  {...field}
+                  style={{ width: '250px' }}
+                  radius={'md'}
+                  size='md'
+                  data={time}
+                  rightSection={<IconChevronDown size={16} />}
+                  onChange={(e) => {
+                    field.onChange(e.target.value)
+                  }}
+                />
+              )}
+            />
           </form>
         </Group>
       </Paper >
-      {/* <Paper p={'xl'}>
-        <AreaChartComponent />
-      </Paper> */}
-      <Group grow>
+
+
+      {/* Mobile Responsive */}
+      <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}>
         {isNormLoading ? <Paper ta={'center'}>Loading...</Paper> : (
-          <Paper p={'md'} my={'md'} radius={'md'}>
+          <Paper py={'md'} px={'xs'} radius={'md'} w={'100%'}>
             <Stack gap={'xs'}>
               <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
               <BarChart
@@ -145,10 +143,11 @@ const Dashboard = () => {
           </Paper>
         )}
         {isWellBeLoading ? <Paper>Loading...</Paper> : (
-          <Paper p={'md'} my={'md'} radius={'md'}>
+          <Paper p={'md'} radius={'md'} w={'100%'}>
             <Stack gap={'xs'}>
               <Title ta={'center'} order={2} fw={700}>Company Well Being Score</Title>
               <LineChart
+                w={'100%'}
                 h={250}
                 data={transformWellbeingData(wellBe?.data)}
                 dataKey="date"
@@ -158,8 +157,8 @@ const Dashboard = () => {
             </Stack>
           </Paper>
         )}
-      </Group>
-      {/* Bar graph */}
+      </Flex>
+
 
       <Box>
         {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
