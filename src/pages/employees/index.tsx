@@ -8,6 +8,7 @@ import { addDepartment, getEmployees, getParticipationRate, sendEmail } from "..
 import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
 import EmployeeDepartment from "../../components/EmployeeDepartment";
 import FeedbackCard from "../../components/Cards/FeedbackCard";
+import InsightCard from "../../components/Cards/InsightCard";
 
 const departments = [
     {
@@ -351,24 +352,6 @@ const Employees = () => {
             </Paper >
             <ParticipationRate selectedDepartment={selectedDepartment} />
             {isDepartmentDataLoading ? <div>loading component... </div> : <EmployeeDepartment dataToRender={departmentData?.data} currentDepartment={selectedDepartment} dropdownData={data} />}
-
-
-
-            {/* Employee's Feedback */}
-            <Paper p="md" my='md' shadow="md">
-                <Group px='md' justify="space-between">
-                    <Title order={2} fw={700}>Employee's Feedback</Title>
-                    <Button variant="light" color="gray" radius="md">View More</Button>
-                </Group>
-                <Group grow m={'md'}>
-                    <FeedbackCard />
-                    <FeedbackCard />
-                    <FeedbackCard />
-                    <FeedbackCard />
-                    <FeedbackCard />
-                </Group>
-            </Paper>
-
         </Box>
     )
 }

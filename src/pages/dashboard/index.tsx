@@ -1,4 +1,4 @@
-import { Box, Flex, Group, NativeSelect, Paper, Stack, Text, Title } from '@mantine/core';
+import { Box, Button, Flex, Group, NativeSelect, Paper, Stack, Text, Title } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
@@ -6,7 +6,8 @@ import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
 import { BarChart, LineChart } from '@mantine/charts';
-import { getLabel, getStanineScore, labelColor } from "../../constants"
+import FeedbackCard from '../../components/Cards/FeedbackCard';
+import InsightCard from '../../components/Cards/InsightCard';
 
 
 const data = [
@@ -166,6 +167,33 @@ const Dashboard = () => {
       <Box my={'md'}>
         {isDepartmentLoading ? <Text ta={'center'}>Department Loading....</Text> : <Department departments={departmentData} />}
       </Box>
+      {/* Employee's Feedback */}
+      <Paper p="md" my='md' shadow="md">
+        <Group px='md' justify="space-between">
+          <Title order={2} fw={700}>Employee's Feedback</Title>
+          <Button variant="light" color="gray" radius="md">View More</Button>
+        </Group>
+        <Group grow m={'md'}>
+          <FeedbackCard />
+          <FeedbackCard />
+          <FeedbackCard />
+          <FeedbackCard />
+          <FeedbackCard />
+        </Group>
+      </Paper>
+
+      <Paper p="md" my='md' shadow="md">
+        <Group px='md' justify="space-between">
+          <Title order={2} fw={700}>Employee’s Insight Per Question</Title>
+          <Button variant="light" color="gray" radius="md">View More</Button>
+        </Group>
+        <Group grow m={'md'}>
+          <InsightCard />
+          <InsightCard />
+          <InsightCard />
+          <InsightCard />
+        </Group>
+      </Paper>
     </Box>
   );
 };
