@@ -25,11 +25,6 @@ const ITEMS = [
     icon: UsersIcon,
     href: '/users',
   },
-  {
-    label: 'Settings',
-    icon: SettingsIcon,
-    href: '/settings'
-  }
 ];
 
 const NavItems = (props: FlexProps) => {
