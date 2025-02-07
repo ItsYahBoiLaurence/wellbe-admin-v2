@@ -182,7 +182,8 @@ const Dashboard = () => {
         </Group>
       </Paper>
 
-      <Paper p="md" my='md' shadow="md">
+      {/* Insight Component   */}
+      {/* <Paper p="md" my='md' shadow="md">
         <Group px='md' justify="space-between">
           <Title order={2} fw={700}>Employee’s Insight Per Question</Title>
           <Button variant="light" color="gray" radius="md">View More</Button>
@@ -193,7 +194,7 @@ const Dashboard = () => {
           <InsightCard />
           <InsightCard />
         </Group>
-      </Paper>
+      </Paper> */}
     </Box>
   );
 };

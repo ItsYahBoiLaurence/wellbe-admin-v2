@@ -21,6 +21,7 @@ const Layout = () => {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
+          Settings
         </Group>
       </AppShell.Header>
 
