@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Logo from '../../assets/logo.svg';
 import NavItems from './NavItems';
 import { useDisclosure } from '@mantine/hooks';
+import { IconSettings, IconLogout } from '@tabler/icons-react';
 
 const Layout = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -21,7 +22,7 @@ const Layout = () => {
       <AppShell.Header>
         <Drawer.Stack>
           <Drawer {...stack.register('profile')} position='right'>
-            <Stack gap={'xl'}>
+            <Stack gap={'xl'} p={'sm'}>
               <Box>
                 <Avatar
                   name='John Laurence Burgos'
@@ -53,11 +54,18 @@ const Layout = () => {
                 </Group>
                 <Divider my="md" />
                 <Group justify='space-between'>
-                  <Text size='lg' fw={700} onClick={() => stack.open('settings')}>Settings</Text>
+                  <Text size='lg' fw={700}>Email</Text>
+                  <Text size='lg' fw={300}>laurence@mayan.com.ph</Text>
+                </Group>
+                <Divider my="md" />
+                <Group justify='space-between' onClick={() => stack.open('settings')}>
+                  <Text size='lg' fw={700}>Settings</Text>
+                  <IconSettings />
                 </Group>
                 <Divider my="md" />
                 <Group justify='space-between'>
                   <Text size='lg' fw={700} c={'red'}>Logout</Text>
+                  <IconLogout color='red' />
                 </Group>
               </Stack>
             </Stack>

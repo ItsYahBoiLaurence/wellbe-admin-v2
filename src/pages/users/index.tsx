@@ -27,7 +27,6 @@ const randomizer = () => {
 }
 
 const Users = () => {
-    const currentUser = "John Smith"
 
     const adminUsers = admins.map((admin) => (
         <Table.Tr key={admin.name} onClick={() => console.log(`Open the sidebar Popup for the ${admin.name}`)}>
@@ -58,13 +57,7 @@ const Users = () => {
                     </Box>
                     <Button variant="filled" color="#515977" radius='xl' px="xl">+Add</Button>
                 </Flex>
-                <Paper bg='#FDFCFD' px='lg' py={'md'}>
-                    <Group>
-                        <Avatar color={randomizer()} size='lg' name={currentUser} />
-                        <Text size="lg">{currentUser}</Text>
-                    </Group>
-                </Paper>
-                <ScrollArea h={400} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
+                <ScrollArea h={500} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
                     <Table miw='700'>
                         <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
                             <Table.Tr >
