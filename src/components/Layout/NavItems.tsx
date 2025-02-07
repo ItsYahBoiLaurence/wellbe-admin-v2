@@ -4,6 +4,7 @@ import {
   ClientsIcons,
   QuestionsIcon,
   UsersIcon,
+  SettingsIcon
 } from '../icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -19,11 +20,16 @@ const ITEMS = [
     icon: ClientsIcons,
     href: '/employees',
   },
-  // {
-  //   label: 'Users',
-  //   icon: UsersIcon,
-  //   href: '/users',
-  // },
+  {
+    label: 'Users',
+    icon: UsersIcon,
+    href: '/users',
+  },
+  {
+    label: 'Settings',
+    icon: SettingsIcon,
+    href: '/settings'
+  }
 ];
 
 const NavItems = (props: FlexProps) => {

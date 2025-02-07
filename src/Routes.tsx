@@ -3,6 +3,9 @@ import Layout from './components/Layout';
 import PageNotFound from './pages/404';
 import Dashboard from './pages/dashboard';
 import Employees from './pages/employees';
+import Settings from './pages/settings'
+import Users from './pages/users'
+
 
 function Routes() {
   return useRoutes([
@@ -17,6 +20,14 @@ function Routes() {
         {
           path: '/employees',
           element: <Employees />
+        },
+        {
+          path: '/settings',
+          element: <Settings />
+        },
+        {
+          path: '/users',
+          element: <Users />
         },
       ],
     },
