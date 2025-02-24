@@ -97,7 +97,6 @@ const Dashboard = () => {
     }))
     return newData
   }
-  console.log(transformData(norm?.data))
 
   return (
     <Box>
