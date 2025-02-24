@@ -8,6 +8,8 @@ import Department from '../../components/DataVisualization/Department'
 import { AreaChart, BarChart, CompositeChart, LineChart } from '@mantine/charts';
 import FeedbackCard from '../../components/Cards/FeedbackCard';
 import InsightCard from '../../components/Cards/InsightCard';
+import NormGraph from '../../components/DataVisualization/NormGraph';
+import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
 
 
 const data = [
@@ -61,15 +63,9 @@ const Dashboard = () => {
     queryFn: getDepartmentStatics
   })
 
-  const { data: norm, isLoading: isNormLoading } = useQuery({
-    queryKey: ['NormDomain', selectedValues[1]],
-    queryFn: getNormComparison
-  })
 
-  const { data: wellBe, isLoading: isWellBeLoading } = useQuery({
-    queryKey: ['Wellbe', selectedValues[1]],
-    queryFn: getWellbe
-  })
+
+
 
   const transformData = (data) => {
     const newData = Object.keys(data.domains).map(domain => ({
@@ -127,51 +123,20 @@ const Dashboard = () => {
 
 
       {/* Mobile Responsive */}
-      <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}>
-        {isNormLoading ? <Paper ta={'center'}>Loading...</Paper> : (
-          <Paper py={'md'} px={'xl'} radius={'md'} w='100%'>
-            <Stack gap={'lg'}>
-              <Title order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
-              <CompositeChart
-                w={'100%'}
-                h={250}
-                data={transformData(norm?.data)}
-                dataKey="domain"
-                series={[
-                  { name: 'norm', color: 'gray', type: 'line' },
-                  { name: 'score', color: '#A5D38F', type: 'bar' }
-                ]}
-                withLegend
-                curveType="linear"
-              />
-            </Stack>
-          </Paper>
-        )}
-        {isWellBeLoading ? <Paper>Loading...</Paper> : (
-          <Paper p={'xl'} radius={'md'} w='100%'>
-            <Stack gap={'lg'}>
-              <Title order={2} fw={700}>Company Well Being Score</Title>
-              <AreaChart
-                h={250}
-                data={transformWellbeingData(wellBe?.data)}
-                dataKey="date"
-                yAxisProps={{ domain: [0, 100] }}
-                series={[{ name: "wellbeing", color: "gray" }]}
-                curveType="natural"
-                withDots={false}
-              />
-            </Stack>
-          </Paper>
-        )}
-      </Flex>
 
+      <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}>
+        <NormGraph filter={selectedValues[1]} />
+        <WellbeingGraph filter={selectedValues[1]} />
+      </Flex>
 
       <Box>
         {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
       </Box>
+
       <Box my={'md'}>
         {isDepartmentLoading ? <Text ta={'center'}>Department Loading....</Text> : <Department departments={departmentData} />}
       </Box>
+
       {/* Employee's Feedback */}
       <Paper p="md" my='md' shadow="md">
         <Group px='md' justify="space-between">
