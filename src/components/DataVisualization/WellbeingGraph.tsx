@@ -30,7 +30,7 @@ const WellbeingGraph = ({ filter }) => {
     if (!isWellBeLoading) {
         return (
             <div>
-                <Paper p={'xl'} radius={'md'} w='100%'>
+                <Paper p={'xl'} radius={'md'} w='100%' shadow="xs">
                     <Stack gap={'lg'}>
                         <Title order={2} fw={700}>Company Well Being Score</Title>
                         <AreaChart

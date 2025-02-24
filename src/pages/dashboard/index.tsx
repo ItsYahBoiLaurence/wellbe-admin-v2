@@ -11,36 +11,11 @@ import InsightCard from '../../components/Cards/InsightCard';
 import NormGraph from '../../components/DataVisualization/NormGraph';
 import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
 
-
-const data = [
-  { label: 'Company Wide', value: 'OverALLCompany' },
-  { label: 'Human Resources Department', value: 'HR' },
-  { label: 'Engineering Department', value: 'Engineering' },
-  { label: 'Marketing Department', value: 'Marketing' },
-  { label: 'Sales Department', value: 'Sales' },
-]
-
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
   { label: 'SemiAnnual View', value: 'SemiAnnual' },
   { label: 'Annually View', value: 'Annually' },
 ]
-
-
-const domain = [
-  { label: 'Character', value: 'Character' },
-  { label: 'Connectedness', value: 'Connectedness' },
-  { label: 'Career', value: 'Career' },
-  { label: 'Contentment', value: 'Contentment' },
-]
-
-const departments = [
-  { name: "Finance", wellbeingScore: 90 },
-  { name: "Marketing", wellbeingScore: 80 },
-  { name: "Sales", wellbeingScore: 50 },
-  { name: "Engineering", wellbeingScore: 70 },
-]
-
 
 const Dashboard = () => {
 
@@ -63,10 +38,9 @@ const Dashboard = () => {
     queryFn: getDepartmentStatics
   })
 
-
   return (
     <Box>
-      <Paper shadow="md" radius="md" px="lg" py='md'>
+      <Paper shadow="xs" radius="md" px="lg" py='md'>
         <Group justify='space-between'>
           <Title order={4} fw={700}>Well-being Overview</Title>
           <form>

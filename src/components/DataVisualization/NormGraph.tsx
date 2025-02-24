@@ -21,25 +21,25 @@ const NormGraph = ({ filter }) => {
 
     if (!isNormLoading) {
         return (
-            <div>
-                <Paper py={'md'} px={'xl'} radius={'md'} w='100%'>
-                    <Stack gap={'lg'}>
-                        <Title order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
-                        <CompositeChart
-                            w={'100%'}
-                            h={250}
-                            data={transformData(norm?.data)}
-                            dataKey="domain"
-                            series={[
-                                { name: 'score', color: '#A5D38F', type: 'bar' },
-                                { name: 'norm', color: 'gray', type: 'line' },
-                            ]}
-                            withLegend
-                            curveType="linear"
-                        />
-                    </Stack>
-                </Paper>
-            </div>
+            <Paper py={'md'} px={'xl'} radius={'md'} w='100%' shadow="xs" sx={{  background: '#3E4954'}}>
+                <Stack gap={'sm'}>
+                    <Text size="lg" c='white' >Company Wide</Text>
+                    <Text size="xl" c='white'>Index vs. Norm</Text>
+                    <CompositeChart
+                        c='white'
+                        w={'100%'}
+                        h={250}
+                        data={transformData(norm?.data)}
+                        dataKey="domain"
+                        series={[
+                            { name: 'score', color: '#A5D38F', type: 'bar' },
+                            { name: 'norm', color: 'gray', type: 'line' },
+                        ]}
+                        withLegend
+                        curveType="linear"
+                    />
+                </Stack>
+            </Paper>
         )
     }
 }
