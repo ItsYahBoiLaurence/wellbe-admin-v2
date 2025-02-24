@@ -5,7 +5,7 @@ import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
-import { AreaChart, BarChart, LineChart } from '@mantine/charts';
+import { AreaChart, BarChart, CompositeChart, LineChart } from '@mantine/charts';
 import FeedbackCard from '../../components/Cards/FeedbackCard';
 import InsightCard from '../../components/Cards/InsightCard';
 
@@ -97,6 +97,7 @@ const Dashboard = () => {
     }))
     return newData
   }
+  console.log(transformData(norm?.data))
 
   return (
     <Box>
@@ -132,13 +133,17 @@ const Dashboard = () => {
           <Paper py={'md'} px={'xl'} radius={'md'} w='100%'>
             <Stack gap={'lg'}>
               <Title order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
-              <BarChart
+              <CompositeChart
                 w={'100%'}
                 h={250}
                 data={transformData(norm?.data)}
                 dataKey="domain"
-                series={[{ name: 'score', color: "lime" }, { name: 'norm', color: "gray" }]}
+                series={[
+                  { name: 'norm', color: 'gray', type: 'line' },
+                  { name: 'score', color: '#A5D38F', type: 'bar' }
+                ]}
                 withLegend
+                curveType="linear"
               />
             </Stack>
           </Paper>
@@ -182,20 +187,6 @@ const Dashboard = () => {
           <FeedbackCard />
         </Group>
       </Paper>
-
-      {/* Insight Component   */}
-      {/* <Paper p="md" my='md' shadow="md">
-        <Group px='md' justify="space-between">
-          <Title order={2} fw={700}>Employee’s Insight Per Question</Title>
-          <Button variant="light" color="gray" radius="md">View More</Button>
-        </Group>
-        <Group grow m={'md'}>
-          <InsightCard />
-          <InsightCard />
-          <InsightCard />
-          <InsightCard />
-        </Group>
-      </Paper> */}
     </Box>
   );
 };
