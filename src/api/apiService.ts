@@ -46,7 +46,7 @@ export const addDepartment = async (newDepartmentData) => {
 }
 
 export const getEmployees = async () => {
-    const company = "Mayan Solutions Inc."
+    const company = "Positive Workplaces"
     const params = {
         company: company
     }
@@ -74,7 +74,7 @@ export const getParticipationRate = async ({ queryKey }) => {
 
 export const updateEmployee = async (newUserInfo) => {
     const params = {
-        company: "Mayan Solutions Inc.",
+        company: "Positive Workplaces",
         email: newUserInfo.email
     }
 
@@ -89,7 +89,7 @@ export const updateEmployee = async (newUserInfo) => {
 
 export const getDepartment = async () => {
     const params = {
-        company: "Mayan Solutions Inc."
+        company: "Positive Workplaces"
     }
     try {
         const response = await api.get('/api/company-admin/allDepartment', { params })
@@ -101,7 +101,7 @@ export const getDepartment = async () => {
 
 export const sendEmail = async (inviteInformation) => {
     const data = {
-        company: "Mayan Solutions Inc.",
+        company: "Positive Workplaces",
         department: inviteInformation.department,
         firstName: inviteInformation.firstName,
         lastName: inviteInformation.lastName,
@@ -118,7 +118,7 @@ export const sendEmail = async (inviteInformation) => {
 export const getNormComparison = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: "Mayan Solutions Inc.",
+        company: "Positive Workplaces",
         viewType: viewType
     }
     try {
@@ -132,7 +132,7 @@ export const getNormComparison = async ({ queryKey }) => {
 export const getWellbe = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: "Mayan Solutions Inc.",
+        company: "Positive Workplaces",
         viewType: viewType
     }
     try {
@@ -145,7 +145,7 @@ export const getWellbe = async ({ queryKey }) => {
 
 export const getAllUsers = async () => {
     const params = {
-        company: "Mayan Solutions Inc."
+        company: "Positive Workplaces"
     }
     try {
         const response = api.get('api/company-admin/usersManagementList/', { params })
@@ -157,7 +157,7 @@ export const getAllUsers = async () => {
 
 export const getSettingsConfig = () => {
     const params = {
-        company: "Mayan Solutions Inc."
+        company: "Positive Workplaces"
     }
     try {
         const response = api.get('/api/company-admin/getSettingsStatus', { params })

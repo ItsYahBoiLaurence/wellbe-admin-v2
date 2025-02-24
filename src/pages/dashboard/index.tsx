@@ -54,45 +54,15 @@ const Dashboard = () => {
   const selectedValues = watch(['data', 'time'])
 
   const { data: domainData, isLoading: isDomainLoading } = useQuery({
-    queryKey: ['AllDomain', "Mayan Solutions Inc.", selectedValues[1]],
+    queryKey: ['AllDomain', "Positive Workplaces", selectedValues[1]],
     queryFn: getCompanyDomainStatistics
   })
 
   const { data: departmentData, isLoading: isDepartmentLoading } = useQuery({
-    queryKey: ['DepartmentWellBeing', "Mayan Solutions Inc.", selectedValues[1]],
+    queryKey: ['DepartmentWellBeing', "Positive Workplaces", selectedValues[1]],
     queryFn: getDepartmentStatics
   })
 
-
-
-
-
-  const transformData = (data) => {
-    const newData = Object.keys(data.domains).map(domain => ({
-      domain,
-      score: data.domains[domain], // Get the correct score
-      norm: data.norms[domain] // Get the corresponding norm
-    }));
-    return newData
-  }
-
-  const transformDate = (stringDate) => {
-    const date = new Date(stringDate)
-    const newDate = date.toLocaleDateString('en-US', {
-      month: 'short'
-    })
-    return newDate
-  }
-
-
-  const transformWellbeingData = (data) => {
-
-    const newData = data.map(entry => ({
-      date: transformDate(entry.Date),
-      wellbeing: entry.Wellbe
-    }))
-    return newData
-  }
 
   return (
     <Box>
@@ -130,11 +100,11 @@ const Dashboard = () => {
       </Flex>
 
       <Box>
-        {isDomainLoading ? <Text ta={'center'}>Loading...</Text> : <AllDomain domains={domainData} />}
+        {isDomainLoading ? <Paper p='md'><Text ta='center'>No Data Yet!</Text></Paper> : <AllDomain domains={domainData} />}
       </Box>
 
       <Box my={'md'}>
-        {isDepartmentLoading ? <Text ta={'center'}>Department Loading....</Text> : <Department departments={departmentData} />}
+        {isDepartmentLoading ? <Paper p='md'><Text ta='center'>No Data for this Department!</Text></Paper> : <Department departments={departmentData} />}
       </Box>
 
       {/* Employee's Feedback */}

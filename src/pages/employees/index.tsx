@@ -124,7 +124,7 @@ const Employees = () => {
     } = useForm({
         defaultValues: {
             department: '',
-            company: 'Mayan Solutions Inc.'
+            company: 'Positive Workplaces'
         }
     })
 
@@ -148,7 +148,6 @@ const Employees = () => {
 
 
     const submitForm = async (data) => {
-        console.log(data)
         try {
             await sendEmailToUser(data)
             resetInviteForm()
