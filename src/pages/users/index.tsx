@@ -3,6 +3,8 @@ import { IconPencil } from '@tabler/icons-react';
 import { useState } from "react";
 import classes from '../../css/TableScrollArea.module.css'
 import cx from 'clsx';
+import { useQuery } from "react-query";
+import { getAllUsers } from "../../api/apiService";
 
 const admins = [
     { name: "Alexander Johnson", email: "alexander.johnson@example.com", role: "Admin" },
@@ -19,6 +21,8 @@ const admins = [
     { name: "Maureen Imperial", email: "maureen@mayan.com.ph", role: "Admin" },
 ]
 
+
+
 const colors = ['grape', 'teal', 'orange', 'red']
 
 const randomizer = () => {
@@ -27,24 +31,12 @@ const randomizer = () => {
 }
 
 const Users = () => {
-
-    const adminUsers = admins.map((admin) => (
-        <Table.Tr key={admin.name} onClick={() => console.log(`Open the sidebar Popup for the ${admin.name}`)}>
-            <Table.Td>
-                <Group>
-                    <Avatar name={admin.name} color={randomizer() as string} allowedInitialsColors={['blue', 'red']}></Avatar>
-                    {admin.name}
-                </Group>
-            </Table.Td>
-            <Table.Td>{admin.email}</Table.Td>
-            <Table.Td>{admin.role}</Table.Td>
-            <Table.Td>
-                <IconPencil onClick={() => console.log('aasdddss')} />
-            </Table.Td>
-        </Table.Tr>
-    ))
-
     const [scrolled, setScrolled] = useState(false)
+
+    const { data: allUsers, isLoading: isAllUsersLoading } = useQuery({
+        queryKey: ['AllUsers'],
+        queryFn: getAllUsers
+    })
 
     return (
         <Paper p='xxl'>
@@ -58,17 +50,35 @@ const Users = () => {
                     <Button variant="filled" color="#515977" radius='xl' px="xl">+Add</Button>
                 </Flex>
                 <ScrollArea h={500} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                    <Table miw='700'>
-                        <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
-                            <Table.Tr >
-                                <Table.Th>NAME</Table.Th>
-                                <Table.Th>EMAIL</Table.Th>
-                                <Table.Th>ROLE</Table.Th>
-                                <Table.Th></Table.Th>
-                            </Table.Tr>
-                        </Table.Thead>
-                        <Table.Tbody>{adminUsers}</Table.Tbody>
-                    </Table>
+                    {isAllUsersLoading ? <Text>Loading...</Text> : (
+                        <Table miw='700'>
+                            <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
+                                <Table.Tr >
+                                    <Table.Th>NAME</Table.Th>
+                                    <Table.Th>EMAIL</Table.Th>
+                                    <Table.Th>ROLE</Table.Th>
+                                    <Table.Th></Table.Th>
+                                </Table.Tr>
+                            </Table.Thead>
+                            <Table.Tbody>
+                                {allUsers?.data.map((user) => (
+                                    <Table.Tr key={user._id} onClick={() => console.log(`Open the sidebar Popup for the ${user._id}`)}>
+                                        <Table.Td>
+                                            <Group>
+                                                <Avatar name={`${user.firstName} ${user.lastName}`} color={randomizer() as string} allowedInitialsColors={['blue', 'red']}></Avatar>
+                                                {`${user.firstName} ${user.lastName}`}
+                                            </Group>
+                                        </Table.Td>
+                                        <Table.Td>{user._id}</Table.Td>
+                                        <Table.Td>{user.role}</Table.Td>
+                                        <Table.Td>
+                                            <IconPencil onClick={() => console.log('aasdddss')} />
+                                        </Table.Td>
+                                    </Table.Tr>
+                                ))}
+                            </Table.Tbody>
+                        </Table>
+                    )}
                 </ScrollArea>
             </Stack >
         </Paper >

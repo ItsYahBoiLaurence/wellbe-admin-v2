@@ -46,16 +46,16 @@ const DepartmentWellbeing = ({ departments }) => {
                         <Box>
                             <Flex align={'center'} gap={12}>
                                 <Avatar size={'md'}  >{department.departmentName[0]}</Avatar>
-                                <Text fw={700} size="md">{department.departmentName}</Text>
+                                <Text fw={700} size="lg">{department.departmentName}</Text>
                             </Flex>
                             {isDepartmentInvalid(getLabel(department.Wellbe)) ? <Text mt={'lg'} fw={700} size="md" ta={'center'}>This department has no available information!</Text> : (
                                 <Flex justify={'space-between'} align={"center"} my={"md"}>
                                     <Box>
-                                        <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="md">{getLabel(department.Wellbe)}</Text>
+                                        <Text c={labelColor(getLabel(department.Wellbe))} fw={700} size="lg">{getLabel(department.Wellbe)}</Text>
                                         <Text c={labelColor(getLabel(department.Wellbe))}>{department.Wellbe}%</Text>
                                     </Box>
                                     <Box>
-                                        <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(department.Wellbe))} />
+                                        <Image src={setIcon(getLabel(department.Wellbe))} />
                                     </Box>
                                 </Flex>
                             )}

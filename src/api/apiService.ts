@@ -142,3 +142,27 @@ export const getWellbe = async ({ queryKey }) => {
         throw error
     }
 }
+
+export const getAllUsers = async () => {
+    const params = {
+        company: "Mayan Solutions Inc."
+    }
+    try {
+        const response = api.get('api/company-admin/usersManagementList/', { params })
+        return response
+    } catch (error) {
+        throw error
+    }
+}
+
+export const getSettingsConfig = () => {
+    const params = {
+        company: "Mayan Solutions Inc."
+    }
+    try {
+        const response = api.get('/api/company-admin/getSettingsStatus', { params })
+        return response
+    } catch (error) {
+        throw error
+    }
+}

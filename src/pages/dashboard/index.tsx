@@ -5,7 +5,7 @@ import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
 import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department'
-import { BarChart, LineChart } from '@mantine/charts';
+import { AreaChart, BarChart, LineChart } from '@mantine/charts';
 import FeedbackCard from '../../components/Cards/FeedbackCard';
 import InsightCard from '../../components/Cards/InsightCard';
 
@@ -129,9 +129,9 @@ const Dashboard = () => {
       {/* Mobile Responsive */}
       <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}>
         {isNormLoading ? <Paper ta={'center'}>Loading...</Paper> : (
-          <Paper py={'md'} px={'xs'} radius={'md'} w={'100%'}>
-            <Stack gap={'xs'}>
-              <Title ta={'center'} order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
+          <Paper py={'md'} px={'xl'} radius={'md'} w='100%'>
+            <Stack gap={'lg'}>
+              <Title order={2} fw={700}>Company Domain score Vs. Norm Domain score</Title>
               <BarChart
                 w={'100%'}
                 h={250}
@@ -144,16 +144,17 @@ const Dashboard = () => {
           </Paper>
         )}
         {isWellBeLoading ? <Paper>Loading...</Paper> : (
-          <Paper p={'md'} radius={'md'} w={'100%'}>
-            <Stack gap={'xs'}>
-              <Title ta={'center'} order={2} fw={700}>Company Well Being Score</Title>
-              <LineChart
-                w={'100%'}
+          <Paper p={'xl'} radius={'md'} w='100%'>
+            <Stack gap={'lg'}>
+              <Title order={2} fw={700}>Company Well Being Score</Title>
+              <AreaChart
                 h={250}
                 data={transformWellbeingData(wellBe?.data)}
                 dataKey="date"
                 yAxisProps={{ domain: [0, 100] }}
                 series={[{ name: "wellbeing", color: "gray" }]}
+                curveType="natural"
+                withDots={false}
               />
             </Stack>
           </Paper>

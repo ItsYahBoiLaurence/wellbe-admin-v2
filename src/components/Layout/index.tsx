@@ -1,4 +1,4 @@
-import { ActionIcon, AppShell, Avatar, Box, Burger, Button, Divider, Drawer, Flex, Group, NativeSelect, Stack, Switch, Text, Title, useDrawersStack } from '@mantine/core';
+import { ActionIcon, AppShell, Avatar, Box, Burger, Button, Divider, Drawer, Flex, Group, NativeSelect, Stack, Switch, Text, TextInput, Title, useDrawersStack } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
 import Logo from '../../assets/logo.svg';
 import NavItems from './NavItems';
@@ -72,7 +72,7 @@ const Layout = () => {
           </Drawer>
 
           <Drawer {...stack.register('settings')} position='right'>
-            <Stack gap='lg'>
+            <Stack gap='lg' justify='space-between' h="500px">
               <Stack gap='md'>
                 <Text fw={200}>Notifications and Alerts</Text>
                 <Flex justify='space-between'>
@@ -81,7 +81,7 @@ const Layout = () => {
                     <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
                   </Box>
                   <Switch
-                    defaultChecked
+                    defaultChecked={false}
                     color="teal"
                   />
                 </Flex>
@@ -89,17 +89,23 @@ const Layout = () => {
               <Stack gap='md'>
                 <Text fw={200}>System Preferences</Text>
                 <Stack ms={'md'}>
-                  <Box>
-                    <Title order={4} fw={500}>Survey reminders</Title>
-                    <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
-                  </Box>
-                  <NativeSelect data={['Daily', 'Weekly', 'Monthly']} />
-                  <Box>
-                    <Title order={4} fw={500}>Data Retention Policy</Title>
-                    <Text size='xs' fw={200}>Configure how long data will be stored before being archived or deleted.</Text>
-                  </Box>
+                  <Flex align='start'>
+                    <Box>
+                      <Title order={4} fw={500}>Survey reminders</Title>
+                      <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
+                    </Box>
+                    <NativeSelect data={['Daily', 'Weekly', 'Monthly']} />
+                  </Flex>
+                  <Flex align='start'>
+                    <Box>
+                      <Title order={4} fw={500}>Data Retention Policy</Title>
+                      <Text size='xs' fw={200}>Configure how long data will be stored before being archived or deleted.</Text>
+                    </Box>
+                    <TextInput></TextInput>
+                  </Flex>
                 </Stack>
               </Stack>
+              <Button>Save</Button>
             </Stack>
           </Drawer>
         </Drawer.Stack>

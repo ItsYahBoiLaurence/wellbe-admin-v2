@@ -10,14 +10,14 @@ const DomainCard = ({ title, score }) => {
                     <Avatar radius="xs" size={'lg'} src={setIcon(getLabel(getStanineScore(score)))} />
                     <Box>
                         <Text fw={500}>{title}</Text>
-                        <Text fw={700}>{getLabel(getStanineScore(score))}</Text>
+                        <Title order={2} fw={700}>{getLabel(getStanineScore(score))}</Title>
                         <Text
-                            size="xs"
+                            size="sm"
                             c={labelColor(getLabel(getStanineScore(score)))}
                         >Stanine: {getStanineScore(score)}</Text>
                     </Box>
                 </Flex>
-                <Title order={2}>{score}%</Title>
+                <Title order={2} fw={700}>{score}%</Title>
             </Flex>
         </Paper>
     )

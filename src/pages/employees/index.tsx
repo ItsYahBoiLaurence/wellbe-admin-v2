@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Flex, Group, Loader, NativeSelect, Paper, Stack, Text, TextInput, Title } from "@mantine/core"
+import { Box, Button, Drawer, Flex, Group, Loader, NativeSelect, Paper, Stack, Text, TextInput, Title, useDrawersStack } from "@mantine/core"
 import { IconChevronDown } from "@tabler/icons-react"
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form"
@@ -7,8 +7,7 @@ import { useMutation, useQuery } from "react-query";
 import { addDepartment, getEmployees, getParticipationRate, sendEmail } from "../../api/apiService";
 import ParticipationRate from "../../components/DataVisualization/ParticipationRate";
 import EmployeeDepartment from "../../components/EmployeeDepartment";
-import FeedbackCard from "../../components/Cards/FeedbackCard";
-import InsightCard from "../../components/Cards/InsightCard";
+import { CustomDropzone } from "../../components/Dropzone/CustomDropzone";
 
 const departments = [
     {
@@ -197,9 +196,15 @@ const Employees = () => {
         }, 5000)
     }, [errorNotif])
 
+    const stack = useDrawersStack(['batch-upload']);
+
     return (
         <Box>
             <Drawer.Stack>
+                {/* Batch Upload */}
+                <Drawer {...stack.register('batch-upload')} position="right">
+                    <CustomDropzone />
+                </Drawer>
                 {/* Invite */}
                 <Drawer.Root
                     key={1}
@@ -228,7 +233,7 @@ const Employees = () => {
                             <Box h={'95%'}>
                                 <form onSubmit={submitInviteEmployee(submitForm)} style={{ height: '100%' }}>
                                     <Flex direction={'column'} gap={'md'} justify={'space-between'} h={'100%'} mt={'md'}>
-                                        <Flex direction={'column'} gap={'lg'}>
+                                        <Flex direction={'column'} gap={'sm'}>
                                             <NativeSelect radius={'md'}
                                                 label={<Text mb={'xs'} fw={700}>Department</Text>}
                                                 style={{ width: '100%' }}
@@ -241,28 +246,34 @@ const Employees = () => {
                                                 }}>
                                             </NativeSelect>
                                             <TextInput  {...registerEmployee('firstName')}
-                                                label={<Text mb={'xs'} fw={700}>
+                                                label={<Text fw={700}>
                                                     First Name
                                                 </Text>} />
                                             <TextInput  {...registerEmployee('lastName')}
-                                                label={<Text mb={'xs'} fw={700}>
+                                                label={<Text fw={700}>
                                                     Last Name
                                                 </Text>} />
                                             <TextInput {...registerEmployee('email')}
-                                                label={<Text mb={'xs'} fw={700}>
+                                                label={<Text fw={700}>
                                                     Company Email
                                                 </Text>}
                                                 error={errors.email?.meesage}
                                             />
                                             {notif && <Text c={'green'}>Invite Success!</Text>}
                                             {errorNotif && <Text c={'red'}>Account already registered!</Text>}
-                                            <Text ta={'center'} size="sm">
-                                                Newly added employees will receive a notification to download our Well be companion app and receives updates from your company
+                                            <Text ta={'left'} size="sm">
+                                                Newly added employees will receive a notification to sign up on our Well be companion app and receives updates from your company
                                             </Text>
+
                                         </Flex>
-                                        <Button type="submit" disabled={inviteSending} size="lg" color="#515977">
-                                            Save
-                                        </Button>
+                                        <Stack>
+                                            <Button type="submit" disabled={inviteSending} size="lg" color="#515977">
+                                                {inviteSending ? 'Sending Invite...' : 'Invite'}
+                                            </Button>
+                                            <Button size="lg" color="#515977" onClick={() => stack.open('batch-upload')}>
+                                                Use Batch Upload
+                                            </Button>
+                                        </Stack>
                                     </Flex>
                                 </form>
                             </Box>
