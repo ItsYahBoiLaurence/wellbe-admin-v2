@@ -19,9 +19,11 @@ const NormGraph = ({ filter }) => {
         return newData
     }
 
+    if (error) return <Paper w='100%' p='md'><Text ta='center'>You need to complete at least 1 set of 25 questions</Text></Paper>
+
     if (!isNormLoading) {
         return (
-            <Paper py={'md'} px={'xl'} radius={'md'} w='100%' shadow="xs" sx={{  background: '#3E4954'}}>
+            <Paper py={'md'} px={'xl'} radius={'md'} w='100%' shadow="xs" sx={{ background: '#3E4954' }}>
                 <Stack gap={'sm'}>
                     <Text size="lg" c='white' >Company Wide</Text>
                     <Text size="xl" c='white'>Index vs. Norm</Text>
@@ -42,6 +44,9 @@ const NormGraph = ({ filter }) => {
             </Paper>
         )
     }
+
+
+
 }
 
 export default NormGraph

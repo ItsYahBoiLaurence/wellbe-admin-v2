@@ -16,18 +16,8 @@ import { useQuery } from 'react-query';
 import {
   getCompanyDomainStatistics,
   getDepartmentStatics,
-  getNormComparison,
-  getWellbe,
 } from '../../api/apiService';
 import Department from '../../components/DataVisualization/Department';
-import {
-  AreaChart,
-  BarChart,
-  CompositeChart,
-  LineChart,
-} from '@mantine/charts';
-import FeedbackCard from '../../components/Cards/FeedbackCard';
-import InsightCard from '../../components/Cards/InsightCard';
 import NormGraph from '../../components/DataVisualization/NormGraph';
 import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
 
@@ -112,21 +102,6 @@ const Dashboard = () => {
           <Department departments={departmentData} />
         )}
       </Box>
-
-      {/* Employee's Feedback */}
-      {/* <Paper p="md" my='md' shadow="md">
-        <Group px='md' justify="space-between">
-          <Title order={2} fw={700}>Employee's Feedback</Title>
-          <Button variant="light" color="gray" radius="md">View More</Button>
-        </Group>
-        <Group grow m={'md'}>
-          <FeedbackCard />
-          <FeedbackCard />
-          <FeedbackCard />
-          <FeedbackCard />
-          <FeedbackCard />
-        </Group>
-      </Paper> */}
     </Box>
   );
 };
