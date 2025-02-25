@@ -14,7 +14,7 @@ import {
     useDrawersStack,
     useMantineTheme,
 } from '@mantine/core';
-import { IconChevronDown } from '@tabler/icons-react';
+import { IconChevronDown, IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDisclosure } from '@mantine/hooks';
@@ -223,27 +223,23 @@ const Employees = () => {
                                 maxSize={30 * 1024 ** 2} // 30MB
                             >
                                 <div style={{ pointerEvents: 'none' }}>
-                                    <Group>
+                                    <Group justify='center'>
                                         <Dropzone.Accept>
-                                            <Text>
-                                                <IconChevronDown
-                                                    size={50}
-                                                    color={theme.colors.blue[6]}
-                                                />
-                                            </Text>
+                                            <IconDownload
+                                                size={50}
+                                                color={theme.colors.blue[6]}
+                                                stroke={1.5}
+                                            />
                                         </Dropzone.Accept>
                                         <Dropzone.Reject>
-                                            <Text>
-                                                <IconChevronDown
-                                                    size={50}
-                                                    color={theme.colors.red[6]}
-                                                />
-                                            </Text>
+                                            <IconX
+                                                size={50}
+                                                color={theme.colors.red[6]}
+                                                stroke={1.5}
+                                            />
                                         </Dropzone.Reject>
                                         <Dropzone.Idle>
-                                            <Text>
-                                                <IconChevronDown size={50} stroke={1.5} />
-                                            </Text>
+                                            <IconCloudUpload size={50} stroke={1.5} />
                                         </Dropzone.Idle>
                                     </Group>
 
@@ -272,9 +268,9 @@ const Employees = () => {
                                 </Text>
                             )}
                             {notif && <Text c="green">Upload Success!</Text>}
-                            {errorNotif && <Text c="red">Account already registered!</Text>}
+                            {errorNotif && <Text c="red">Failed to Invite! Check the CSV Format and try again.</Text>}
                             <Button type="submit" variant="filled" color="gray">
-                                Upload Performance Data
+                                Batch Invite
                             </Button>
                         </Stack>
                     </form>

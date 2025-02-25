@@ -2,9 +2,11 @@ import {
   Box,
   Button,
   Flex,
+  Grid,
   Group,
   NativeSelect,
   Paper,
+  SimpleGrid,
   Stack,
   Text,
   Title,
@@ -78,10 +80,13 @@ const Dashboard = () => {
 
       {/* Mobile Responsive */}
 
-      <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}>
+      {/* <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}> */}
+      <SimpleGrid cols={2} my='md'>
         <NormGraph filter={selectedValues[1]} />
         <WellbeingGraph filter={selectedValues[1]} />
-      </Flex>
+      </SimpleGrid>
+
+
 
       <Box>
         {isDomainLoading ? (
