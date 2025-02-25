@@ -8,6 +8,7 @@ import {
 } from '../icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { IconChartHistogram } from '@tabler/icons-react';
 
 const ITEMS = [
   {
@@ -25,6 +26,11 @@ const ITEMS = [
     icon: UsersIcon,
     href: '/users',
   },
+  {
+    label: 'Scatter Plot',
+    icon: IconChartHistogram,
+    href:'/scatterplot'
+  }
 ];
 
 const NavItems = (props: FlexProps) => {

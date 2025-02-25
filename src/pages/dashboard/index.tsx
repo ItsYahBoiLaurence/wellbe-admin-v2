@@ -1,11 +1,31 @@
-import { Box, Button, Flex, Group, NativeSelect, Paper, Stack, Text, Title } from '@mantine/core';
+import {
+  Box,
+  Button,
+  Flex,
+  Group,
+  NativeSelect,
+  Paper,
+  Stack,
+  Text,
+  Title,
+} from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
 import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
-import { getCompanyDomainStatistics, getDepartmentStatics, getNormComparison, getWellbe } from '../../api/apiService';
-import Department from '../../components/DataVisualization/Department'
-import { AreaChart, BarChart, CompositeChart, LineChart } from '@mantine/charts';
+import {
+  getCompanyDomainStatistics,
+  getDepartmentStatics,
+  getNormComparison,
+  getWellbe,
+} from '../../api/apiService';
+import Department from '../../components/DataVisualization/Department';
+import {
+  AreaChart,
+  BarChart,
+  CompositeChart,
+  LineChart,
+} from '@mantine/charts';
 import FeedbackCard from '../../components/Cards/FeedbackCard';
 import InsightCard from '../../components/Cards/InsightCard';
 import NormGraph from '../../components/DataVisualization/NormGraph';
@@ -15,56 +35,56 @@ const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
   { label: 'SemiAnnual View', value: 'SemiAnnual' },
   { label: 'Annually View', value: 'Annually' },
-]
+];
 
 const Dashboard = () => {
-
   const { control, watch } = useForm({
     defaultValues: {
       data: 'OverALLCompany',
-      time: 'Annually'
-    }
-  })
+      time: 'Annually',
+    },
+  });
 
-  const selectedValues = watch(['data', 'time'])
+  const selectedValues = watch(['data', 'time']);
 
   const { data: domainData, isLoading: isDomainLoading } = useQuery({
-    queryKey: ['AllDomain', "Positive Workplaces", selectedValues[1]],
-    queryFn: getCompanyDomainStatistics
-  })
+    queryKey: ['AllDomain', 'Positive Workplaces', selectedValues[1]],
+    queryFn: getCompanyDomainStatistics,
+  });
 
   const { data: departmentData, isLoading: isDepartmentLoading } = useQuery({
-    queryKey: ['DepartmentWellBeing', "Positive Workplaces", selectedValues[1]],
-    queryFn: getDepartmentStatics
-  })
+    queryKey: ['DepartmentWellBeing', 'Positive Workplaces', selectedValues[1]],
+    queryFn: getDepartmentStatics,
+  });
 
   return (
     <Box>
-      <Paper shadow="xs" radius="md" px="lg" py='md'>
-        <Group justify='space-between'>
-          <Title order={4} fw={700}>Well-being Overview</Title>
+      <Paper shadow="xs" radius="md" px="lg" py="md">
+        <Group justify="space-between">
+          <Title order={4} fw={700}>
+            Well-being Overview
+          </Title>
           <form>
             <Controller
-              name='time'
+              name="time"
               control={control}
               render={({ field }) => (
                 <NativeSelect
                   {...field}
                   style={{ width: '250px' }}
                   radius={'md'}
-                  size='md'
+                  size="md"
                   data={time}
                   rightSection={<IconChevronDown size={16} />}
                   onChange={(e) => {
-                    field.onChange(e.target.value)
+                    field.onChange(e.target.value);
                   }}
                 />
               )}
             />
           </form>
         </Group>
-      </Paper >
-
+      </Paper>
 
       {/* Mobile Responsive */}
 
@@ -74,15 +94,27 @@ const Dashboard = () => {
       </Flex>
 
       <Box>
-        {isDomainLoading ? <Paper p='md'><Text ta='center'>No Data Yet!</Text></Paper> : <AllDomain domains={domainData} />}
+        {isDomainLoading ? (
+          <Paper p="md">
+            <Text ta="center">No Data Yet!</Text>
+          </Paper>
+        ) : (
+          <AllDomain domains={domainData} />
+        )}
       </Box>
 
       <Box my={'md'}>
-        {isDepartmentLoading ? <Paper p='md'><Text ta='center'>No Data for this Department!</Text></Paper> : <Department departments={departmentData} />}
+        {isDepartmentLoading ? (
+          <Paper p="md">
+            <Text ta="center">No Data for this Department!</Text>
+          </Paper>
+        ) : (
+          <Department departments={departmentData} />
+        )}
       </Box>
 
       {/* Employee's Feedback */}
-      <Paper p="md" my='md' shadow="md">
+      {/* <Paper p="md" my='md' shadow="md">
         <Group px='md' justify="space-between">
           <Title order={2} fw={700}>Employee's Feedback</Title>
           <Button variant="light" color="gray" radius="md">View More</Button>
@@ -94,7 +126,7 @@ const Dashboard = () => {
           <FeedbackCard />
           <FeedbackCard />
         </Group>
-      </Paper>
+      </Paper> */}
     </Box>
   );
 };

@@ -4,7 +4,7 @@ import PageNotFound from './pages/404';
 import Dashboard from './pages/dashboard';
 import Employees from './pages/employees';
 import Users from './pages/users'
-
+import Scatter from './pages/scatterplot'
 
 function Routes() {
   return useRoutes([
@@ -24,6 +24,10 @@ function Routes() {
           path: '/users',
           element: <Users />
         },
+        {
+          path:'/scatterplot',
+          element: <Scatter />
+        }
       ],
     },
 

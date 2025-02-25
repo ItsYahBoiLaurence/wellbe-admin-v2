@@ -33,7 +33,7 @@ const NormGraph = ({ filter }) => {
                         dataKey="domain"
                         series={[
                             { name: 'score', color: '#A5D38F', type: 'bar' },
-                            { name: 'norm', color: 'gray', type: 'line' },
+                            { name: 'norm', color: 'white', type: 'line' },
                         ]}
                         withLegend
                         curveType="linear"
