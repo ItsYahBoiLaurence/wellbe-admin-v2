@@ -29,6 +29,7 @@ import ParticipationRate from '../../components/DataVisualization/ParticipationR
 import EmployeeDepartment from '../../components/EmployeeDepartment';
 import { Dropzone } from '@mantine/dropzone';
 import axios from 'axios';
+import api from '../../api/api';
 
 const data = [
     { label: 'Human Resources Department', value: 'Human Resources' },
@@ -194,8 +195,8 @@ const Employees = () => {
             const formData = new FormData();
             formData.append('file', values.file[0]);
             try {
-                await axios.post(
-                    '/api/company-admin/batchUploadPerformance?company=Positive Workplaces',
+                await api.post(
+                    '/api/company-admin/batchUploadInvite?company=Positive Workplaces',
                     formData,
                     { headers: { 'Content-Type': 'multipart/form-data' } }
                 );

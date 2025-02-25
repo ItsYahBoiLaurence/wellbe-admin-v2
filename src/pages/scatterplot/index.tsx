@@ -113,6 +113,21 @@ const Scatterplot = () => {
         <Text>{`Error: ${error.message}`}</Text>
       ) : (
         <>
+          <Paper
+            radius="sm"
+            shadow="xs"
+            p="md"
+            style={{ display: 'flex', justifyContent: 'flex-end' }}
+            mb='md'
+          >
+            <Button
+              variant="filled"
+              color="gray"
+              onClick={() => setOpened(true)}
+            >
+              Upload Performance Data
+            </Button>
+          </Paper>
           <Drawer
             opened={opened}
             onClose={() => setOpened(false)}
@@ -180,20 +195,6 @@ const Scatterplot = () => {
             </form>
           </Drawer>
           <Stack gap="md">
-            <Paper
-              radius="sm"
-              shadow="xs"
-              p="md"
-              style={{ display: 'flex', justifyContent: 'flex-end' }}
-            >
-              <Button
-                variant="filled"
-                color="gray"
-                onClick={() => setOpened(true)}
-              >
-                Upload Performance Data
-              </Button>
-            </Paper>
             <Paper radius="sm" shadow="xs" p="md">
               <Stack gap="md">
                 <Text size="xl">
