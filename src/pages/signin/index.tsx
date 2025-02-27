@@ -3,11 +3,18 @@ import BGImage from '../../assets/wellbe.png'
 import Logo from '../../assets/logo.svg'
 import { useForm } from "react-hook-form"
 import { useMutation } from "react-query"
-import { auth } from "../../api/firebaseConfig"
-import { signInWithEmailAndPassword } from 'firebase/auth'
+import { useContext } from "react"
+import { AuthenticationContext } from "../../context/Authencation"
+import { useNavigate } from "react-router-dom"
 
+type Creds = {
+  email: string,
+  password: string
+}
 
 const signin = () => {
+  const navigate = useNavigate()
+  const { user, login } = useContext(AuthenticationContext)
   const {
     register,
     handleSubmit,
@@ -21,20 +28,10 @@ const signin = () => {
   });
 
   const { mutateAsync: loginUser, isLoading: isLoggingIn } = useMutation({
-    mutationFn: async (credentials) => {
-      try {
-        const userCredential = await signInWithEmailAndPassword(
-          auth,
-          credentials.email,
-          credentials.password
-        );
-        return userCredential.user;
-      } catch (error) {
-        // Throw the entire error object for onError to inspect
-        throw error;
-      }
+    mutationFn: async (credentials: Creds) => login(credentials),
+    onSuccess: async (data) => {
+      navigate('/')
     },
-    onSuccess: (data) => console.log('Save this data to localStorage', data),
     onError: (error) => {
       // Handle different Firebase error codes
       switch (error.code) {

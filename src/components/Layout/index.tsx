@@ -4,10 +4,13 @@ import Logo from '../../assets/logo.svg';
 import NavItems from './NavItems';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings, IconLogout } from '@tabler/icons-react';
+import { useContext } from 'react';
+import { AuthenticationContext } from '../../context/Authencation';
 
 const Layout = () => {
   const [opened, { toggle }] = useDisclosure();
   const stack = useDrawersStack(['profile', 'settings'])
+  const { logout } = useContext(AuthenticationContext)
 
   return (
     <AppShell
@@ -63,7 +66,7 @@ const Layout = () => {
                   <IconSettings />
                 </Group>
                 <Divider my="md" />
-                <Group justify='space-between'>
+                <Group justify='space-between' onClick={logout}>
                   <Text size='lg' fw={700} c={'red'}>Logout</Text>
                   <IconLogout color='red' />
                 </Group>
