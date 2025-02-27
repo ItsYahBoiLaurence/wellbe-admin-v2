@@ -1,13 +1,9 @@
 import {
   Box,
-  Button,
-  Flex,
-  Grid,
   Group,
   NativeSelect,
   Paper,
   SimpleGrid,
-  Stack,
   Text,
   Title,
 } from '@mantine/core';

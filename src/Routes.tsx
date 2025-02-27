@@ -5,6 +5,7 @@ import Dashboard from './pages/dashboard';
 import Employees from './pages/employees';
 import Users from './pages/users'
 import Scatter from './pages/scatterplot'
+import Signin from './pages/signin'
 
 function Routes() {
   return useRoutes([
@@ -25,12 +26,15 @@ function Routes() {
           element: <Users />
         },
         {
-          path:'/scatterplot',
+          path: '/scatterplot',
           element: <Scatter />
         }
       ],
     },
-
+    {
+      path: '/sign-in',
+      element: <Signin />
+    },
     {
       path: '*',
       element: <PageNotFound />,
