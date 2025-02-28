@@ -29,7 +29,7 @@ const signin = () => {
 
   const { mutateAsync: loginUser, isLoading: isLoggingIn } = useMutation({
     mutationFn: async (credentials: Creds) => login(credentials),
-    onSuccess: async (data) => {
+    onSuccess: async () => {
       navigate('/')
     },
     onError: (error) => {
@@ -54,12 +54,17 @@ const signin = () => {
           });
           break;
         case "auth/wrong-password":
-        case "auth/invalid-credentials":
+        case "auth/invalid-credential":
           // Some Firebase configurations may return "auth/invalid-credentials" instead of "auth/wrong-password"
+          setError('email', {
+            type: "manual",
+            message: " ",
+          })
           setError("password", {
             type: "manual",
-            message: "Incorrect password.",
+            message: "Invalid username or password!",
           });
+
           break;
         default:
           // For any other error, log it and set a generic error
@@ -75,25 +80,24 @@ const signin = () => {
   const onSubmit = (data) => {
     loginUser(data);
   };
-
   return (
     <Center bg='white' h='100vh' p='md'>
-      <Paper radius='sm' h='425' >
+      <Paper radius='sm' h='460' >
         <BackgroundImage
           src={BGImage}
           w={600}
-          h={425}
+          h={500}
         >
           <Image src={Logo} w={180} />
         </BackgroundImage>
       </Paper>
-      <Paper radius='md' px='xl' py='xl' bg='#A7b7e6' w='400' h='425' >
+      <Paper radius='md' px='xl' py='xl' bg='#A7b7e6' w='400' h='500' >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack justify="space-between" h='350'>
+          <Stack justify="space-between" h='400'>
             <Box>
               <Box mb='md'>
-                <Title c='white'>Welcome!</Title>
-                <Text c='white'>Log in to your account</Text>
+                <Title c='white' order={1}>Welcome!</Title>
+                <Text c='white' size="lg">Log in to your account</Text>
               </Box>
               <Stack>
                 <TextInput
