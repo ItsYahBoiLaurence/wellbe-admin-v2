@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Center,
     Drawer,
     Flex,
     Loader,
@@ -59,9 +60,10 @@ const Employees = () => {
         formState: { errors: inviteErrors },
     } = inviteForm;
 
+    const company = localStorage.getItem('USER_COMPANY')
     // Add Department form
     const departmentForm = useForm({
-        defaultValues: { department: '', company: 'Positive Workplaces' },
+        defaultValues: { department: '', company: company },
     });
     const {
         register: registerDepartment,
@@ -102,7 +104,7 @@ const Employees = () => {
 
     // Fetch all departments (to populate the dropdown)
     const { data: allDepartments } = useQuery({
-        queryKey: ['AllDepartmentInCompany', 'Positive Workplaces'],
+        queryKey: ['AllDepartmentInCompany'],
         queryFn: getAllDepartments,
     });
     // Use the transformed data if available, otherwise fallback to static options.
@@ -168,7 +170,7 @@ const Employees = () => {
         const formData = new FormData();
         formData.append('file', values.file[0]);
         try {
-            await api.post('/api/company-admin/batchUploadInvite?company=Positive Workplaces', formData, {
+            await api.post(`/api/company-admin/batchUploadInvite?company=${company}`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             setNotif(true);
@@ -361,16 +363,16 @@ const Employees = () => {
             </Paper>
 
             <ParticipationRate selectedDepartment={selectedDepartment} />
+            <Box>
+                {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>asdasdasd</Text></Center></Paper> : (
+                    <EmployeeDepartment
+                        dataToRender={departmentData?.data}
+                        currentDepartment={selectedDepartment}
+                        dropdownData={staticDepartmentOptions}
+                    />
+                )}
+            </Box>
 
-            {isDepartmentDataLoading ? (
-                <div>Loading component...</div>
-            ) : (
-                <EmployeeDepartment
-                    dataToRender={departmentData?.data}
-                    currentDepartment={selectedDepartment}
-                    dropdownData={staticDepartmentOptions}
-                />
-            )}
         </Box>
     );
 };

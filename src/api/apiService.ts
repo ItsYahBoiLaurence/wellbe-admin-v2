@@ -1,11 +1,10 @@
 import api from "./api";
 
-export const getCompanyWellbeingStatistics = async () => {
-    return
-}
+
+const company = localStorage.getItem("USER_COMPANY")
 
 export const getCompanyDomainStatistics = async ({ queryKey }) => {
-    const [, company, viewType] = queryKey
+    const [, viewType] = queryKey
     const params = {
         company: company,
         viewType: viewType
@@ -19,7 +18,7 @@ export const getCompanyDomainStatistics = async ({ queryKey }) => {
 }
 
 export const getDepartmentStatics = async ({ queryKey }) => {
-    const [, company, viewType] = queryKey
+    const [, viewType] = queryKey
     const params = {
         company: company,
         viewType: viewType
@@ -46,7 +45,6 @@ export const addDepartment = async (newDepartmentData) => {
 }
 
 export const getEmployees = async () => {
-    const company = "Positive Workplaces"
     const params = {
         company: company
     }
@@ -59,7 +57,7 @@ export const getEmployees = async () => {
 }
 
 export const getParticipationRate = async ({ queryKey }) => {
-    const [, company, department] = queryKey
+    const [, department] = queryKey
     const params = {
         company: company,
         department: department
@@ -74,7 +72,7 @@ export const getParticipationRate = async ({ queryKey }) => {
 
 export const updateEmployee = async (newUserInfo) => {
     const params = {
-        company: "Positive Workplaces",
+        company: company,
         email: newUserInfo.email
     }
 
@@ -89,7 +87,7 @@ export const updateEmployee = async (newUserInfo) => {
 
 export const getDepartment = async () => {
     const params = {
-        company: "Positive Workplaces"
+        company: company
     }
     try {
         const response = await api.get('/api/company-admin/allDepartment', { params })
@@ -101,7 +99,7 @@ export const getDepartment = async () => {
 
 export const sendEmail = async (inviteInformation) => {
     const data = {
-        company: "Positive Workplaces",
+        company: company,
         department: inviteInformation.department,
         firstName: inviteInformation.firstName,
         lastName: inviteInformation.lastName,
@@ -118,7 +116,7 @@ export const sendEmail = async (inviteInformation) => {
 export const getNormComparison = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: "Positive Workplaces",
+        company: company,
         viewType: viewType
     }
     try {
@@ -132,7 +130,7 @@ export const getNormComparison = async ({ queryKey }) => {
 export const getWellbe = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: "Positive Workplaces",
+        company: company,
         viewType: viewType
     }
     try {
@@ -145,7 +143,7 @@ export const getWellbe = async ({ queryKey }) => {
 
 export const getAllUsers = async () => {
     const params = {
-        company: "Positive Workplaces"
+        company: company
     }
     try {
         const response = api.get('api/company-admin/usersManagementList/', { params })
@@ -157,7 +155,7 @@ export const getAllUsers = async () => {
 
 export const getSettingsConfig = () => {
     const params = {
-        company: "Positive Workplaces"
+        company: company
     }
     try {
         const response = api.get('/api/company-admin/getSettingsStatus', { params })
@@ -167,12 +165,10 @@ export const getSettingsConfig = () => {
     }
 }
 
-export const getAllDepartments = async ({ queryKey }) => {
-    const [, company] = queryKey
+export const getAllDepartments = async () => {
     const params = {
         company: company
     }
-
     try {
         const response = await api.get('/api/company-admin/allDepartment', { params })
         return response.data

@@ -53,7 +53,7 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
             await signOut(auth);
             setUser(null);
             localStorage.removeItem("ADMIN_TOKEN");
-            localStorage.removeItem("token");
+            localStorage.removeItem("USER_COMPANY");
             navigate("/sign-in");
         } catch (error) {
             console.error("Logout failed", error);
@@ -62,14 +62,18 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
     };
 
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-            setUser(currentUser);
-        });
 
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            setUser(currentUser);
+            const userData = await currentUser?.getIdTokenResult()
+            if (userData) {
+                localStorage.setItem('USER_COMPANY', userData?.claims.company as string)
+            }
+            console.log(localStorage.getItem('USER_COMPANY'))
+        });
         return () => unsubscribe();
     }, []);
-
 
     useEffect(() => {
         if (user && EXCLUDED_PATHS.includes(location.pathname)) {

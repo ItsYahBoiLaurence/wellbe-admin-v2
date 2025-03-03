@@ -19,8 +19,9 @@ interface FormValues {
   file: File[];
 }
 
+const user_company = localStorage.getItem("USER_COMPANY")
 const fetchDataForScatterPlot = async () => {
-  const company = 'Positive Workplaces';
+  const company = user_company;
   const params = { company };
   try {
     const response = await api.get(
@@ -76,7 +77,7 @@ const Scatterplot = () => {
       formData.append('file', values.file[0]);
       try {
         await api.post(
-          '/api/company-admin/batchUploadPerformance?company=Positive Workplaces',
+          `/api/company-admin/batchUploadPerformance?company=${user_company}`,
           formData,
           { headers: { 'Content-Type': 'multipart/form-data' } }
         );

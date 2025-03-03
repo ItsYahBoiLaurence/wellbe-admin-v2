@@ -1,5 +1,5 @@
 import { AreaChart } from "@mantine/charts"
-import { Paper, Stack, Text, Title } from "@mantine/core"
+import { Center, Paper, Stack, Text, Title } from "@mantine/core"
 import { useQuery } from "react-query"
 import { getWellbe } from "../../api/apiService"
 
@@ -27,7 +27,7 @@ const WellbeingGraph = ({ filter }) => {
         return newData
     }
 
-    if (error) return <Paper w='100%' p='md' h='250'><Text ta='center'>You need to complete at least 1 set of 25 questions.</Text></Paper>
+    if (error) return <Paper w='100%' p='md' h='250'><Center h='100%'><Text>No data available!</Text></Center></Paper>
 
     if (!isWellBeLoading) {
         return (

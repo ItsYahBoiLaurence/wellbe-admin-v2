@@ -1,4 +1,4 @@
-import { Avatar, Box, Drawer, Flex, Image, Paper, ScrollArea, Stack, Text } from "@mantine/core"
+import { Avatar, Box, Center, Drawer, Flex, Image, Paper, ScrollArea, Stack, Text } from "@mantine/core"
 import DECREASE from '../../assets/LowAverage.png'
 import INCREASE from '../../assets/AboveAverage.png'
 import MAINTAIN from '../../assets/MaintainedScore.png'
@@ -41,7 +41,7 @@ const DepartmentWellbeing = ({ departments }) => {
     return (
         <ScrollArea w={'100%'} p={'xs'}>
             <Flex direction={'row'} gap={'md'}>
-                {departments === undefined ? <Text ta={"center"}>Loading....</Text> : departments.map((department) => (
+                {departments === undefined ? <Paper w='100%' p='md'><Center><Text>No data available!</Text></Center></Paper> : departments.map((department) => (
                     <Paper key={department.departmentName} shadow="xs" radius="md" p='md' w={'300px'} >
                         <Box>
                             <Flex align={'center'} gap={12}>

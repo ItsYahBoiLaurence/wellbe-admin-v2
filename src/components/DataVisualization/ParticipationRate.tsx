@@ -7,7 +7,7 @@ const ParticipationRate = ({ selectedDepartment }) => {
 
     const [participationLogo, setParticipation] = useState(false)
     const { data: participationData, isLoading: isParticipationDataLoading } = useQuery({
-        queryKey: ['participation', 'Positive Workplaces', selectedDepartment],
+        queryKey: ['participation', selectedDepartment],
         queryFn: getParticipationRate,
         onError: (error) => {
             if (error?.status == 404) {

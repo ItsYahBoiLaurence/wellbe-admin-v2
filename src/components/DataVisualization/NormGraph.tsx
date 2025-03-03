@@ -1,5 +1,5 @@
 import { CompositeChart } from "@mantine/charts"
-import { Paper, Stack, Text, Title } from "@mantine/core"
+import { Center, Paper, Stack, Text, Title } from "@mantine/core"
 import { useQuery } from "react-query"
 import { getNormComparison } from "../../api/apiService"
 
@@ -19,7 +19,7 @@ const NormGraph = ({ filter }) => {
         return newData
     }
 
-    if (error) return <Paper w='100%' p='md'><Text ta='center'>You need to complete at least 1 set of 25 questions</Text></Paper>
+    if (error) return <Paper w='100%' p='md'><Center h='100%'><Text>No data available!</Text></Center></Paper>
 
     if (!isNormLoading) {
         return (

@@ -35,13 +35,13 @@ const Dashboard = () => {
 
   const selectedValues = watch(['data', 'time']);
 
-  const { data: domainData, isLoading: isDomainLoading } = useQuery({
-    queryKey: ['AllDomain', 'Positive Workplaces', selectedValues[1]],
+  const { data: domainData } = useQuery({
+    queryKey: ['AllDomain', selectedValues[1]],
     queryFn: getCompanyDomainStatistics,
   });
 
-  const { data: departmentData, isLoading: isDepartmentLoading } = useQuery({
-    queryKey: ['DepartmentWellBeing', 'Positive Workplaces', selectedValues[1]],
+  const { data: departmentData } = useQuery({
+    queryKey: ['DepartmentWellBeing', selectedValues[1]],
     queryFn: getDepartmentStatics,
   });
 
@@ -73,35 +73,17 @@ const Dashboard = () => {
           </form>
         </Group>
       </Paper>
-
       {/* Mobile Responsive */}
-
       {/* <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}> */}
       <SimpleGrid cols={2} my='md'>
         <NormGraph filter={selectedValues[1]} />
         <WellbeingGraph filter={selectedValues[1]} />
       </SimpleGrid>
-
-
-
       <Box>
-        {isDomainLoading ? (
-          <Paper p="md">
-            <Text ta="center">No Data Yet!</Text>
-          </Paper>
-        ) : (
-          <AllDomain domains={domainData} />
-        )}
+        <AllDomain domains={domainData} />
       </Box>
-
       <Box my={'md'}>
-        {isDepartmentLoading ? (
-          <Paper p="md">
-            <Text ta="center">No Data for this Department!</Text>
-          </Paper>
-        ) : (
-          <Department departments={departmentData} />
-        )}
+        <Department departments={departmentData} />
       </Box>
     </Box>
   );
