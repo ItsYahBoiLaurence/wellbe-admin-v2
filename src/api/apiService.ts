@@ -166,3 +166,17 @@ export const getSettingsConfig = () => {
         throw error
     }
 }
+
+export const getAllDepartments = async ({ queryKey }) => {
+    const [, company] = queryKey
+    const params = {
+        company: company
+    }
+
+    try {
+        const response = await api.get('/api/company-admin/allDepartment', { params })
+        return response.data
+    } catch (error) {
+        throw error
+    }
+}
