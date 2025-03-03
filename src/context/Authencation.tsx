@@ -2,6 +2,7 @@ import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { User, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../api/firebaseConfig";
+import { useQueryClient } from "react-query";
 
 type Creds = {
     email: string;
@@ -47,6 +48,7 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
         }
     };
 
+    const queryClient = useQueryClient()
 
     const logout = async (): Promise<void> => {
         try {
@@ -54,6 +56,8 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
             setUser(null);
             localStorage.removeItem("ADMIN_TOKEN");
             localStorage.removeItem("USER_COMPANY");
+            queryClient.removeQueries();
+            queryClient.clear();
             navigate("/sign-in");
         } catch (error) {
             console.error("Logout failed", error);
