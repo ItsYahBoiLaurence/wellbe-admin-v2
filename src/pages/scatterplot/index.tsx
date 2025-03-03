@@ -5,6 +5,7 @@ import { ScatterChart } from '@mantine/charts';
 import { Dropzone } from '@mantine/dropzone';
 import {
   Button,
+  Center,
   Drawer,
   Group,
   Paper,
@@ -111,7 +112,7 @@ const Scatterplot = () => {
       {isLoading ? (
         <Text>Loading...</Text>
       ) : error ? (
-        <Text>{`Error: ${error.message}`}</Text>
+        <Paper w='100%' p="md"><Center><Text>No data available!</Text></Center></Paper>
       ) : (
         <>
           <Paper
