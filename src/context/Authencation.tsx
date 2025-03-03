@@ -42,7 +42,7 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
             );
             setUser(userCredential.user)
             const token = await userCredential.user.getIdToken()
-            localStorage.setItem('TOKEN', token)
+            localStorage.setItem('ADMIN_TOKEN', token)
         } catch (error) {
             // Throw the entire error object for onError to inspect
             throw error;
@@ -53,7 +53,7 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
         try {
             await signOut(auth);
             setUser(null);
-            localStorage.removeItem("TOKEN");
+            localStorage.removeItem("ADMIN_TOKEN");
             navigate('/sign-in')
         } catch (error) {
             console.error("Logout failed", error);
