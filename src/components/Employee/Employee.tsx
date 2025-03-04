@@ -24,7 +24,7 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
     const { mutateAsync: updateUserInfo } = useMutation({
         mutationFn: updateEmployee,
         onSuccess: () => {
-            queryClient.invalidateQueries(['dataOfDepartment'])
+            queryClient.invalidateQueries({ queryKey: ['dataOfDepartment'] })
         }
     })
 
@@ -108,7 +108,7 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                                         </Flex>
                                         <Stack gap={'sm'}>
                                             <Button variant="filled" type="submit" disabled={isSubmitting} color="#515977">{isSubmitting ? "Saving..." : "Save"}</Button>
-                                            <Button color="#515977" variant="outline">Delete</Button>
+                                            {/* <Button color="#515977" variant="outline">Delete</Button> */}
                                         </Stack>
                                     </Stack>
                                 </form>

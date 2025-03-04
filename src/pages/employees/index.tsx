@@ -103,7 +103,7 @@ const Employees = () => {
     });
 
     // Fetch all departments (to populate the dropdown)
-    const { data: allDepartments } = useQuery({
+    const { data: allDepartments, refetch: refetchDepartment } = useQuery({
         queryKey: ['AllDepartmentInCompany'],
         queryFn: getAllDepartments,
     });
@@ -158,6 +158,7 @@ const Employees = () => {
         try {
             await addNewDepartment(data);
             resetDepartmentForm();
+            refetchDepartment()
         } catch (error: any) {
             if (error?.status === 409) {
                 setDepartmentError('department', { type: 'manual', message: 'Department Already Exist!' });
@@ -254,7 +255,7 @@ const Employees = () => {
                                                 label={<Text mb="xs" fw={700}>Department</Text>}
                                                 style={{ width: '100%' }}
                                                 size="md"
-                                                data={staticDepartmentOptions}
+                                                data={departmentOptionsFromApi}
                                                 defaultValue={selectedDepartment}
                                                 rightSection={<IconChevronDown size={16} />}
                                                 onChange={(e) => setInviteValue('department', e.target.value)}

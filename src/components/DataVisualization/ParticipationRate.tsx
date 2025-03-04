@@ -17,8 +17,17 @@ const ParticipationRate = ({ selectedDepartment }) => {
     })
 
     useEffect(() => {
-        setParticipation(false)
-    }, [selectedDepartment])
+        if (participationData?.participationRate === undefined || participationData?.participationRate === null) {
+            setParticipation(true)
+        } else {
+            setParticipation(false)
+        }
+    }, [selectedDepartment, participationData])
+
+    useEffect(() => {
+
+    },)
+
 
     return (
         <Paper p='md' radius='md' my={'md'}>
