@@ -364,7 +364,7 @@ const Employees = () => {
 
             <ParticipationRate selectedDepartment={selectedDepartment} />
             <Box>
-                {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>asdasdasd</Text></Center></Paper> : (
+                {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>No data available!</Text></Center></Paper> : (
                     <EmployeeDepartment
                         dataToRender={departmentData?.data}
                         currentDepartment={selectedDepartment}
