@@ -44,7 +44,7 @@ const Employees = () => {
     const [errorNotif, setErrorNotif] = useState(false);
 
     // Main page department selection form
-    const { control, watch } = useForm({ defaultValues: { department: 'Human Resources' } });
+    const { control, watch } = useForm({ defaultValues: { department: 'Sales & Marketing' } });
     const selectedDepartment = watch('department');
 
     // Invite Employee form
