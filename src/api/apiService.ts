@@ -1,65 +1,139 @@
 import api from "./api";
 
+// Helper function to get company from localStorage (used across functions)
+const getCompany = () => localStorage.getItem("USER_COMPANY") || '';
 
-const company = localStorage.getItem("USER_COMPANY")
+// Cache for API responses with configurable TTL
+class ApiCache {
+    private cache: Map<string, { data: any, timestamp: number }> = new Map();
+    private DEFAULT_TTL = 5 * 60 * 1000; // 5 minutes in milliseconds
 
-export const getCompanyDomainStatistics = async ({ queryKey }) => {
-    const [, viewType] = queryKey
-    const params = {
-        company: company,
-        viewType: viewType
+    set(key: string, data: any, ttl: number = this.DEFAULT_TTL): void {
+        this.cache.set(key, {
+            data,
+            timestamp: Date.now() + ttl
+        });
     }
-    try {
-        const response = await api.get('/api/company-admin/latestDomainStatistics/', { params })
-        return response.data.Domains
-    } catch (error) {
-        throw error
+
+    get(key: string): any | null {
+        const cached = this.cache.get(key);
+        if (!cached) return null;
+
+        if (Date.now() > cached.timestamp) {
+            this.cache.delete(key);
+            return null;
+        }
+
+        return cached.data;
+    }
+
+    clear(): void {
+        this.cache.clear();
     }
 }
 
-export const getDepartmentStatics = async ({ queryKey }) => {
-    const [, viewType] = queryKey
-    const params = {
-        company: company,
-        viewType: viewType
-    }
-    try {
-        const response = await api.get('/api/company-admin/latestDepartmentStatisticsAll/', { params })
-        return response.data
-    } catch (error) {
-        throw error
-    }
-}
+const apiCache = new ApiCache();
 
-export const addDepartment = async (newDepartmentData) => {
-    const data = {
-        company: newDepartmentData.company,
-        department: newDepartmentData.department
-    }
-    try {
-        const response = await api.post('/api/company-admin/addDepartment/', data)
-        if (response) { return response.data }
-    } catch (error) {
-        throw error
-    }
-}
+// Generic error handler
+const handleApiError = (error: any, endpoint: string) => {
+    console.error(`API Error in ${endpoint}:`, error);
+    throw error;
+};
 
+/**
+ * Company Domain Statistics
+ */
+export const getCompanyDomainStatistics = async ({ queryKey }: { queryKey: any[] }) => {
+    const [_, viewType] = queryKey;
+    const cacheKey = `domain-stats-${viewType}-${getCompany()}`;
+
+    // Check cache first
+    const cachedData = apiCache.get(cacheKey);
+    if (cachedData) return cachedData;
+
+    try {
+        const params = {
+            company: getCompany(),
+            viewType
+        };
+        const response = await api.get('/api/company-admin/latestDomainStatistics/', { params });
+
+        // Cache the response
+        apiCache.set(cacheKey, response.data.Domains);
+        return response.data.Domains;
+    } catch (error) {
+        return handleApiError(error, 'getCompanyDomainStatistics');
+    }
+};
+
+/**
+ * Department Statistics
+ */
+export const getDepartmentStatics = async ({ queryKey }: { queryKey: any[] }) => {
+    const [_, viewType] = queryKey;
+    const cacheKey = `dept-stats-${viewType}-${getCompany()}`;
+
+    // Check cache first
+    const cachedData = apiCache.get(cacheKey);
+    if (cachedData) return cachedData;
+
+    try {
+        const params = {
+            company: getCompany(),
+            viewType
+        };
+        const response = await api.get('/api/company-admin/latestDepartmentStatisticsAll/', { params });
+
+        // Cache the response
+        apiCache.set(cacheKey, response.data);
+        return response.data;
+    } catch (error) {
+        return handleApiError(error, 'getDepartmentStatics');
+    }
+};
+
+/**
+ * Add Department
+ */
+export const addDepartment = async (newDepartmentData: { company: string, department: string }) => {
+    try {
+        const response = await api.post('/api/company-admin/addDepartment/', newDepartmentData);
+
+        // Invalidate relevant caches
+        apiCache.clear();
+
+        return response.data;
+    } catch (error) {
+        return handleApiError(error, 'addDepartment');
+    }
+};
+
+/**
+ * Get Employees
+ */
 export const getEmployees = async () => {
-    const params = {
-        company: company
-    }
+    const cacheKey = `employees-${getCompany()}`;
+
+    // Check cache first
+    const cachedData = apiCache.get(cacheKey);
+    if (cachedData) return cachedData;
+
     try {
-        const response = api.get('/api/company-admin/employeesList/', { params })
-        return response
+        const params = { company: getCompany() };
+        const response = await api.get('/api/company-admin/employeesList/', { params });
+
+        // Cache the response
+        apiCache.set(cacheKey, response);
+        return response;
     } catch (error) {
-        console.log(error)
+        return handleApiError(error, 'getEmployees');
     }
-}
+};
 
 export const getParticipationRate = async ({ queryKey }) => {
     const [, department] = queryKey
     const params = {
-        company: company,
+        company: getCompany(),
         department: department
     }
     try {
@@ -72,7 +146,7 @@ export const getParticipationRate = async ({ queryKey }) => {
 
 export const updateEmployee = async (newUserInfo) => {
     const params = {
-        company: company,
+        company: getCompany(),
         email: newUserInfo.email
     }
 
@@ -87,7 +161,7 @@ export const updateEmployee = async (newUserInfo) => {
 
 export const getDepartment = async () => {
     const params = {
-        company: company
+        company: getCompany()
     }
     try {
         const response = await api.get('/api/company-admin/allDepartment', { params })
@@ -99,7 +173,7 @@ export const getDepartment = async () => {
 
 export const sendEmail = async (inviteInformation) => {
     const data = {
-        company: company,
+        company: getCompany(),
         department: inviteInformation.department,
         firstName: inviteInformation.firstName,
         lastName: inviteInformation.lastName,
@@ -116,7 +190,7 @@ export const sendEmail = async (inviteInformation) => {
 export const getNormComparison = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: company,
+        company: getCompany(),
         viewType: viewType
     }
     try {
@@ -130,7 +204,7 @@ export const getNormComparison = async ({ queryKey }) => {
 export const getWellbe = async ({ queryKey }) => {
     const [, viewType] = queryKey
     const params = {
-        company: company,
+        company: getCompany(),
         viewType: viewType
     }
     try {
@@ -143,7 +217,7 @@ export const getWellbe = async ({ queryKey }) => {
 
 export const getAllUsers = async () => {
     const params = {
-        company: company
+        company: getCompany()
     }
     try {
         const response = api.get('api/company-admin/usersManagementList/', { params })
@@ -155,7 +229,7 @@ export const getAllUsers = async () => {
 
 export const getSettingsConfig = () => {
     const params = {
-        company: company
+        company: getCompany()
     }
     try {
         const response = api.get('/api/company-admin/getSettingsStatus', { params })
@@ -167,7 +241,7 @@ export const getSettingsConfig = () => {
 
 export const getAllDepartments = async () => {
     const params = {
-        company: company
+        company: getCompany()
     }
     try {
         const response = await api.get('/api/company-admin/allDepartment', { params })
@@ -176,3 +250,8 @@ export const getAllDepartments = async () => {
         throw error
     }
 }
+
+// Export the cache for manual invalidation when needed
+export const invalidateApiCache = () => {
+    apiCache.clear();
+};

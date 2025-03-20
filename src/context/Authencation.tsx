@@ -1,4 +1,4 @@
-import { createContext, PropsWithChildren, useEffect, useState } from "react";
+import { createContext, PropsWithChildren, useEffect, useState, useCallback, useMemo } from "react";
 import { User, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../api/firebaseConfig";
@@ -31,64 +31,80 @@ export const Authentication = ({ children }: PropsWithChildren<{}>) => {
     const [user, setUser] = useState<User | null>(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const queryClient = useQueryClient();
 
-
-    const login = async (credentials: Creds) => {
+    // Memoize login function to prevent unnecessary re-renders
+    const login = useCallback(async (credentials: Creds) => {
         try {
             const userCredential = await signInWithEmailAndPassword(
                 auth,
                 credentials.email,
                 credentials.password
             );
-            setUser(userCredential.user);
+            // No need to setUser here as onAuthStateChanged will handle it
             const token = await userCredential.user.getIdToken();
             localStorage.setItem("ADMIN_TOKEN", token);
         } catch (error) {
             throw error;
         }
-    };
+    }, []);
 
-    const queryClient = useQueryClient()
-
-    const logout = async (): Promise<void> => {
+    // Memoize logout function to prevent unnecessary re-renders
+    const logout = useCallback(async (): Promise<void> => {
         try {
             await signOut(auth);
-            setUser(null);
+            // No need to setUser here as onAuthStateChanged will handle it
             localStorage.removeItem("ADMIN_TOKEN");
             localStorage.removeItem("USER_COMPANY");
             queryClient.removeQueries();
             queryClient.clear();
-            navigate("/sign-in");
+            // Navigation will be handled by the auth state effect
         } catch (error) {
             console.error("Logout failed", error);
             throw error;
         }
-    };
+    }, [queryClient]);
 
-
-
+    // Handle auth state changes and navigation in a single useEffect
     useEffect(() => {
+        // Setup auth state listener
         const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
             setUser(currentUser);
-            const userData = await currentUser?.getIdTokenResult()
-            if (userData) {
-                localStorage.setItem('USER_COMPANY', userData?.claims.company as string)
-            }
-            console.log(localStorage.getItem('USER_COMPANY'))
-        });
-        return () => unsubscribe();
-    }, []);
 
-    useEffect(() => {
-        if (user && EXCLUDED_PATHS.includes(location.pathname)) {
-            navigate("/");
-        } else if (!user && !EXCLUDED_PATHS.includes(location.pathname)) {
-            navigate("/sign-in");
-        }
-    }, [user, location.pathname, navigate]);
+            if (currentUser) {
+                const userData = await currentUser.getIdTokenResult();
+                if (userData?.claims.company) {
+                    localStorage.setItem('USER_COMPANY', userData.claims.company as string);
+                }
+
+                // Handle navigation when user is authenticated
+                if (EXCLUDED_PATHS.includes(location.pathname)) {
+                    navigate("/");
+                }
+
+                // Invalidate queries when user changes
+                queryClient.invalidateQueries();
+            } else {
+                // Handle navigation when user is not authenticated
+                if (!EXCLUDED_PATHS.includes(location.pathname)) {
+                    navigate("/sign-in");
+                }
+            }
+        });
+
+        // Cleanup auth listener on unmount
+        return () => unsubscribe();
+    }, [location.pathname, navigate, queryClient]);
+
+    // Memoize the context value to prevent unnecessary re-renders
+    const contextValue = useMemo(() => ({
+        user,
+        login,
+        logout
+    }), [user, login, logout]);
 
     return (
-        <AuthenticationContext.Provider value={{ user, login, logout }}>
+        <AuthenticationContext.Provider value={contextValue}>
             {children}
         </AuthenticationContext.Provider>
     );

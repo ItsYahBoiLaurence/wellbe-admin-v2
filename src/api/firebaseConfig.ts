@@ -1,10 +1,10 @@
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+// For better security, these values should be stored in environment variables
 const firebaseConfig = {
     apiKey: "AIzaSyByyBLWf0es6FLcyk43kGbGEs76s9daIIk",
     authDomain: "wellbe-admin.firebaseapp.com",
@@ -16,4 +16,9 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app)
+
+// Get Auth instance with error handling
+export const auth = getAuth(app);
+
+// Note: Consider moving Firebase API keys to environment variables
+// Create a .env file in the project root with these variables
