@@ -2,17 +2,19 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
+console.log(import.meta.env.API_KEY)
 // Your web app's Firebase configuration
 // For better security, these values should be stored in environment variables
 const firebaseConfig = {
-    apiKey: "AIzaSyByyBLWf0es6FLcyk43kGbGEs76s9daIIk",
-    authDomain: "wellbe-admin.firebaseapp.com",
-    projectId: "wellbe-admin",
-    storageBucket: "wellbe-admin.firebasestorage.app",
-    messagingSenderId: "767950692779",
-    appId: "1:767950692779:web:d587ac9061ae02241df2ee"
+    apiKey: import.meta.env.VITE_API_KEY,
+    authDomain: import.meta.env.VITE_AUTH_DOMAIN,
+    projectId: import.meta.env.VITE_PROJECT_ID,
+    storageBucket: import.meta.env.VITE_STORAGE_BUCKET,
+    messagingSenderId: import.meta.env.VITE_MESSAGING_SENDER_ID,
+    appId: import.meta.env.VITE_APP_ID
 };
+
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

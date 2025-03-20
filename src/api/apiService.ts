@@ -1,8 +1,5 @@
 import api from "./api";
 
-// Helper function to get company from localStorage (used across functions)
-const getCompany = () => localStorage.getItem("USER_COMPANY") || '';
-
 // Cache for API responses with configurable TTL
 class ApiCache {
     private cache: Map<string, { data: any, timestamp: number }> = new Map();
@@ -45,17 +42,14 @@ const handleApiError = (error: any, endpoint: string) => {
  */
 export const getCompanyDomainStatistics = async ({ queryKey }: { queryKey: any[] }) => {
     const [_, viewType] = queryKey;
-    const cacheKey = `domain-stats-${viewType}-${getCompany()}`;
+    const cacheKey = `domain-stats-${viewType}`;
 
     // Check cache first
     const cachedData = apiCache.get(cacheKey);
     if (cachedData) return cachedData;
 
     try {
-        const params = {
-            company: getCompany(),
-            viewType
-        };
+        const params = { viewType };
         const response = await api.get('/api/company-admin/latestDomainStatistics/', { params });
 
         // Cache the response
@@ -71,17 +65,14 @@ export const getCompanyDomainStatistics = async ({ queryKey }: { queryKey: any[]
  */
 export const getDepartmentStatics = async ({ queryKey }: { queryKey: any[] }) => {
     const [_, viewType] = queryKey;
-    const cacheKey = `dept-stats-${viewType}-${getCompany()}`;
+    const cacheKey = `dept-stats-${viewType}`;
 
     // Check cache first
     const cachedData = apiCache.get(cacheKey);
     if (cachedData) return cachedData;
 
     try {
-        const params = {
-            company: getCompany(),
-            viewType
-        };
+        const params = { viewType };
         const response = await api.get('/api/company-admin/latestDepartmentStatisticsAll/', { params });
 
         // Cache the response
@@ -95,7 +86,7 @@ export const getDepartmentStatics = async ({ queryKey }: { queryKey: any[] }) =>
 /**
  * Add Department
  */
-export const addDepartment = async (newDepartmentData: { company: string, department: string }) => {
+export const addDepartment = async (newDepartmentData: { department: string }) => {
     try {
         const response = await api.post('/api/company-admin/addDepartment/', newDepartmentData);
 
@@ -112,15 +103,14 @@ export const addDepartment = async (newDepartmentData: { company: string, depart
  * Get Employees
  */
 export const getEmployees = async () => {
-    const cacheKey = `employees-${getCompany()}`;
+    const cacheKey = 'employees';
 
     // Check cache first
     const cachedData = apiCache.get(cacheKey);
     if (cachedData) return cachedData;
 
     try {
-        const params = { company: getCompany() };
-        const response = await api.get('/api/company-admin/employeesList/', { params });
+        const response = await api.get('/api/company-admin/employeesList/');
 
         // Cache the response
         apiCache.set(cacheKey, response);
@@ -130,126 +120,100 @@ export const getEmployees = async () => {
     }
 };
 
-export const getParticipationRate = async ({ queryKey }) => {
-    const [, department] = queryKey
-    const params = {
-        company: getCompany(),
-        department: department
-    }
+export const getParticipationRate = async ({ queryKey }: { queryKey: any[] }) => {
+    const [, department] = queryKey;
     try {
-        const response = await api.get('/api/company-admin/departmentParticipationRate/', { params })
-        return response.data
+        const response = await api.get('/api/company-admin/departmentParticipationRate/', {
+            params: { department }
+        });
+        return response.data;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getParticipationRate');
     }
-}
+};
 
-export const updateEmployee = async (newUserInfo) => {
-    const params = {
-        company: getCompany(),
-        email: newUserInfo.email
-    }
-
+export const updateEmployee = async (newUserInfo: any) => {
     try {
-        const response = api.put('/api/company-admin/updateEmployee', newUserInfo, { params })
-        return response.data
+        const response = await api.put('/api/company-admin/updateEmployee', newUserInfo);
+        return response.data;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'updateEmployee');
     }
-
-}
+};
 
 export const getDepartment = async () => {
-    const params = {
-        company: getCompany()
-    }
     try {
-        const response = await api.get('/api/company-admin/allDepartment', { params })
-        return response.data
+        const response = await api.get('/api/company-admin/allDepartment');
+        return response.data;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getDepartment');
     }
-}
+};
 
-export const sendEmail = async (inviteInformation) => {
-    const data = {
-        company: getCompany(),
-        department: inviteInformation.department,
-        firstName: inviteInformation.firstName,
-        lastName: inviteInformation.lastName,
-        email: inviteInformation.email
-    }
+export const sendEmail = async (inviteInformation: {
+    department: string;
+    firstName: string;
+    lastName: string;
+    email: string;
+}) => {
     try {
-        const response = await api.post('/api/company-admin/inviteEmployee', data)
-        return response.data
+        const response = await api.post('/api/company-admin/inviteEmployee', inviteInformation);
+        return response.data;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'sendEmail');
     }
-}
+};
 
-export const getNormComparison = async ({ queryKey }) => {
-    const [, viewType] = queryKey
-    const params = {
-        company: getCompany(),
-        viewType: viewType
-    }
+export const getNormComparison = async ({ queryKey }: { queryKey: any[] }) => {
+    const [_, viewType] = queryKey;
     try {
-        const response = api.get('/api/company-admin/latestNormDomain/', { params })
-        return response
+        const response = await api.get('/api/company-admin/latestNormDomain/', {
+            params: { viewType }
+        });
+        return response;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getNormComparison');
     }
-}
+};
 
-export const getWellbe = async ({ queryKey }) => {
-    const [, viewType] = queryKey
-    const params = {
-        company: getCompany(),
-        viewType: viewType
-    }
+export const getWellbe = async ({ queryKey }: { queryKey: any[] }) => {
+    const [_, viewType] = queryKey;
     try {
-        const response = api.get('/api/company-admin/latestWellbeingStatistics/', { params })
-        return response
+        const response = await api.get('/api/company-admin/latestWellbeingStatistics/', {
+            params: { viewType }
+        });
+        return response;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getWellbe');
     }
-}
+};
 
 export const getAllUsers = async () => {
-    const params = {
-        company: getCompany()
-    }
     try {
-        const response = api.get('api/company-admin/usersManagementList/', { params })
-        return response
+        const response = await api.get('api/company-admin/usersManagementList/');
+        return response;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getAllUsers');
     }
-}
+};
 
-export const getSettingsConfig = () => {
-    const params = {
-        company: getCompany()
-    }
+export const getSettingsConfig = async () => {
     try {
-        const response = api.get('/api/company-admin/getSettingsStatus', { params })
-        return response
+        const response = await api.get('/api/company-admin/getSettingsStatus');
+        return response;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getSettingsConfig');
     }
-}
+};
 
 export const getAllDepartments = async () => {
-    const params = {
-        company: getCompany()
-    }
     try {
-        const response = await api.get('/api/company-admin/allDepartment', { params })
-        return response.data
+        const response = await api.get('/api/company-admin/allDepartment');
+        return response.data;
     } catch (error) {
-        throw error
+        return handleApiError(error, 'getAllDepartments');
     }
-}
+};
 
 // Export the cache for manual invalidation when needed
 export const invalidateApiCache = () => {
