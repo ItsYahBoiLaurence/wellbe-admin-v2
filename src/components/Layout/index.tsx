@@ -6,11 +6,20 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconSettings, IconLogout } from '@tabler/icons-react';
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/Authencation';
+import api from '../../api/api';
 
 const Layout = () => {
   const [opened, { toggle }] = useDisclosure();
   const stack = useDrawersStack(['profile', 'settings'])
   const { logout } = useContext(AuthenticationContext)
+
+  const handleSubmitBatch = async () => {
+    try {
+      await api.get('/api/company-admin/scheduleBatchFrequency').then((res) => console.log(res))
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   return (
     <AppShell
@@ -118,7 +127,12 @@ const Layout = () => {
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
           </Box>
-          <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
+          <Group>
+            <Button variant='filled' size='sm' radius='xl' onClick={handleSubmitBatch}>
+              Send Batch
+            </Button>
+            <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
+          </Group>
         </Group>
       </AppShell.Header>
 

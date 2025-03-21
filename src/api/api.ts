@@ -29,28 +29,28 @@ api.interceptors.request.use(
 )
 
 // Response interceptor
-api.interceptors.response.use(
-    (response) => response,
-    (error) => {
-        // Handle specific error cases
-        if (error.response) {
-            // Server responded with error status
-            if (error.response.status === 401) {
-                // Unauthorized - token expired or invalid
-                localStorage.removeItem("ADMIN_TOKEN");
-                // Redirect to login page if needed
-                window.location.href = '/sign-in';
-            }
-            console.error('API Error:', error.response.status, error.response.data);
-        } else if (error.request) {
-            // Request was made but no response
-            console.error('Network Error:', error.request);
-        } else {
-            // Error in setting up the request
-            console.error('Request setup error:', error.message);
-        }
-        return Promise.reject(error);
-    }
-);
+// api.interceptors.response.use(
+//     (response) => response,
+//     (error) => {
+//         // Handle specific error cases
+//         if (error.response) {
+//             // Server responded with error status
+//             if (error.response.status === 401) {
+//                 // Unauthorized - token expired or invalid
+//                 localStorage.removeItem("ADMIN_TOKEN");
+//                 // Redirect to login page if needed
+//                 window.location.href = '/sign-in';
+//             }
+//             console.error('API Error:', error.response.status, error.response.data);
+//         } else if (error.request) {
+//             // Request was made but no response
+//             console.error('Network Error:', error.request);
+//         } else {
+//             // Error in setting up the request
+//             console.error('Request setup error:', error.message);
+//         }
+//         return Promise.reject(error);
+//     }
+// );
 
 export default api
