@@ -26,7 +26,7 @@ import { Dropzone } from '@mantine/dropzone';
 import api from '../../api/api';
 
 const staticDepartmentOptions = [
-    { label: 'Human Resources Department', value: 'Human Resources' },
+    { label: 'No Department Available', value: '' },
 ];
 
 const transformDepartmentData = (data: any[]): { label: string; value: string }[] =>
@@ -44,12 +44,12 @@ const Employees = () => {
     const [errorNotif, setErrorNotif] = useState(false);
 
     // Main page department selection form
-    const { control, watch } = useForm({ defaultValues: { department: 'Sales & Marketing' } });
+    const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');
 
     // Invite Employee form
     const inviteForm = useForm({
-        defaultValues: { department: 'Human Resources', firstName: '', lastName: '', email: '' },
+        defaultValues: { department: selectedDepartment, firstName: '', lastName: '', email: '', role: 'employee' },
     });
     const {
         register: registerEmployee,
@@ -58,8 +58,12 @@ const Employees = () => {
         reset: resetInviteForm,
         setError: setInviteError,
         formState: { errors: inviteErrors },
+        watch: watchRole
     } = inviteForm;
 
+    const selectedRole = watchRole('role')
+    console.log(selectedRole)
+    console.log(selectedDepartment)
     const company = localStorage.getItem('USER_COMPANY')
     // Add Department form
     const departmentForm = useForm({
@@ -259,7 +263,25 @@ const Employees = () => {
                                                 defaultValue={selectedDepartment}
                                                 rightSection={<IconChevronDown size={16} />}
                                                 onChange={(e) => setInviteValue('department', e.target.value)}
+                                            >
+
+                                                <option value=''>Select Department</option>
+                                                {departmentOptionsFromApi.map(({ label, value }) => (
+                                                    <option key={value} value={value}>{label}</option>
+                                                ))}
+                                            </NativeSelect>
+
+                                            <NativeSelect
+                                                radius="md"
+                                                label={<Text mb="xs" fw={700}>Role</Text>}
+                                                style={{ width: '100%' }}
+                                                size="md"
+                                                data={[{ label: 'Employee', value: 'employee' }, { label: 'Admin', value: 'admin' }]}
+                                                defaultValue={'employee'}
+                                                rightSection={<IconChevronDown size={16} />}
+                                                onChange={(e) => setInviteValue('role', e.target.value)}
                                             />
+
                                             <TextInput {...registerEmployee('firstName')} label={<Text fw={700}>First Name</Text>} />
                                             <TextInput {...registerEmployee('lastName')} label={<Text fw={700}>Last Name</Text>} />
                                             <TextInput
@@ -345,8 +367,18 @@ const Employees = () => {
                                             size="md"
                                             data={departmentOptionsFromApi}
                                             rightSection={<IconChevronDown size={16} />}
-                                            onChange={(e) => field.onChange(e.target.value)}
-                                        />
+                                            onChange={(e) => {
+                                                field.onChange(e.target.value)
+                                                setDepartmentValue('department', e.target.value)
+                                            }}
+                                        >
+                                            <option value=''>Select Department</option>
+                                            {departmentOptionsFromApi.map(({ label, value }) => (
+                                                <option key={value} value={value}>{label}</option>
+                                            ))}
+
+
+                                        </NativeSelect>
                                     )}
                                 />
                             </Flex>
@@ -363,17 +395,21 @@ const Employees = () => {
                 </Flex>
             </Paper>
 
-            <ParticipationRate selectedDepartment={selectedDepartment} />
-            <Box>
-                {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>No data available!</Text></Center></Paper> : (
-                    <EmployeeDepartment
-                        dataToRender={departmentData?.data}
-                        currentDepartment={selectedDepartment}
-                        dropdownData={staticDepartmentOptions}
-                    />
-                )}
-            </Box>
-
+            {selectedDepartment != '' ? <>
+                <ParticipationRate selectedDepartment={selectedDepartment} />
+                <Box>
+                    {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>No data available!</Text></Center></Paper> : (
+                        <EmployeeDepartment
+                            dataToRender={departmentData?.data}
+                            currentDepartment={selectedDepartment}
+                            dropdownData={staticDepartmentOptions}
+                        />
+                    )}
+                </Box>
+            </> : <Paper my="md" p={'xl'}><Text ta={'center'}>
+                Choose Department
+            </Text>
+            </Paper>}
         </Box>
     );
 };
