@@ -33,7 +33,7 @@ const randomizer = () => {
 const Users = () => {
     const [scrolled, setScrolled] = useState(false)
 
-    const { data: allUsers, isLoading: isAllUsersLoading } = useQuery({
+    const { data: allUsers, isSuccess } = useQuery({
         queryKey: ['AllUsers'],
         queryFn: getAllUsers
     })
@@ -41,44 +41,41 @@ const Users = () => {
     return (
         <Paper p='xxl'>
             <Stack>
-                <Title order={1} fw={700}>User Management</Title>
+                <Title order={1} fw={700}>Admin User Management</Title>
                 <Flex w='100%' justify='space-between'>
                     <Box>
                         <Title order={3} fw={500}>Profile and Members</Title>
-                        <Text size="sm">Simplify user roles for secure, seamless access control.</Text>
                     </Box>
                     <Button variant="filled" color="#515977" radius='xl' px="xl">+Add</Button>
                 </Flex>
                 <ScrollArea h={500} onScrollPositionChange={({ y }) => setScrolled(y !== 0)}>
-                    {isAllUsersLoading ? <Text>Loading...</Text> : (
+                    {isSuccess ?
                         <Table miw='700'>
                             <Table.Thead className={cx(classes.header, { [classes.scrolled]: scrolled })}>
                                 <Table.Tr >
                                     <Table.Th>NAME</Table.Th>
                                     <Table.Th>EMAIL</Table.Th>
-                                    <Table.Th>ROLE</Table.Th>
                                     <Table.Th></Table.Th>
                                 </Table.Tr>
                             </Table.Thead>
                             <Table.Tbody>
-                                {allUsers?.data.map((user) => (
+                                {allUsers?.adminList.map((user) => (
                                     <Table.Tr key={user._id} onClick={() => console.log(`Open the sidebar Popup for the ${user._id}`)}>
                                         <Table.Td>
                                             <Group>
-                                                <Avatar name={`${user.firstName} ${user.lastName}`} color={randomizer() as string} allowedInitialsColors={['blue', 'red']}></Avatar>
-                                                {`${user.firstName} ${user.lastName}`}
+                                                <Avatar name={`${user.name}`} color={randomizer() as string} allowedInitialsColors={['blue', 'red']}></Avatar>
+                                                {`${user.name}`}
                                             </Group>
                                         </Table.Td>
-                                        <Table.Td>{user._id}</Table.Td>
-                                        <Table.Td>{user.role}</Table.Td>
-                                        <Table.Td>
-                                            <IconPencil onClick={() => console.log('aasdddss')} />
-                                        </Table.Td>
+                                        <Table.Td>{user.email}</Table.Td>
                                     </Table.Tr>
                                 ))}
                             </Table.Tbody>
                         </Table>
-                    )}
+
+                        : (
+                            <Text>Loading...</Text>
+                        )}
                 </ScrollArea>
             </Stack >
         </Paper >

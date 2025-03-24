@@ -190,8 +190,9 @@ export const getWellbe = async ({ queryKey }: { queryKey: any[] }) => {
 
 export const getAllUsers = async () => {
     try {
-        const response = await api.get('api/company-admin/usersManagementList/');
-        return response;
+        const response = await api.get('api/company-admin/adminList');
+        console.log(response.data)
+        return response.data;
     } catch (error) {
         return handleApiError(error, 'getAllUsers');
     }
