@@ -58,11 +58,7 @@ const Employees = () => {
         reset: resetInviteForm,
         setError: setInviteError,
         formState: { errors: inviteErrors },
-        watch: watchRole
     } = inviteForm;
-
-    const selectedRole = watchRole('role')
-    console.log(selectedRole)
     console.log(selectedDepartment)
     const company = localStorage.getItem('USER_COMPANY')
     // Add Department form
@@ -260,7 +256,6 @@ const Employees = () => {
                                                 style={{ width: '100%' }}
                                                 size="md"
                                                 data={departmentOptionsFromApi}
-                                                defaultValue={selectedDepartment}
                                                 rightSection={<IconChevronDown size={16} />}
                                                 onChange={(e) => setInviteValue('department', e.target.value)}
                                             >
@@ -270,17 +265,6 @@ const Employees = () => {
                                                     <option key={value} value={value}>{label}</option>
                                                 ))}
                                             </NativeSelect>
-
-                                            <NativeSelect
-                                                radius="md"
-                                                label={<Text mb="xs" fw={700}>Role</Text>}
-                                                style={{ width: '100%' }}
-                                                size="md"
-                                                data={[{ label: 'Employee', value: 'employee' }, { label: 'Admin', value: 'admin' }]}
-                                                defaultValue={'employee'}
-                                                rightSection={<IconChevronDown size={16} />}
-                                                onChange={(e) => setInviteValue('role', e.target.value)}
-                                            />
 
                                             <TextInput {...registerEmployee('firstName')} label={<Text fw={700}>First Name</Text>} />
                                             <TextInput {...registerEmployee('lastName')} label={<Text fw={700}>Last Name</Text>} />
