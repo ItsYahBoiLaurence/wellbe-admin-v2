@@ -152,6 +152,14 @@ const Scatterplot = () => {
                   dataKey={{ x: 'performance', y: 'wellbeing' }}
                   xAxisLabel="Performance"
                   yAxisLabel="Wellbeing"
+                  xAxisProps={{
+                    domain: [0, 100], // Fix x-axis range from 0 to 100
+                    ticks: [0, 20, 40, 60, 80, 100], // Define x-axis ticks
+                  }}
+                  yAxisProps={{
+                    domain: [0, 100], // Adjust y-axis range as needed,
+                    ticks: [0, 20, 40, 60, 80, 100],
+                  }}
                 />
               </Stack>
             </Paper>
