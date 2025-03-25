@@ -11,6 +11,7 @@ import {
   Paper,
   Stack,
   Text,
+  Title,
   useMantineTheme,
 } from '@mantine/core';
 import { IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
@@ -142,28 +143,26 @@ const Scatterplot = () => {
         <Paper w='100%' p="md"><Center><Text>No data available!</Text></Center></Paper>
       ) : (
         <>
-          <Stack gap="md">
-            <Paper radius="sm" shadow="xs" p="md">
-              <Stack gap="md">
-                <Text size="xl">Performance vs. Well-being of the Employee</Text>
-                <ScatterChart
-                  h={350}
-                  data={formatData('blue', 'Employee', data)}
-                  dataKey={{ x: 'performance', y: 'wellbeing' }}
-                  xAxisLabel="Performance"
-                  yAxisLabel="Wellbeing"
-                  xAxisProps={{
-                    domain: [0, 100], // Fix x-axis range from 0 to 100
-                    ticks: [0, 20, 40, 60, 80, 100], // Define x-axis ticks
-                  }}
-                  yAxisProps={{
-                    domain: [0, 100], // Adjust y-axis range as needed,
-                    ticks: [0, 20, 40, 60, 80, 100],
-                  }}
-                />
-              </Stack>
-            </Paper>
-          </Stack>
+          <Paper radius="sm" shadow="xs" p="xl">
+            <Stack gap="lg">
+              <Title order={2} size="xl">Performance vs. Well-being of the Employee</Title>
+              <ScatterChart
+                h={650}
+                data={formatData('blue', 'Employee', data)}
+                dataKey={{ x: 'performance', y: 'wellbeing' }}
+                xAxisLabel="Performance"
+                yAxisLabel="Wellbeing"
+                xAxisProps={{
+                  domain: [0, 100], // Fix x-axis range from 0 to 100
+                  ticks: [0, 20, 40, 60, 80, 100], // Define x-axis ticks
+                }}
+                yAxisProps={{
+                  domain: [0, 100], // Adjust y-axis range as needed,
+                  ticks: [0, 20, 40, 60, 80, 100],
+                }}
+              />
+            </Stack>
+          </Paper>
         </>
       )}
     </>
