@@ -46,6 +46,7 @@ const Scatterplot = () => {
   const [errorNotif, setErrorNotif] = useState(false);
   const { data, isLoading, error } = useQuery('scatterPlot', fetchDataForScatterPlot);
   const theme = useMantineTheme();
+  const [isButtonLoading, setIsButtonLoading] = useState(false)
   const openRef = useRef(null);
   const [opened, setOpened] = useState(false);
   const { handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<FormValues>({ defaultValues: { file: [] } });
@@ -60,9 +61,11 @@ const Scatterplot = () => {
       const formData = new FormData();
       formData.append('file', values.file[0]);
       try {
+        setIsButtonLoading(true)
         await api.post(`/api/company-admin/batchUploadPerformance?company=${user_company}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } });
         setNotif(true);
         reset({ file: [] });
+        setIsButtonLoading(false)
       } catch (error) {
         console.error('Upload error:', error);
         setErrorNotif(true);
@@ -130,7 +133,7 @@ const Scatterplot = () => {
             )}
             {notif && <Text c="green">Upload Success!</Text>}
             {errorNotif && <Text c="red">Account already registered!</Text>}
-            <Button type="submit" variant="filled" color="gray">
+            <Button type="submit" variant="filled" color="gray" loading={isButtonLoading}>
               Upload Performance Data
             </Button>
           </Stack>

@@ -42,7 +42,7 @@ const Employees = () => {
     // Notification state
     const [notif, setNotif] = useState(false);
     const [errorNotif, setErrorNotif] = useState(false);
-
+    const [isButtonLoading, setIsButtonLoading] = useState(false)
     // Main page department selection form
     const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');
@@ -171,12 +171,14 @@ const Employees = () => {
         const formData = new FormData();
         formData.append('file', values.file[0]);
         try {
+            setIsButtonLoading(true)
             await api.post(`/api/company-admin/batchUploadInvite?company=${company}`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' },
             });
             setNotif(true);
             resetBatch({ file: [] });
             setFileName(null);
+            setIsButtonLoading(false)
         } catch (error) {
             console.error('Upload error:', error);
             setErrorNotif(true);
@@ -226,7 +228,7 @@ const Employees = () => {
                             )}
                             {notif && <Text color="green">Upload Success!</Text>}
                             {errorNotif && <Text color="red">Failed to Invite! Check the CSV format and try again.</Text>}
-                            <Button type="submit" variant="filled" color="gray">
+                            <Button type="submit" variant="filled" color="gray" loading={isButtonLoading}>
                                 Batch Invite
                             </Button>
                         </Stack>
