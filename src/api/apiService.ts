@@ -133,8 +133,12 @@ export const getParticipationRate = async ({ queryKey }: { queryKey: any[] }) =>
 };
 
 export const updateEmployee = async (newUserInfo: any) => {
+    const { email } = newUserInfo
+    const params = {
+        email: email
+    }
     try {
-        const response = await api.put('/api/company-admin/updateEmployee', newUserInfo);
+        const response = await api.put('/api/company-admin/updateEmployee', newUserInfo, { params });
         return response.data;
     } catch (error) {
         return handleApiError(error, 'updateEmployee');

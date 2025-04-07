@@ -59,7 +59,6 @@ const Employees = () => {
         setError: setInviteError,
         formState: { errors: inviteErrors },
     } = inviteForm;
-    console.log(selectedDepartment)
     const company = localStorage.getItem('USER_COMPANY')
     // Add Department form
     const departmentForm = useForm({
@@ -97,7 +96,7 @@ const Employees = () => {
     });
 
     // Fetch employee data
-    const { data: departmentData, isLoading: isDepartmentDataLoading } = useQuery({
+    const { data: departmentData } = useQuery({
         queryKey: ['dataOfDepartment'],
         queryFn: getEmployees,
     });
@@ -184,7 +183,6 @@ const Employees = () => {
             setErrorNotif(true);
         }
     };
-
     return (
         <Box>
             <Drawer.Stack>

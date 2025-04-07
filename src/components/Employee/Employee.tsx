@@ -1,14 +1,32 @@
 import { Avatar, Box, Button, Drawer, Flex, NativeSelect, Paper, Stack, Text, TextInput } from "@mantine/core"
 import { useDisclosure } from "@mantine/hooks"
 import { useForm } from "react-hook-form"
-import { useMutation } from 'react-query';
-import { updateEmployee } from "../../api/apiService";
+import { useMutation, useQuery } from 'react-query';
+import { getAllDepartments, updateEmployee } from "../../api/apiService";
 import queryClient from "../../queryClient";
 import { IconChevronDown } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 
 const UserCard = ({ department, dataEmployee, dropdownData }) => {
 
+    const staticDepartmentOptions = [
+        { label: 'No Department Available', value: '' },
+    ];
+
+    const transformDepartmentData = (data: any[]): { label: string; value: string }[] =>
+        Array.isArray(data)
+            ? data.map((department) => ({ label: department, value: department }))
+            : [];
+
+    // Fetch all departments (to populate the dropdown)
+    const { data: allDepartments, refetch: refetchDepartment } = useQuery({
+        queryKey: ['AllDepartmentInCompany'],
+        queryFn: getAllDepartments,
+    });
+    // Use the transformed data if available, otherwise fallback to static options.
+    const departmentOptionsFromApi = allDepartments
+        ? transformDepartmentData(allDepartments)
+        : staticDepartmentOptions;
 
     const [opened, { open, close }] = useDisclosure(false)
 
@@ -31,11 +49,12 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
     const [notif, setNotif] = useState(false)
 
 
-
     const onsubmit = async (data) => {
+        console.log(data)
         try {
             await updateUserInfo(data)
             setNotif(true)
+            refetchDepartment()
         } catch (error) {
             throw error
         }
@@ -60,7 +79,7 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                     <Drawer.Content>
                         <Drawer.Header style={{ backgroundColor: '#515977' }}>
                             <Drawer.Title style={{ color: 'white', }}>
-                                <Text size="xl">Manage Employee</Text>
+                                <Text size="xl" fw={700}>Edit Employee Details </Text>
                             </Drawer.Title>
                             <Drawer.CloseButton
                                 style={{
@@ -73,19 +92,21 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                                 }}
                             />
                         </Drawer.Header>
-                        <Drawer.Body h={'90%'}>
-                            <Box h={'95%'}>
-                                <form onSubmit={handleSubmit(onsubmit)} style={{ height: '100%' }}  >
-                                    <Text my={'lg'} size="lg" fw={700}>Employee Details</Text>
+                        <Drawer.Body h={'100%'}>
+                            <Box h={'95%'} pt={'lg'}>
+                                <form onSubmit={handleSubmit(onsubmit)} style={{ height: '100%' }} >
                                     <Stack justify="space-between" h={'95%'}>
                                         <Flex direction={'column'} gap={'md'}>
                                             <NativeSelect
                                                 label={<Text fw={700} >Department</Text>}
-                                                data={dropdownData}
                                                 rightSection={<IconChevronDown size={16} />}
-                                                defaultValue={department}
                                                 onChange={(e) => setValue('department', e.target.value)}
-                                            />
+                                            >
+                                                <option value=''>Select Department</option>
+                                                {departmentOptionsFromApi.map(({ label, value }) => (
+                                                    <option key={value} value={value}>{label}</option>
+                                                ))}
+                                            </NativeSelect>
 
                                             <TextInput
                                                 label={<Text fw={700}>First Name</Text>}
@@ -109,6 +130,7 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                                         <Stack gap={'sm'}>
                                             <Button variant="filled" type="submit" disabled={isSubmitting} color="#515977">{isSubmitting ? "Saving..." : "Save"}</Button>
                                             {/* <Button color="#515977" variant="outline">Delete</Button> */}
+                                            <Button variant="outline" onClick={close} disabled={isSubmitting} color="#515977">Back</Button>
                                         </Stack>
                                     </Stack>
                                 </form>
