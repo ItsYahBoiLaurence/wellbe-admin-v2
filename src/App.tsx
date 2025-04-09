@@ -5,6 +5,9 @@ import { BrowserRouter } from 'react-router-dom';
 import queryClient from './queryClient';
 import Routes from './Routes';
 import { Authentication } from './context/Authencation';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications'
+import '@mantine/notifications/styles.css';
 
 const theme = createTheme({
   fontFamily:
@@ -38,13 +41,16 @@ function App() {
   return (
     <MantineProvider theme={theme} stylesTransform={emotionTransform}>
       <MantineEmotionProvider>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <Authentication>
-              <Routes />
-            </Authentication>
-          </BrowserRouter>
-        </QueryClientProvider>
+        <ModalsProvider>
+          <Notifications />
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <Authentication>
+                <Routes />
+              </Authentication>
+            </BrowserRouter>
+          </QueryClientProvider>
+        </ModalsProvider>
       </MantineEmotionProvider>
     </MantineProvider>
   );

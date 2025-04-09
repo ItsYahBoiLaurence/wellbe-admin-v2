@@ -7,6 +7,7 @@ import { IconSettings, IconLogout } from '@tabler/icons-react';
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/Authencation';
 import api from '../../api/api';
+import BatchButton from '../SendBatchButton/index'
 
 const Layout = () => {
   const [opened, { toggle }] = useDisclosure();
@@ -14,11 +15,12 @@ const Layout = () => {
   const { logout } = useContext(AuthenticationContext)
 
   const handleSubmitBatch = async () => {
-    try {
-      await api.get('/api/company-admin/scheduleBatchFrequency').then((res) => console.log(res))
-    } catch (error) {
-      console.log(error)
-    }
+    // try {
+    //   await api.get('/api/company-admin/scheduleBatchFrequency').then((res) => console.log(res))
+    // } catch (error) {
+    //   console.log(error)
+    // }
+    alert('hello')
   }
 
   return (
@@ -108,13 +110,6 @@ const Layout = () => {
                     </Box>
                     <NativeSelect data={['Daily', 'Weekly', 'Monthly']} />
                   </Flex>
-                  <Flex align='start'>
-                    <Box>
-                      <Title order={4} fw={500}>Data Retention Policy</Title>
-                      <Text size='xs' fw={200}>Configure how long data will be stored before being archived or deleted.</Text>
-                    </Box>
-                    <TextInput></TextInput>
-                  </Flex>
                 </Stack>
               </Stack>
               <Button>Save</Button>
@@ -122,18 +117,28 @@ const Layout = () => {
           </Drawer>
         </Drawer.Stack>
 
+
+
+
+
+
+
+
+
+
         <Group h="100%" px="md" justify='space-between'>
           <Box>
             <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
             <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
           </Box>
           <Group>
-            <Button variant='filled' size='sm' radius='xl' onClick={handleSubmitBatch}>
-              Send Batch
-            </Button>
+            <BatchButton />
             <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
           </Group>
         </Group>
+
+
+
       </AppShell.Header>
 
       <AppShell.Navbar p="md" style={{ backgroundColor: '#fff' }}>

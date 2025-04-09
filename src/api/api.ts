@@ -4,7 +4,7 @@ import { signOut } from 'firebase/auth'
 import { auth } from "../api/firebaseConfig";
 
 // API base URL from environment variables
-const BASE_URL = 'https://wellbe-staging-employee-qiwsg.ondigitalocean.app'
+const BASE_URL = 'https://wellbe-staging-employee-qiwsg.ondigitalocean.app/'
 
 const api = axios.create({
     baseURL: BASE_URL,
