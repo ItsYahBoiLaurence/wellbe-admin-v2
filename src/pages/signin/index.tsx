@@ -14,11 +14,11 @@ type Creds = {
 
 const signin = () => {
   const navigate = useNavigate()
-  const { user, login } = useContext(AuthenticationContext)
+  const { login } = useContext(AuthenticationContext)
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, },
     setError,
   } = useForm({
     defaultValues: {
@@ -27,59 +27,16 @@ const signin = () => {
     },
   });
 
-  const { mutateAsync: loginUser, isLoading: isLoggingIn } = useMutation({
-    mutationFn: async (credentials: Creds) => login(credentials),
-    onSuccess: async () => {
-      navigate('/')
-    },
-    onError: (error) => {
-      // Handle different Firebase error codes
-      switch (error.code) {
-        case "auth/invalid-email":
-          setError("email", {
-            type: "manual",
-            message: "Invalid email format.",
-          });
-          break;
-        case "auth/user-disabled":
-          setError("email", {
-            type: "manual",
-            message: "This user account has been disabled.",
-          });
-          break;
-        case "auth/user-not-found":
-          setError("email", {
-            type: "manual",
-            message: "No user found with this email.",
-          });
-          break;
-        case "auth/wrong-password":
-        case "auth/invalid-credential":
-          // Some Firebase configurations may return "auth/invalid-credentials" instead of "auth/wrong-password"
-          setError('email', {
-            type: "manual",
-            message: " ",
-          })
-          setError("password", {
-            type: "manual",
-            message: "Invalid username or password!",
-          });
 
-          break;
-        default:
-          // For any other error, log it and set a generic error
-          console.error("Login error:", error);
-          setError("email", {
-            type: "manual",
-            message: "An unexpected error occurred. Please try again.",
-          });
-      }
-    },
-  });
-
-  const onSubmit = (data) => {
-    loginUser(data);
+  const onSubmit = async (data) => {
+    const { email, password } = data
+    try {
+      await login(email, password)
+    } catch (error) {
+      throw error
+    }
   };
+
   return (
     <Center bg='white' h='100vh' p='md'>
       <Paper radius='sm' h='460' >
@@ -114,7 +71,7 @@ const signin = () => {
                 />
               </Stack>
             </Box>
-            <Button variant="filled" color="#515977" type="submit" disabled={isLoggingIn} loading={isLoggingIn}>Login</Button>
+            <Button variant="filled" color="#515977" type="submit" >Login</Button>
           </Stack>
         </form>
       </Paper>

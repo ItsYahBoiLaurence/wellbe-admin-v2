@@ -1,110 +1,85 @@
-import { createContext, PropsWithChildren, useEffect, useState, useCallback, useMemo } from "react";
-import { User, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { createContext, PropsWithChildren, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { auth } from "../api/firebaseConfig";
-import { useQueryClient } from "react-query";
+import api from "../api/api";
+import queryClient from "../queryClient";
 
-type Creds = {
-    email: string;
-    password: string;
-};
+type LoginCreds = {
+    email: string
+    first_name: string
+    last_name: string
+    department_name: string
+    company: string
+    password: string
+}
 
 interface AuthContextType {
-    user: User | null;
-    login: (credentials: Creds) => Promise<void>;
+    token: string | null;
+    login: (email: string, password: string) => Promise<void>;
     logout: () => Promise<void>;
+    userRegister: (credentials: LoginCreds) => Promise<void>;
 }
 
 export const AuthenticationContext = createContext<AuthContextType>({
-    user: null,
-    login: () => {
-        throw new Error("login method not implemented");
-    },
-    logout: () => {
-        throw new Error("logout method not implemented");
-    }
+    token: null,
+    login: async () => { throw new Error('login method not implemented'); },
+    logout: async () => { throw new Error('logout method not implemented'); },
+    userRegister: async () => { throw new Error('register method not implemented'); },
 });
 
 const EXCLUDED_PATHS = ["/sign-in"];
 
 export const Authentication = ({ children }: PropsWithChildren<{}>) => {
-    const [user, setUser] = useState<User | null>(null);
+    const [token, setToken] = useState<string | null>(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const queryClient = useQueryClient();
 
-    // Memoize login function to prevent unnecessary re-renders
-    const login = useCallback(async (credentials: Creds) => {
+    const login = async (email: string, password: string): Promise<void> => {
         try {
-            const userCredential = await signInWithEmailAndPassword(
-                auth,
-                credentials.email,
-                credentials.password
-            );
-            // No need to setUser here as onAuthStateChanged will handle it
-            const token = await userCredential.user.getIdToken();
-            localStorage.setItem("ADMIN_TOKEN", token);
+            const response = await api.post('/auth/sign-in', { email, password })
+            localStorage.setItem("CLIENT_TOKEN", response.data.access_token)
+            navigate('/')
         } catch (error) {
+            console.error("Login failed", error);
             throw error;
         }
-    }, []);
+    };
 
-    // Memoize logout function to prevent unnecessary re-renders
-    const logout = useCallback(async (): Promise<void> => {
+    const logout = async (): Promise<void> => {
         try {
-            await signOut(auth);
-            // No need to setUser here as onAuthStateChanged will handle it
-            localStorage.removeItem("ADMIN_TOKEN");
-            localStorage.removeItem("USER_COMPANY");
-            queryClient.removeQueries();
-            queryClient.clear();
-            // Navigation will be handled by the auth state effect
+            setToken(null);
+            queryClient.clear(); // Clear all queries and cache
+            localStorage.clear();
         } catch (error) {
             console.error("Logout failed", error);
             throw error;
         }
-    }, [queryClient]);
+    };
 
-    // Handle auth state changes and navigation in a single useEffect
-    useEffect(() => {
-        // Setup auth state listener
-        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-            setUser(currentUser);
-
-            if (currentUser) {
-                const userData = await currentUser.getIdTokenResult();
-                if (userData?.claims.company) {
-                    localStorage.setItem('USER_COMPANY', userData.claims.company as string);
-                }
-
-                // Handle navigation when user is authenticated
-                if (EXCLUDED_PATHS.includes(location.pathname)) {
-                    navigate("/");
-                }
-
-                // Invalidate queries when user changes
-                queryClient.invalidateQueries();
-            } else {
-                // Handle navigation when user is not authenticated
-                if (!EXCLUDED_PATHS.includes(location.pathname)) {
-                    navigate("/sign-in");
-                }
+    const userRegister = async (credentials: LoginCreds) => {
+        try {
+            const response = await api.post('user', credentials)
+            console.log(response)
+            if (response.status) {
+                navigate('/sign-in');
             }
-        });
+        } catch (error) {
+            console.error("Registration failed", error);
+            throw error;
+        }
+    };
 
-        // Cleanup auth listener on unmount
-        return () => unsubscribe();
-    }, [location.pathname, navigate, queryClient]);
-
-    // Memoize the context value to prevent unnecessary re-renders
-    const contextValue = useMemo(() => ({
-        user,
-        login,
-        logout
-    }), [user, login, logout]);
+    useEffect(() => {
+        const user_token = localStorage.getItem("CLIENT_TOKEN")
+        if (user_token) setToken(user_token)
+        if (!token && !EXCLUDED_PATHS.includes(location.pathname)) {
+            navigate('/sign-in')
+            return
+        }
+        if (token && EXCLUDED_PATHS.includes(location.pathname)) navigate('/')
+    })
 
     return (
-        <AuthenticationContext.Provider value={contextValue}>
+        <AuthenticationContext.Provider value={{ token, login, logout, userRegister }}>
             {children}
         </AuthenticationContext.Provider>
     );
