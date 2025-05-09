@@ -8,18 +8,17 @@ const BASE_URL = 'http://localhost:8000/'
 
 const api = axios.create({
     baseURL: BASE_URL,
-    // baseURL: 'http://localhost:2000',
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
     },
-    timeout: 10000, // 10 second timeout
+    timeout: 10000,
 })
 
 // Request interceptor
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem("ADMIN_TOKEN");
+        const token = localStorage.getItem("CLIENT_TOKEN");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`
         }
@@ -31,22 +30,18 @@ api.interceptors.request.use(
     }
 )
 
-const handleLogout = async () => {
-    await signOut(auth)
-}
 
-
-api.interceptors.response.use(
-    response => response,
-    error => {
-        if (error.response && error.response.status === 401) {
-            console.log(`Session Expired. Please Login again.`)
-            queryClient.clear()
-            localStorage.clear()
-            handleLogout()
-        }
-        return Promise.reject(error)
-    }
-)
+// api.interceptors.response.use(
+//     response => response,
+//     error => {
+//         if (error.response && error.response.status === 401) {
+//             console.log(`Session Expired. Please Login again.`)
+//             queryClient.clear()
+//             localStorage.clear()
+//             handleLogout()
+//         }
+//         return Promise.reject(error)
+//     }
+// )
 
 export default api

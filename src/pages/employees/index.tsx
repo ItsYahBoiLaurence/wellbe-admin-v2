@@ -1,12 +1,15 @@
 import {
+    Avatar,
     Box,
     Button,
     Center,
     Drawer,
     Flex,
-    Loader,
+    Group,
+    LoadingOverlay,
     NativeSelect,
     Paper,
+    SimpleGrid,
     Stack,
     Text,
     TextInput,
@@ -20,10 +23,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDisclosure } from '@mantine/hooks';
 import { useMutation, useQuery } from 'react-query';
 import { addDepartment, getAllDepartments, getEmployees, sendEmail } from '../../api/apiService';
-import ParticipationRate from '../../components/DataVisualization/ParticipationRate';
-import EmployeeDepartment from '../../components/EmployeeDepartment';
 import { Dropzone } from '@mantine/dropzone';
 import api from '../../api/api';
+import AddDepartment from '../../components/V2Components/AddDepartment'
+import InviteEmployee from '../../components/V2Components/InviteEmployee'
 
 const staticDepartmentOptions = [
     { label: 'No Department Available', value: '' },
@@ -34,15 +37,67 @@ const transformDepartmentData = (data: any[]): { label: string; value: string }[
         ? data.map((department) => ({ label: department, value: department }))
         : [];
 
+
+
+const EMPLOYEE_CARD = ({ department }) => {
+    const { data: EMPLOYEES, isError: noEMPLOYEES, isLoading: isFETCHINGEMPLOYEES } = useQuery({
+        queryKey: ['EMPLOYEES', department],
+        queryFn: async ({ queryKey }) => {
+            const [, department] = queryKey
+            console.log(department)
+
+            if (!department || department === "") {
+                const res = await api.get('hr-admin/employees');
+                return res.data
+            }
+            const res = await api.get('hr-admin/employees', { params: { department } });
+            return res.data
+        }
+    })
+
+    if (isFETCHINGEMPLOYEES) return (
+        <LoadingOverlay
+            h={'100px'}
+            pos={'relative'}
+            visible={true}
+            zIndex={1000}
+            overlayProps={{ radius: 'sm', blur: 20 }}
+            loaderProps={{ color: '#515977', type: 'bars' }}
+        />
+    )
+
+    if (noEMPLOYEES) return <>no employees</>
+
+    if (EMPLOYEES.length === 0) return <Paper h={'100px'} ><Center h={'100%'}><Title order={2} >No employees!</Title></Center></Paper>
+
+    return (
+        <SimpleGrid cols={4} >
+            {EMPLOYEES.map(({ id, first_name, last_name, department }) => (
+                <Paper key={id} radius={'md'} p={'xl'}>
+                    <Center h={'100%'}>
+                        <Group gap={'md'}>
+                            <Avatar size={'lg'}>{first_name[0]}</Avatar>
+                            <Box>
+                                <Text size="xs">{department.name}</Text>
+                                <Text size="md" fw={700}>{`${first_name} ${last_name}`}</Text>
+                            </Box>
+                        </Group>
+                    </Center>
+                </Paper>
+            ))}
+        </SimpleGrid>
+    )
+}
+
 const Employees = () => {
     // Disclosures for Invite Employee and Add Department drawers
-    const [openedEmployeeInvite, { open: openEmployeeInvite, close: closeEmployeeInvite }] = useDisclosure(false);
-    const [openedAddDepartment, { open: openAddDepartment, close: closeAddDepartment }] = useDisclosure(false);
 
     // Notification state
     const [notif, setNotif] = useState(false);
     const [errorNotif, setErrorNotif] = useState(false);
     const [isButtonLoading, setIsButtonLoading] = useState(false)
+
+
     // Main page department selection form
     const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');
@@ -51,6 +106,7 @@ const Employees = () => {
     const inviteForm = useForm({
         defaultValues: { department: selectedDepartment, firstName: '', lastName: '', email: '', role: 'employee' },
     });
+
     const {
         register: registerEmployee,
         handleSubmit: handleSubmitInvite,
@@ -153,18 +209,6 @@ const Employees = () => {
         }
     };
 
-    const submitDepartment = async (data: any) => {
-        try {
-            await addNewDepartment(data);
-            resetDepartmentForm();
-            refetchDepartment()
-        } catch (error: any) {
-            if (error?.status === 409) {
-                setDepartmentError('department', { type: 'manual', message: 'Department Already Exist!' });
-            }
-        }
-    };
-
     const submitBatchUpload = async (values: { file: File[] }) => {
         if (!values.file.length) return;
         const formData = new FormData();
@@ -183,154 +227,31 @@ const Employees = () => {
             setErrorNotif(true);
         }
     };
+
+
+    const { data: DEPARTMENT, isError: noDEPARTMENT, isLoading: isFETCHINGDEPARTMENT, refetch: REFETCH_DEPARTMENT } = useQuery({
+        queryKey: ['DEPARTMENT'],
+        queryFn: async () => {
+            const res = await api.get('department')
+            return res.data
+        }
+    })
+
+    if (isFETCHINGDEPARTMENT) {
+        console.log('fetching...')
+        return
+    }
+
+    if (noDEPARTMENT) {
+        console.log('no department')
+        return
+    }
+
+    const DEPARTMENT_NAMES = DEPARTMENT.map(({ name }) => name)
+
     return (
         <Box>
-            <Drawer.Stack>
-                {/* Batch Upload Drawer */}
-                <Drawer position="right" {...stack.register('batch-upload')}>
-                    <form onSubmit={handleBatchSubmit(submitBatchUpload)}>
-                        <Stack gap="md" p="md">
-                            <Dropzone openRef={openRef} onDrop={handleDrop} accept={['text/csv']} maxSize={30 * 1024 ** 2}>
-                                <div style={{ pointerEvents: 'none' }}>
-                                    <Flex justify="center">
-                                        <Dropzone.Accept>
-                                            <IconDownload size={50} color={theme.colors.blue[6]} stroke={1.5} />
-                                        </Dropzone.Accept>
-                                        <Dropzone.Reject>
-                                            <IconX size={50} color={theme.colors.red[6]} stroke={1.5} />
-                                        </Dropzone.Reject>
-                                        <Dropzone.Idle>
-                                            <IconCloudUpload size={50} stroke={1.5} />
-                                        </Dropzone.Idle>
-                                    </Flex>
-                                    <Text ta="center" fw={700} size="lg" mt="xl">
-                                        <Dropzone.Accept>Drop CSV file here</Dropzone.Accept>
-                                        <Dropzone.Reject>Only CSV files under 30MB are accepted</Dropzone.Reject>
-                                        <Dropzone.Idle>Upload CSV File</Dropzone.Idle>
-                                    </Text>
-                                    {batchFileValue && batchFileValue.length > 0 ? (
-                                        <Text ta="center" size="sm" mt="md" fw={600}>
-                                            Uploaded file: {batchFileValue[0].name}
-                                        </Text>
-                                    ) : (
-                                        <Text ta="center" size="sm" mt="xs" color="dimmed">
-                                            Drag & drop a CSV file here. Only <i>.csv</i> files less than 30MB are accepted.
-                                        </Text>
-                                    )}
-                                </div>
-                            </Dropzone>
-                            {batchErrors.file && (
-                                <Text color="red" size="sm">
-                                    {batchErrors.file.message || 'Please upload a CSV file'}
-                                </Text>
-                            )}
-                            {notif && <Text color="green">Upload Success!</Text>}
-                            {errorNotif && <Text color="red">Failed to Invite! Check the CSV format and try again.</Text>}
-                            <Button type="submit" variant="filled" color="gray" loading={isButtonLoading}>
-                                Batch Invite
-                            </Button>
-                        </Stack>
-                    </form>
-                </Drawer>
 
-                {/* Invite Employee Drawer */}
-                <Drawer.Root key={1} position="right" size="md" opened={openedEmployeeInvite} onClose={closeEmployeeInvite}>
-                    <Drawer.Overlay />
-                    <Drawer.Content>
-                        <Drawer.Header sx={{ backgroundColor: '#515977' }}>
-                            <Drawer.Title sx={{ color: 'white' }}>
-                                <Text size="xl">Invite Employee</Text>
-                            </Drawer.Title>
-                            <Drawer.CloseButton
-                                sx={{ color: 'white', background: 'none', border: 'none', boxShadow: 'none', cursor: 'pointer' }}
-                            />
-                        </Drawer.Header>
-                        <Drawer.Body h="90%">
-                            <Box h="95%">
-                                <form onSubmit={handleSubmitInvite(submitInvite)} style={{ height: '100%' }}>
-                                    <Flex direction="column" gap="md" justify="space-between" h="100%" mt="md">
-                                        <Flex direction="column" gap="sm">
-                                            <NativeSelect
-                                                radius="md"
-                                                label={<Text mb="xs" fw={700}>Department</Text>}
-                                                style={{ width: '100%' }}
-                                                size="md"
-                                                data={departmentOptionsFromApi}
-                                                rightSection={<IconChevronDown size={16} />}
-                                                onChange={(e) => setInviteValue('department', e.target.value)}
-                                            >
-
-                                                <option value=''>Select Department</option>
-                                                {departmentOptionsFromApi.map(({ label, value }) => (
-                                                    <option key={value} value={value}>{label}</option>
-                                                ))}
-                                            </NativeSelect>
-
-                                            <TextInput {...registerEmployee('firstName')} label={<Text fw={700}>First Name</Text>} />
-                                            <TextInput {...registerEmployee('lastName')} label={<Text fw={700}>Last Name</Text>} />
-                                            <TextInput
-                                                {...registerEmployee('email')}
-                                                label={<Text fw={700}>Company Email</Text>}
-                                                error={inviteErrors.email?.message}
-                                            />
-                                            {notif && <Text color="green">Invite Success!</Text>}
-                                            {errorNotif && <Text color="red">Account already registered!</Text>}
-                                            <Text ta="left" size="sm">
-                                                Newly added employees will receive a notification to sign up on our Wellbe companion app and receive company updates.
-                                            </Text>
-                                        </Flex>
-                                        <Stack>
-                                            <Button type="submit" disabled={inviteSending} size="lg" color="#515977">
-                                                {inviteSending ? 'Sending Invite...' : 'Invite'}
-                                            </Button>
-                                            <Button size="lg" color="#515977" onClick={() => stack.open('batch-upload')}>
-                                                Use Batch Upload
-                                            </Button>
-                                        </Stack>
-                                    </Flex>
-                                </form>
-                            </Box>
-                        </Drawer.Body>
-                    </Drawer.Content>
-                </Drawer.Root>
-
-                {/* Add Department Drawer */}
-                <Drawer.Root key={2} position="right" size="md" opened={openedAddDepartment} onClose={closeAddDepartment}>
-                    <Drawer.Overlay />
-                    <Drawer.Content>
-                        <Drawer.Header sx={{ backgroundColor: '#515977' }}>
-                            <Drawer.Title sx={{ color: 'white' }}>
-                                <Text size="xl">Manage Employee</Text>
-                            </Drawer.Title>
-                            <Drawer.CloseButton
-                                sx={{ color: 'white', background: 'none', border: 'none', boxShadow: 'none', cursor: 'pointer' }}
-                            />
-                        </Drawer.Header>
-                        <Drawer.Body h="90%">
-                            <Box h="95%">
-                                <form onSubmit={handleSubmitDepartment(submitDepartment)} style={{ height: '100%' }}>
-                                    <Flex direction="column" gap="md" justify="space-between" h="100%" mt="md">
-                                        <Box>
-                                            <Text mb="md" fw={700}>Department Name</Text>
-                                            <TextInput
-                                                size="lg"
-                                                {...registerDepartment('department', { required: 'Department name is required' })}
-                                                error={departmentErrors.department?.message}
-                                            />
-                                            <Text mt="md" size="sm">
-                                                Employees in this department will be notified to download the Wellbe companion app and receive company updates.
-                                            </Text>
-                                        </Box>
-                                        <Button disabled={departmentSubmitting} type="submit" size="lg" color="#515977">
-                                            {departmentSubmitting ? <Loader color="blue" /> : 'Save'}
-                                        </Button>
-                                    </Flex>
-                                </form>
-                            </Box>
-                        </Drawer.Body>
-                    </Drawer.Content>
-                </Drawer.Root>
-            </Drawer.Stack>
 
             <Paper shadow="md" radius="md" px="xl" py="md">
                 <Flex direction="row" justify="space-between" align="center">
@@ -349,7 +270,6 @@ const Employees = () => {
                                             radius="lg"
                                             style={{ width: '300px' }}
                                             size="md"
-                                            data={departmentOptionsFromApi}
                                             rightSection={<IconChevronDown size={16} />}
                                             onChange={(e) => {
                                                 field.onChange(e.target.value)
@@ -357,11 +277,9 @@ const Employees = () => {
                                             }}
                                         >
                                             <option value=''>Select Department</option>
-                                            {departmentOptionsFromApi.map(({ label, value }) => (
-                                                <option key={value} value={value}>{label}</option>
+                                            {DEPARTMENT_NAMES.map((item) => (
+                                                <option key={item} value={item}>{item}</option>
                                             ))}
-
-
                                         </NativeSelect>
                                     )}
                                 />
@@ -369,31 +287,19 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align="center">
-                        <Button color="#515977" size="md" radius="xl" onClick={openEmployeeInvite}>
-                            + Invite
-                        </Button>
-                        <Button color="#82BC66" size="md" radius="xl" onClick={openAddDepartment}>
+
+                        {/* <Button color="#82BC66" size="md" radius="xl" onClick={openAddDepartment}>
                             + Department
-                        </Button>
+                        </Button> */}
+                        <InviteEmployee departments={DEPARTMENT_NAMES} />
+                        <AddDepartment refetch={REFETCH_DEPARTMENT} />
                     </Flex>
                 </Flex>
             </Paper>
 
-            {selectedDepartment != '' ? <>
-                <ParticipationRate selectedDepartment={selectedDepartment} />
-                <Box>
-                    {departmentData?.data === null && departmentData?.data === undefined ? <Paper><Center><Text>No data available!</Text></Center></Paper> : (
-                        <EmployeeDepartment
-                            dataToRender={departmentData?.data}
-                            currentDepartment={selectedDepartment}
-                            dropdownData={staticDepartmentOptions}
-                        />
-                    )}
-                </Box>
-            </> : <Paper my="md" p={'xl'}><Text ta={'center'}>
-                Choose Department
-            </Text>
-            </Paper>}
+            <Box my="md" >
+                <EMPLOYEE_CARD department={selectedDepartment} />
+            </Box>
         </Box>
     );
 };
