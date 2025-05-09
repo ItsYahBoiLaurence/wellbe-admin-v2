@@ -27,6 +27,7 @@ import { Dropzone } from '@mantine/dropzone';
 import api from '../../api/api';
 import AddDepartment from '../../components/V2Components/AddDepartment'
 import InviteEmployee from '../../components/V2Components/InviteEmployee'
+import PARTICIPATION_RATE from '../../components/V2Components/ParticipationRate'
 
 const staticDepartmentOptions = [
     { label: 'No Department Available', value: '' },
@@ -42,16 +43,15 @@ const transformDepartmentData = (data: any[]): { label: string; value: string }[
 const EMPLOYEE_CARD = ({ department }) => {
     const { data: EMPLOYEES, isError: noEMPLOYEES, isLoading: isFETCHINGEMPLOYEES } = useQuery({
         queryKey: ['EMPLOYEES', department],
-        queryFn: async ({ queryKey }) => {
-            const [, department] = queryKey
-            console.log(department)
+        queryFn: async ({ queryKey: [, department] }) => {
+            // Build the request config: either { params: { department } } or empty object
+            const config = department
+                ? { params: { department } }
+                : {};
 
-            if (!department || department === "") {
-                const res = await api.get('hr-admin/employees');
-                return res.data
-            }
-            const res = await api.get('hr-admin/employees', { params: { department } });
-            return res.data
+            // Single GET, axios will omit undefined params automatically
+            const { data } = await api.get('hr-admin/employees', config);
+            return data;
         }
     })
 
@@ -297,9 +297,10 @@ const Employees = () => {
                 </Flex>
             </Paper>
 
-            <Box my="md" >
+            <Stack my="sm" gap={'sm'}>
+                <PARTICIPATION_RATE department={selectedDepartment} />
                 <EMPLOYEE_CARD department={selectedDepartment} />
-            </Box>
+            </Stack>
         </Box>
     );
 };
