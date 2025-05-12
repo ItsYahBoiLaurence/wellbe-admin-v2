@@ -1,10 +1,7 @@
 import axios from 'axios'
-import queryClient from '../queryClient'
-import { signOut } from 'firebase/auth'
-import { auth } from "../api/firebaseConfig";
 
 // API base URL from environment variables
-const BASE_URL = 'http://localhost:8000/'
+const BASE_URL = 'http://159.65.250.197:3000/'
 
 const api = axios.create({
     baseURL: BASE_URL,
@@ -29,19 +26,5 @@ api.interceptors.request.use(
         return Promise.reject(error)
     }
 )
-
-
-// api.interceptors.response.use(
-//     response => response,
-//     error => {
-//         if (error.response && error.response.status === 401) {
-//             console.log(`Session Expired. Please Login again.`)
-//             queryClient.clear()
-//             localStorage.clear()
-//             handleLogout()
-//         }
-//         return Promise.reject(error)
-//     }
-// )
 
 export default api

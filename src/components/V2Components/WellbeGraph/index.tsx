@@ -1,7 +1,6 @@
 import { useQuery } from "react-query"
 import api from "../../../api/api"
-import { Paper, Stack, Text, Title } from "@mantine/core"
-import { AreaChart } from "recharts"
+import { Paper, Stack, Title } from "@mantine/core"
 import { LineChart } from "@mantine/charts"
 
 export default function index({ period }: { period: string }) {
