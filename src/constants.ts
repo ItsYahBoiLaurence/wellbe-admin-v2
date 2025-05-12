@@ -1,6 +1,9 @@
 import DECREASE from './assets/decrease.png'
 import INCREASE from './assets/increase.png'
 import MAINTAIN from './assets/maintained.png'
+import ABOVE_AVE from './assets/AboveAverage.png'
+import MAINTAINED from './assets/MaintainedScore.png'
+import LOW from './assets/LowAverage.png'
 
 export const getLabel = (value) => {
 
@@ -42,6 +45,6 @@ export const labelColor = (label) => {
 }
 
 export const setIcon = (label) => {
-    const icon = label == "Below Average" ? DECREASE : label == "Average" ? MAINTAIN : label == "Above Average" ? INCREASE : 'black'
+    const icon = label == "Below Average" ? LOW : label == "Average" ? MAINTAINED : label == "Above Average" ? ABOVE_AVE : 'black'
     return icon
 }

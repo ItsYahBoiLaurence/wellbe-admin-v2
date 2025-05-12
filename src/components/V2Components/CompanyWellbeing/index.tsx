@@ -31,26 +31,7 @@ const Domain = ({ domain_title, score }: { domain_title: string, score: number }
     )
 }
 
-export default function index({ period }: { period: string }) {
-
-    const { data: WELLBEING_DATA, isError: noWELLBEING_DATA, isLoading: isFETCHING_DATA } = useQuery({
-        queryKey: ['WELLBEING_DATA', period],
-        queryFn: async () => {
-            const config = period
-                ? { params: { period } }
-                : {}
-
-            const res = await api.get('wellbeing/company', config)
-            return res.data
-        }
-    })
-
-    if (isFETCHING_DATA) return <>fetching...</>
-
-    if (noWELLBEING_DATA) return <>no data!</>
-
-    console.log(WELLBEING_DATA)
-
+export default function index({ WELLBEING_DATA }) {
     return (
         <SimpleGrid cols={2}>
             <Domain domain_title={"character"} score={WELLBEING_DATA.character} />

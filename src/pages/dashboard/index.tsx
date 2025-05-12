@@ -20,7 +20,9 @@ import NormGraph from '../../components/DataVisualization/NormGraph';
 import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
 import COMPANYWELLBEING from '../../components/V2Components/CompanyWellbeing'
 import DEPARTMENT from '../../components/V2Components/DepartmentWellbeing'
-
+import NORMGRAPH from '../../components/V2Components/NormGraph'
+import api from '../../api/api';
+import WELLBEGRAPH from '../../components/V2Components/WellbeGraph'
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -29,25 +31,6 @@ const time = [
 ];
 
 const Dashboard = () => {
-  const { control, watch } = useForm({
-    defaultValues: {
-      data: 'OverALLCompany',
-      time: 'Annually',
-    },
-  });
-
-  const selectedValues = watch(['data', 'time']);
-
-  const { data: domainData } = useQuery({
-    queryKey: ['AllDomain', selectedValues[1]],
-    queryFn: getCompanyDomainStatistics,
-  });
-
-  const { data: departmentData } = useQuery({
-    queryKey: ['DepartmentWellBeing', selectedValues[1]],
-    queryFn: getDepartmentStatics,
-  });
-
   const { control: CONTROL_PERIOD, watch: WATCH_PERIOD } = useForm({
     defaultValues: {
       period: ''
@@ -56,7 +39,23 @@ const Dashboard = () => {
 
   const selectedPeriod = WATCH_PERIOD('period');
 
-  console.log(selectedPeriod)
+  const { data: WELLBEING_DATA, isError: noWELLBEING_DATA, isLoading: isFETCHING_DATA } = useQuery({
+    queryKey: ['WELLBEING_DATA', selectedPeriod],
+    queryFn: async () => {
+      const config = selectedPeriod
+        ? { params: { period: selectedPeriod } }
+        : {}
+
+      const res = await api.get('wellbeing/company', config)
+      return res.data
+    }
+  })
+
+  if (isFETCHING_DATA) return <>fetching...</>
+
+  if (noWELLBEING_DATA) return <>no data!</>
+
+  console.log(WELLBEING_DATA)
 
   return (
     <Box>
@@ -78,7 +77,7 @@ const Dashboard = () => {
                   data={time}
                   rightSection={<IconChevronDown size={16} />}
                 >
-                  <option value=''>Select</option>
+                  <option value=''>Select View</option>
                   <option value="quarter">Quarter View</option>
                   <option value="semiannual">Semiannual View</option>
                   <option value="annual">Annual View</option>
@@ -88,21 +87,15 @@ const Dashboard = () => {
           </form>
         </Group>
       </Paper>
-
-      {/* Mobile Responsive */}
-      {/* <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}> */}
-
       <SimpleGrid cols={2} my='md'>
-        <NormGraph filter={selectedValues[1]} />
-        <WellbeingGraph filter={selectedValues[1]} />
+        <NORMGRAPH WELLBEING_DATA={WELLBEING_DATA} />
+        <WELLBEGRAPH period={selectedPeriod} />
       </SimpleGrid>
       <Box>
-        {/* <AllDomain domains={domainData} /> */}
-        <COMPANYWELLBEING period={selectedPeriod} />
+        <COMPANYWELLBEING WELLBEING_DATA={WELLBEING_DATA} />
       </Box>
       <Box my={'md'}>
-        {/* <Department departments={departmentData} /> */}
-        <DEPARTMENT />
+        <DEPARTMENT period={selectedPeriod} />
       </Box>
     </Box>
   );
