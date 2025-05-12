@@ -97,7 +97,6 @@ const Employees = () => {
     const [errorNotif, setErrorNotif] = useState(false);
     const [isButtonLoading, setIsButtonLoading] = useState(false)
 
-
     // Main page department selection form
     const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');

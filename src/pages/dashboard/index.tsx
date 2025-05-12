@@ -18,6 +18,9 @@ import {
 import Department from '../../components/DataVisualization/Department';
 import NormGraph from '../../components/DataVisualization/NormGraph';
 import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
+import COMPANYWELLBEING from '../../components/V2Components/CompanyWellbeing'
+import DEPARTMENT from '../../components/V2Components/DepartmentWellbeing'
+
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -45,6 +48,16 @@ const Dashboard = () => {
     queryFn: getDepartmentStatics,
   });
 
+  const { control: CONTROL_PERIOD, watch: WATCH_PERIOD } = useForm({
+    defaultValues: {
+      period: ''
+    }
+  });
+
+  const selectedPeriod = WATCH_PERIOD('period');
+
+  console.log(selectedPeriod)
+
   return (
     <Box>
       <Paper shadow="xs" radius="md" px="lg" py="md">
@@ -54,8 +67,8 @@ const Dashboard = () => {
           </Title>
           <form>
             <Controller
-              name="time"
-              control={control}
+              name="period"
+              control={CONTROL_PERIOD}
               render={({ field }) => (
                 <NativeSelect
                   {...field}
@@ -64,26 +77,32 @@ const Dashboard = () => {
                   size="md"
                   data={time}
                   rightSection={<IconChevronDown size={16} />}
-                  onChange={(e) => {
-                    field.onChange(e.target.value);
-                  }}
-                />
+                >
+                  <option value=''>Select</option>
+                  <option value="quarter">Quarter View</option>
+                  <option value="semiannual">Semiannual View</option>
+                  <option value="annual">Annual View</option>
+                </NativeSelect>
               )}
             />
           </form>
         </Group>
       </Paper>
+
       {/* Mobile Responsive */}
       {/* <Flex my={'md'} direction={{ base: 'column', sm: 'row' }} gap={'md'}> */}
+
       <SimpleGrid cols={2} my='md'>
         <NormGraph filter={selectedValues[1]} />
         <WellbeingGraph filter={selectedValues[1]} />
       </SimpleGrid>
       <Box>
-        <AllDomain domains={domainData} />
+        {/* <AllDomain domains={domainData} /> */}
+        <COMPANYWELLBEING period={selectedPeriod} />
       </Box>
       <Box my={'md'}>
-        <Department departments={departmentData} />
+        {/* <Department departments={departmentData} /> */}
+        <DEPARTMENT />
       </Box>
     </Box>
   );

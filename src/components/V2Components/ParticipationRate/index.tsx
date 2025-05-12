@@ -9,12 +9,9 @@ export default function index({ department }) {
         queryFn: async ({ queryKey }) => {
             console.log(queryKey)
             const [, department] = queryKey
-            // Build the request config: either { params: { department } } or empty object
             const config = department
                 ? { params: { department } }
                 : {};
-
-            // Single GET, axios will omit undefined params automatically
             const { data } = await api.get('participation-rate', config);
             return data;
         }
