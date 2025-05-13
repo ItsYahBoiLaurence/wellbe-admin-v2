@@ -28,20 +28,44 @@ import api from '../../api/api';
 import AddDepartment from '../../components/V2Components/AddDepartment'
 import InviteEmployee from '../../components/V2Components/InviteEmployee'
 import PARTICIPATION_RATE from '../../components/V2Components/ParticipationRate'
+import queryClient from '../../queryClient';
 
-const staticDepartmentOptions = [
-    { label: 'No Department Available', value: '' },
-];
 
-const transformDepartmentData = (data: any[]): { label: string; value: string }[] =>
-    Array.isArray(data)
-        ? data.map((department) => ({ label: department, value: department }))
-        : [];
+const EMPLOYEE_CARD = ({ department, department_names }) => {
+
+    const stack = useDrawersStack(['batch-upload'])
+    const [opened, { open, close }] = useDisclosure(false);
 
 
 
-const EMPLOYEE_CARD = ({ department }) => {
-    const { data: EMPLOYEES, isError: noEMPLOYEES, isLoading: isFETCHINGEMPLOYEES } = useQuery({
+    const { register, handleSubmit, setValue, reset, formState: { isSubmitting } } = useForm({
+        defaultValues: {
+            first_name: "",
+            last_name: "",
+            email: "",
+            department: ""
+        }
+    })
+    const details = (first_name, last_name, email, department) => {
+        setValue("first_name", first_name)
+        setValue("last_name", last_name)
+        setValue("email", email)
+        setValue("department", department)
+        open()
+    }
+
+    const onsubmit = async (data) => {
+        try {
+            const res = await api.patch('user', data)
+            REFETCH_EMPLOYEES()
+            reset()
+            return res.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const { data: EMPLOYEES, isError: noEMPLOYEES, isLoading: isFETCHINGEMPLOYEES, refetch: REFETCH_EMPLOYEES } = useQuery({
         queryKey: ['EMPLOYEES', department],
         queryFn: async ({ queryKey: [, department] }) => {
             // Build the request config: either { params: { department } } or empty object
@@ -70,11 +94,59 @@ const EMPLOYEE_CARD = ({ department }) => {
 
     if (EMPLOYEES.length === 0) return <Paper h={'100px'} ><Center h={'100%'}><Title order={2} >No employees!</Title></Center></Paper>
 
+    console.log(EMPLOYEES)
+
     return (
-        <SimpleGrid cols={4} >
-            {EMPLOYEES.map(({ id, first_name, last_name, department }) => (
-                <Paper key={id} radius={'md'} p={'xl'}>
-                    <Center h={'100%'}>
+        <>
+            <Drawer.Stack>
+                <Drawer.Root key={1} position="right" size="md" opened={opened} onClose={close}>
+                    <Drawer.Overlay />
+                    <Drawer.Content>
+                        <Drawer.Header sx={{ backgroundColor: '#515977' }}>
+                            <Drawer.Title sx={{ color: 'white' }}>
+                                <Text size="xl">Employee Details</Text>
+                            </Drawer.Title>
+                            <Drawer.CloseButton
+                                sx={{ color: 'white', background: 'none', border: 'none', boxShadow: 'none', cursor: 'pointer' }}
+                            />
+                        </Drawer.Header>
+                        <Drawer.Body h="90%">
+                            <form onSubmit={handleSubmit(onsubmit)} style={{ height: "100%" }}>
+                                <Stack h={"100%"} justify='space-between'>
+                                    <Stack gap={'sm'}>
+                                        <NativeSelect
+                                            {...register('department')}
+                                            radius="md"
+                                            label={<Text mb="xs" fw={700}>Department</Text>}
+                                            style={{ width: '100%' }}
+                                            size="md"
+                                            rightSection={<IconChevronDown size={16} />}
+                                        >
+
+                                            <option value=''>Select Department</option>
+                                            {department_names.map((item, index) => (
+                                                <option key={index} value={item}>{item}</option>
+                                            ))}
+                                        </NativeSelect>
+                                        <TextInput label={<Text fw={700}>First Name</Text>} {...register('first_name')} />
+                                        <TextInput label={<Text fw={700}>Last Name</Text>} {...register('last_name')} />
+                                        <TextInput label={<Text fw={700}>Email</Text>} {...register('email')} disabled />
+                                    </Stack>
+                                    <Button type="submit" size="lg" color="#515977" loading={isSubmitting}>
+                                        {isSubmitting ? "Saving..." : "Save"}
+                                    </Button>
+                                </Stack>
+                            </form>
+                        </Drawer.Body>
+                    </Drawer.Content>
+                </Drawer.Root>
+            </Drawer.Stack>
+
+
+            <SimpleGrid cols={4} >
+                {EMPLOYEES.map(({ id, first_name, last_name, department, email, }) => (
+                    <Paper key={id} radius={'md'} p={'xl'} onClick={() => details(first_name, last_name, email, department.name)}>
+
                         <Group gap={'md'}>
                             <Avatar size={'lg'}>{first_name[0]}</Avatar>
                             <Box>
@@ -82,151 +154,19 @@ const EMPLOYEE_CARD = ({ department }) => {
                                 <Text size="md" fw={700}>{`${first_name} ${last_name}`}</Text>
                             </Box>
                         </Group>
-                    </Center>
-                </Paper>
-            ))}
-        </SimpleGrid>
+
+                    </Paper>
+                ))}
+            </SimpleGrid>
+        </>
     )
 }
 
+
 const Employees = () => {
-    // Disclosures for Invite Employee and Add Department drawers
 
-    // Notification state
-    const [notif, setNotif] = useState(false);
-    const [errorNotif, setErrorNotif] = useState(false);
-    const [isButtonLoading, setIsButtonLoading] = useState(false)
-
-    // Main page department selection form
     const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');
-
-    // Invite Employee form
-    const inviteForm = useForm({
-        defaultValues: { department: selectedDepartment, firstName: '', lastName: '', email: '', role: 'employee' },
-    });
-
-    const {
-        register: registerEmployee,
-        handleSubmit: handleSubmitInvite,
-        setValue: setInviteValue,
-        reset: resetInviteForm,
-        setError: setInviteError,
-        formState: { errors: inviteErrors },
-    } = inviteForm;
-    const company = localStorage.getItem('USER_COMPANY')
-    // Add Department form
-    const departmentForm = useForm({
-        defaultValues: { department: '', company: company },
-    });
-    const {
-        register: registerDepartment,
-        handleSubmit: handleSubmitDepartment,
-        reset: resetDepartmentForm,
-        formState: { isSubmitting: departmentSubmitting, errors: departmentErrors },
-        setError: setDepartmentError,
-    } = departmentForm;
-
-    // Batch Upload form
-    const batchForm = useForm<{ file: File[] }>({ defaultValues: { file: [] } });
-    const {
-        handleSubmit: handleBatchSubmit,
-        setValue: setBatchValue,
-        watch: watchBatch,
-        reset: resetBatch,
-        formState: { errors: batchErrors },
-    } = batchForm;
-    const batchFileValue = watchBatch('file');
-    const [fileName, setFileName] = useState<string | null>(null);
-
-    // React Query mutations
-    const { mutateAsync: addNewDepartment } = useMutation(addDepartment);
-    const { mutateAsync: sendEmailToUser, isLoading: inviteSending } = useMutation(sendEmail, {
-        onSuccess: () => console.log('Email Sent'),
-        onError: (e: any) => {
-            if (e.status === 409) {
-                setInviteError('email', { type: 'manual', message: 'Account Already Registered!' });
-            }
-        },
-    });
-
-    // Fetch employee data
-    const { data: departmentData } = useQuery({
-        queryKey: ['dataOfDepartment'],
-        queryFn: getEmployees,
-    });
-
-    // Fetch all departments (to populate the dropdown)
-    const { data: allDepartments, refetch: refetchDepartment } = useQuery({
-        queryKey: ['AllDepartmentInCompany'],
-        queryFn: getAllDepartments,
-    });
-    // Use the transformed data if available, otherwise fallback to static options.
-    const departmentOptionsFromApi = allDepartments
-        ? transformDepartmentData(allDepartments)
-        : staticDepartmentOptions;
-
-    // Clear notifications after 5 seconds
-    useEffect(() => {
-        if (notif) {
-            const timer = setTimeout(() => setNotif(false), 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [notif]);
-
-    useEffect(() => {
-        if (errorNotif) {
-            const timer = setTimeout(() => setErrorNotif(false), 5000);
-            return () => clearTimeout(timer);
-        }
-    }, [errorNotif]);
-
-    // Batch Upload Drawer stack and theming
-    const stack = useDrawersStack(['batch-upload']);
-    const theme = useMantineTheme();
-    const openRef = useRef<() => void>(null);
-
-    // Handle file drop for batch upload
-    const handleDrop = (files: File[]) => {
-        if (files.length > 0 && files[0].type === 'text/csv') {
-            setBatchValue('file', files);
-            setFileName(files[0].name);
-        } else {
-            setBatchValue('file', []);
-            setFileName(null);
-        }
-    };
-
-    // Submit handlers
-    const submitInvite = async (data: any) => {
-        try {
-            await sendEmailToUser(data);
-            resetInviteForm();
-            setNotif(true);
-        } catch (error: any) {
-            if (error?.status === 409) setErrorNotif(true);
-        }
-    };
-
-    const submitBatchUpload = async (values: { file: File[] }) => {
-        if (!values.file.length) return;
-        const formData = new FormData();
-        formData.append('file', values.file[0]);
-        try {
-            setIsButtonLoading(true)
-            await api.post(`/api/company-admin/batchUploadInvite?company=${company}`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
-            setNotif(true);
-            resetBatch({ file: [] });
-            setFileName(null);
-            setIsButtonLoading(false)
-        } catch (error) {
-            console.error('Upload error:', error);
-            setErrorNotif(true);
-        }
-    };
-
 
     const { data: DEPARTMENT, isError: noDEPARTMENT, isLoading: isFETCHINGDEPARTMENT, refetch: REFETCH_DEPARTMENT } = useQuery({
         queryKey: ['DEPARTMENT'],
@@ -250,8 +190,6 @@ const Employees = () => {
 
     return (
         <Box>
-
-
             <Paper shadow="md" radius="md" px="xl" py="md">
                 <Flex direction="row" justify="space-between" align="center">
                     <Box>
@@ -295,10 +233,9 @@ const Employees = () => {
                     </Flex>
                 </Flex>
             </Paper>
-
             <Stack my="sm" gap={'sm'}>
                 <PARTICIPATION_RATE department={selectedDepartment} />
-                <EMPLOYEE_CARD department={selectedDepartment} />
+                <EMPLOYEE_CARD department_names={DEPARTMENT_NAMES} department={selectedDepartment} />
             </Stack>
         </Box>
     );

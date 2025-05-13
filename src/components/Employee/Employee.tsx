@@ -129,7 +129,6 @@ const UserCard = ({ department, dataEmployee, dropdownData }) => {
                                         </Flex>
                                         <Stack gap={'sm'}>
                                             <Button variant="filled" type="submit" disabled={isSubmitting} color="#515977">{isSubmitting ? "Saving..." : "Save"}</Button>
-                                            {/* <Button color="#515977" variant="outline">Delete</Button> */}
                                             <Button variant="outline" onClick={close} disabled={isSubmitting} color="#515977">Back</Button>
                                         </Stack>
                                     </Stack>
