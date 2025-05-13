@@ -59,6 +59,7 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
             const res = await api.patch('user', data)
             REFETCH_EMPLOYEES()
             reset()
+            queryClient.clear()
             return res.data
         } catch (error) {
             console.log(error)
