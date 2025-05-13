@@ -1,6 +1,6 @@
 import { useQuery } from "react-query"
 import api from "../../../api/api"
-import { Paper, Stack, Title } from "@mantine/core"
+import { Center, Paper, Stack, Text, Title } from "@mantine/core"
 import { LineChart } from "@mantine/charts"
 
 export default function index({ period }: { period: string }) {
@@ -32,6 +32,7 @@ export default function index({ period }: { period: string }) {
     })
 
     console.log(data)
+    if (data.length === 0) return <Paper h={400}><Center h={"100%"}><Text>NO DATA AVAILABLE</Text></Center></Paper>
     return (
         <Paper p='md'>
             <Stack>

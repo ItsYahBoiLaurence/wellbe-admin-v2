@@ -1,11 +1,13 @@
 import { CompositeChart } from "@mantine/charts";
-import { Paper, Stack, Text } from "@mantine/core";
+import { Center, Paper, Stack, Text } from "@mantine/core";
 
 export default function index({ WELLBEING_DATA }) {
 
 
-
     const { career, character, connectedness, contentment } = WELLBEING_DATA
+
+    if (career === null || character === null || connectedness === null || contentment === null) return <Paper h={400}><Center h={"100%"}><Text>NO DATA AVAILABLE</Text></Center></Paper>
+
 
     const data = [
         {

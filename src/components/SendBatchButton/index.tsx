@@ -85,11 +85,11 @@ const Index = () => {
         }
     })
 
-    if (noBATCH) return <>Error fetching batch...</>
+    if (noBATCH) return
 
     if (isFETCHINGBATCH) return <>Fetching...</>
 
-    console.log(BATCH)
+    console.log(BATCH, 'ksksksksks')
 
     return (
         <Group>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
+import { Avatar, Box, Center, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
 import { useQuery } from "react-query";
 import api from "../../../api/api";
 import { getLabel, getStanineScore } from "../../../constants";
@@ -7,7 +7,7 @@ import Increased from '../../../assets/increase.png'
 import Maintained from '../../../assets/maintained.png'
 
 const Domain = ({ domain_title, score }: { domain_title: string, score: number }) => {
-
+    if (score === null) return <Paper h={100}><Center h={"100%"}><Text>NO DATA AVAILABLE</Text></Center></Paper>
     const stanine = getStanineScore(score)
     const Image = score >= 1 && score <= 22 ? Decreased : score >= 23 && score <= 76 ? Maintained : score >= 77 && score <= 100 ? Increased : "NA"
     return (

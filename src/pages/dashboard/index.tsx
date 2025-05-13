@@ -4,20 +4,11 @@ import {
   NativeSelect,
   Paper,
   SimpleGrid,
-  Text,
   Title,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
 import { useForm, Controller } from 'react-hook-form';
-import AllDomain from '../../components/DataVisualization/AllDomain';
 import { useQuery } from 'react-query';
-import {
-  getCompanyDomainStatistics,
-  getDepartmentStatics,
-} from '../../api/apiService';
-import Department from '../../components/DataVisualization/Department';
-import NormGraph from '../../components/DataVisualization/NormGraph';
-import WellbeingGraph from '../../components/DataVisualization/WellbeingGraph';
 import COMPANYWELLBEING from '../../components/V2Components/CompanyWellbeing'
 import DEPARTMENT from '../../components/V2Components/DepartmentWellbeing'
 import NORMGRAPH from '../../components/V2Components/NormGraph'
