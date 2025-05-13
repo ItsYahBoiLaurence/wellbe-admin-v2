@@ -3,11 +3,13 @@ import { Dropzone } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconCloudUpload, IconDownload, IconX } from "@tabler/icons-react";
 import { useForm } from "react-hook-form";
+import api from "../../../api/api";
+import { useState } from "react";
 
 export default function index({ departments }: any) {
     const [openedEmployeeInvite, { open, close }] = useDisclosure(false);
     const stack = useDrawersStack(['batch-upload']);
-    const { register, handleSubmit, formState: { errors, isSubmitting }, reset, setValue } = useForm({
+    const { register, handleSubmit, formState: { errors, isSubmitting, isSubmitSuccessful }, reset } = useForm({
         defaultValues: {
             first_name: "",
             last_name: "",
@@ -16,8 +18,14 @@ export default function index({ departments }: any) {
         }
     })
 
-    const inviteEmployee = (data) => {
-        console.log(data)
+    const inviteEmployee = async (data) => {
+        try {
+            const res = await api.post('hr-admin/employees', data)
+            reset()
+            return res.data
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
@@ -109,6 +117,7 @@ export default function index({ departments }: any) {
                                             </Text>
                                         </Flex>
                                         <Stack>
+                                            {isSubmitSuccessful && <Text c='green'>Invite Success!</Text>}
                                             <Button type="submit" disabled={isSubmitting} size="lg" color="#515977">
                                                 {isSubmitting ? 'Sending Invite...' : 'Invite'}
                                             </Button>
