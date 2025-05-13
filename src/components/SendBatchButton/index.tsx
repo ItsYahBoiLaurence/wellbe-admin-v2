@@ -29,7 +29,8 @@ const Index = () => {
     // Function to send the batch
     const handleSendBatch = async () => {
         try {
-            const response = await api.get('/api/company-admin/scheduleBatchFrequency');
+            const response = await api.get('batch');
+            refetchBATCH()
             console.log(response.data);
             notifications.show({
                 title: <Text fw={700} size='md' mb={'sm'}>Survey Batch Released!</Text>,
@@ -54,35 +55,12 @@ const Index = () => {
         }
     };
 
-    // Function to fetch batch overview
-    const getBatchOverview = async () => {
-        try {
-            const response = await api.get('/api/company-admin/batchStatus');
-            return response.data;
-        } catch (error) {
-            console.error('Error fetching batch overview:', error);
-            throw error;
-        }
-    };
-
     // Function to format the date
-    const formatDate = (isoString) => {
+    const formatDate = (isoString: string) => {
         const date = new Date(isoString);
         return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     };
 
-    // React Query hook to fetch and manage batch overview data
-    const { data, isSuccess } = useQuery({
-        queryKey: ['BatchOverview'],
-        queryFn: getBatchOverview,
-        refetchInterval: 60000,
-        select: (data) => ({
-            ...data,
-            batchStart: data.batchStart ? formatDate(data.batchStart) : 'None',
-        }),
-    });
-
-    // Function to open the confirmation modal
     const openModal = () => {
         modals.openConfirmModal({
             title: <Text fw={700}>Release Survey Batch?</Text>,
@@ -99,14 +77,27 @@ const Index = () => {
         });
     };
 
+    const { data: BATCH, isError: noBATCH, isLoading: isFETCHINGBATCH, refetch: refetchBATCH } = useQuery({
+        queryKey: ['BATCH_DATA'],
+        queryFn: async () => {
+            const res = await api.get('batch/latest')
+            return res.data
+        }
+    })
+
+    if (noBATCH) return <>Error fetching batch...</>
+
+    if (isFETCHINGBATCH) return <>Fetching...</>
+
+    console.log(BATCH)
+
     return (
         <Group>
-            {isSuccess && (
-                <Text>
-                    Batch Overview: <span style={{ fontWeight: 700 }}>{data.batchStart}</span>
-                </Text>
-            )}
-            <Button onClick={openModal} color={"#515977"} autoContrast>
+            {!BATCH.is_completed && <Text>
+                Batch Overview: <span style={{ fontWeight: 700 }}>{formatDate(BATCH.created_at)}</span>
+            </Text>}
+
+            <Button onClick={openModal} disabled={!BATCH.is_completed} color={"#515977"} autoContrast>
                 Send Batch Survey
             </Button>
         </Group>
