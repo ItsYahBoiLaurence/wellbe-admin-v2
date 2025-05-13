@@ -1,4 +1,4 @@
-import { Box, Flex, Paper, RingProgress, Text } from "@mantine/core";
+import { Box, Center, Flex, LoadingOverlay, Paper, RingProgress, Text } from "@mantine/core";
 import { useQuery } from "react-query";
 import api from "../../../api/api";
 
@@ -17,9 +17,16 @@ export default function index({ department }) {
         }
     })
 
-    if (isPARTICIPATIONLOADING) return <>fetching...</>
+    if (isPARTICIPATIONLOADING) return <LoadingOverlay
+        h={100}
+        pos={'relative'}
+        visible={true}
+        zIndex={1000}
+        overlayProps={{ radius: 'sm', blur: 20 }}
+        loaderProps={{ color: '#515977', type: 'bars' }}
+    />
 
-    if (noPARTICIPATION) return <>no participation</>
+    if (noPARTICIPATION) return <Paper h={100} shadow="sm"><Center h={"100%"}><Text >NO AVAILABLE PARTICIPATION DATA</Text></Center></Paper>
 
     console.log(PARTICIPATION_RATE)
 
