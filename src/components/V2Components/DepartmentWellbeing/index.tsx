@@ -2,6 +2,7 @@ import { Avatar, Box, Group, Paper, SimpleGrid, Stack, Text } from "@mantine/cor
 import { useQuery } from "react-query";
 import api from "../../../api/api";
 import { getLabel, getStanineScore, setIcon } from "../../../constants";
+import LoaderComponent from '../LoaderComponent'
 
 export default function index({ period }: { period: string }) {
     const { data: DEPARTMENT_DATA, isError: noDEPARTMENT_DATA, isLoading: isFETCHINGDATA } = useQuery({
@@ -16,7 +17,7 @@ export default function index({ period }: { period: string }) {
         }
     })
 
-    if (isFETCHINGDATA) return <>fetching...</>
+    if (isFETCHINGDATA) return < LoaderComponent />
     if (noDEPARTMENT_DATA) return <>no data...</>
 
     console.log(DEPARTMENT_DATA)

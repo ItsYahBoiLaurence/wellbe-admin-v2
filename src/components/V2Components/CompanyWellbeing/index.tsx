@@ -1,6 +1,4 @@
 import { Avatar, Box, Center, Group, Paper, SimpleGrid, Stack, Text, Title } from "@mantine/core";
-import { useQuery } from "react-query";
-import api from "../../../api/api";
 import { getLabel, getStanineScore } from "../../../constants";
 import Decreased from '../../../assets/decrease.png'
 import Increased from '../../../assets/increase.png'

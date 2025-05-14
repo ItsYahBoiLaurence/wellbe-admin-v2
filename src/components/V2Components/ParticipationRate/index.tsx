@@ -1,6 +1,7 @@
 import { Box, Center, Flex, LoadingOverlay, Paper, RingProgress, Text } from "@mantine/core";
 import { useQuery } from "react-query";
 import api from "../../../api/api";
+import LoaderComponent from '../../V2Components/LoaderComponent'
 
 export default function index({ department }) {
 
@@ -17,14 +18,7 @@ export default function index({ department }) {
         }
     })
 
-    if (isPARTICIPATIONLOADING) return <LoadingOverlay
-        h={100}
-        pos={'relative'}
-        visible={true}
-        zIndex={1000}
-        overlayProps={{ radius: 'sm', blur: 20 }}
-        loaderProps={{ color: '#515977', type: 'bars' }}
-    />
+    if (isPARTICIPATIONLOADING) return <LoaderComponent />
 
     if (noPARTICIPATION) return <Paper h={100} shadow="sm"><Center h={"100%"}><Text >NO AVAILABLE PARTICIPATION DATA</Text></Center></Paper>
 

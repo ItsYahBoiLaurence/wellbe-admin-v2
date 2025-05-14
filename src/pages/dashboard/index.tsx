@@ -14,6 +14,7 @@ import DEPARTMENT from '../../components/V2Components/DepartmentWellbeing'
 import NORMGRAPH from '../../components/V2Components/NormGraph'
 import api from '../../api/api';
 import WELLBEGRAPH from '../../components/V2Components/WellbeGraph'
+import LoaderComponent from '../../components/V2Components/LoaderComponent'
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -42,7 +43,7 @@ const Dashboard = () => {
     }
   })
 
-  if (isFETCHING_DATA) return <>fetching...</>
+  if (isFETCHING_DATA) return <LoaderComponent />
 
   if (noWELLBEING_DATA) return <>no data!</>
 
