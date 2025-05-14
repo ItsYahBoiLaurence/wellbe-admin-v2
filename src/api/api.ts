@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // API base URL from environment variables
-const BASE_URL = 'https://sea-turtle-app-lrl4l.ondigitalocean.app/'
+const BASE_URL = import.meta.env.VITE_API_URL
 const api = axios.create({
     baseURL: BASE_URL,
     headers: {

@@ -2,6 +2,7 @@ import { useQuery } from "react-query"
 import api from "../../../api/api"
 import { Center, Paper, Stack, Text, Title } from "@mantine/core"
 import { LineChart } from "@mantine/charts"
+import LoaderComponent from '../LoaderComponent'
 
 export default function index({ period }: { period: string }) {
 
@@ -16,7 +17,7 @@ export default function index({ period }: { period: string }) {
         }
     })
 
-    if (isFETCHINGDATA) return <>fetching...</>
+    if (isFETCHINGDATA) return <LoaderComponent size="100%" />
     if (noWELLBE_DATA) return <>No Data</>
 
 

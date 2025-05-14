@@ -1,8 +1,8 @@
 import { LoadingOverlay } from "@mantine/core";
 
-export default function index() {
+export default function index({ size }: { size?: string }) {
     return <LoadingOverlay
-        h={100}
+        h={size ?? 100}
         pos={'relative'}
         visible={true}
         zIndex={1000}

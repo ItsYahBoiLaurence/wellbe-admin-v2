@@ -40,7 +40,7 @@ const SettingsDrawer = ({ stack }) => {
     }
   })
 
-  if (fetchingSETTINGS) return <LoaderComponent />
+  if (fetchingSETTINGS) return <>fetching...</>
   if (noSETTINGS) return <>no data...</>
 
   console.log(SETTINGS)
@@ -58,9 +58,10 @@ const SettingsDrawer = ({ stack }) => {
             </Box>
             <NativeSelect {...register('frequency')} data={['DAILY', 'WEEKLY']} />
           </Group>
+          {isSubmitSuccessful && <Text c={'green'}>Update Success!</Text>}
+          <Button type='submit' disabled={isLoading}>{isLoading ? "Saving" : "Save"}</Button>
         </Stack>
       </form>
-      <Button type='submit' disabled={isLoading}>{isLoading ? "Saving" : "Save"}</Button>
     </Drawer>
   )
 }
@@ -76,7 +77,7 @@ const DrawerComponent = ({ stack }) => {
     }
   })
 
-  if (fetchingPROFILE) return <LoaderComponent />
+  if (fetchingPROFILE) return <>fetching...</>
   if (noPROFILE) return <>Error...</>
 
   console.log(PROFILE)
