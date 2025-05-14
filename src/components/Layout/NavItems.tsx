@@ -1,10 +1,8 @@
-import { Flex, FlexProps, NavLink, Tabs, TabsList, Text } from '@mantine/core';
+import { Flex, FlexProps, Tabs, Text } from '@mantine/core';
 import {
   DashboardIcon,
   ClientsIcons,
-  QuestionsIcon,
   UsersIcon,
-  SettingsIcon
 } from '../icons';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -27,7 +25,7 @@ const ITEMS = [
     href: '/users',
   },
   {
-    label: 'Scatter Plot',
+    label: 'Workforce Vitality',
     icon: IconChartHistogram,
     href: '/scatterplot'
   }
