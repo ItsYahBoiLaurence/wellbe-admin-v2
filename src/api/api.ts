@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 // API base URL from environment variables
-const BASE_URL = 'http://localhost:3000/'
+const BASE_URL = 'https://sea-turtle-app-lrl4l.ondigitalocean.app/'
 
 const api = axios.create({
     baseURL: BASE_URL,
