@@ -1,6 +1,6 @@
 import { Controller, useForm } from 'react-hook-form';
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { useQuery } from 'react-query';
+import { QueryClient, useQuery } from 'react-query';
 import { ScatterChart } from '@mantine/charts';
 import { Dropzone } from '@mantine/dropzone';
 import {
@@ -15,18 +15,17 @@ import {
 import { IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
 import api from '../../api/api';
 import { useDisclosure } from '@mantine/hooks';
+import queryClient from '../../queryClient';
 
 
-const ScatterGraph = ({ func }) => {
-  const { data: SCATTERDATA, isError: noSCATTERDATA, isLoading: fetchingSCATTERDATA, refetch: REFETCHDATA } = useQuery({
+const ScatterGraph = () => {
+  const { data: SCATTERDATA, isError: noSCATTERDATA, isLoading: fetchingSCATTERDATA } = useQuery({
     queryKey: ['SCATTERPLOT'],
     queryFn: async () => {
       const res = await api.get('workforce-vitality')
       return res.data
     }
   })
-
-  func(REFETCHDATA)
 
   if (fetchingSCATTERDATA) return <>loading...</>
   if (noSCATTERDATA) return <>no data...</>
@@ -75,10 +74,6 @@ const Scatterplot = () => {
     defaultValues: { files: [] }
   })
 
-  function refetch(func: any) {
-    func()
-  }
-
   const onFileSubmit = async (data: { files: File[] }) => {
     const { files } = data;
     if (!files || files.length === 0) {
@@ -103,6 +98,7 @@ const Scatterplot = () => {
       });
       console.log('Server parsed rows:', response.data);
       RESET_FILE()
+      queryClient.removeQueries({ queryKey: 'SCATTERPLOT', exact: true })
     } catch (error) {
       console.error('Upload failed:', error);
     }
@@ -180,7 +176,7 @@ const Scatterplot = () => {
           Upload Performance Data
         </Button>
       </Paper>
-      <ScatterGraph func={refetch} />
+      <ScatterGraph />
     </>
   );
 };
