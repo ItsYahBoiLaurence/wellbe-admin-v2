@@ -8,147 +8,171 @@ import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/Authencation';
 import api from '../../api/api';
 import BatchButton from '../SendBatchButton/index'
+import { useQuery } from 'react-query';
+import LoaderComponent from '../V2Components/LoaderComponent'
+import { useForm } from 'react-hook-form';
+
+
+const SettingsDrawer = ({ stack }) => {
+
+  const { register, setValue, handleSubmit, formState: { isLoading, isSubmitSuccessful } } = useForm({
+    defaultValues: {
+      frequency: ""
+    }
+  })
+
+  const onSubmit = async (data) => {
+    try {
+      const res = await api.patch('settings', data)
+      console.log(res.data)
+      REFETCH_SETTINGS()
+      return res.data
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const { data: SETTINGS, isError: noSETTINGS, isLoading: fetchingSETTINGS, refetch: REFETCH_SETTINGS } = useQuery({
+    queryKey: ['SETTINGS'],
+    queryFn: async () => {
+      const res = await api.get('settings')
+      return res.data
+    }
+  })
+
+  if (fetchingSETTINGS) return <LoaderComponent />
+  if (noSETTINGS) return <>no data...</>
+
+  console.log(SETTINGS)
+  setValue('frequency', SETTINGS.frequency)
+
+  return (
+    <Drawer h={"100%"} {...stack.register('settings')} position='right'>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack gap='lg' justify='space-between' h={'100%'} >
+          <Text fw={200}>System Preferences</Text>
+          <Group grow ms={'md'} align='start' >
+            <Box>
+              <Title order={4} fw={500}>Survey reminders</Title>
+              <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
+            </Box>
+            <NativeSelect {...register('frequency')} data={['DAILY', 'WEEKLY']} />
+          </Group>
+        </Stack>
+      </form>
+      <Button type='submit' disabled={isLoading}>{isLoading ? "Saving" : "Save"}</Button>
+    </Drawer>
+  )
+}
+
+const DrawerComponent = ({ stack }) => {
+  const { logout } = useContext(AuthenticationContext)
+
+  const { data: PROFILE, isError: noPROFILE, isLoading: fetchingPROFILE } = useQuery({
+    queryKey: ['PROFILE'],
+    queryFn: async () => {
+      const res = await api.get('user')
+      return res.data
+    }
+  })
+
+  if (fetchingPROFILE) return <LoaderComponent />
+  if (noPROFILE) return <>Error...</>
+
+  console.log(PROFILE)
+  const { first_name, last_name, email, department } = PROFILE
+  return (
+    <>
+      <Drawer.Stack>
+        <Drawer {...stack.register('profile')} position='right'>
+          <Stack gap={'xl'} p={'sm'}>
+            <Box>
+              <Avatar
+                name={first_name}
+                size={120}
+                radius={120}
+                mx="auto"
+              />
+              <Text ta="center" fz="lg" fw={500} mt="md">
+                Admin Profile
+              </Text>
+              <Text ta="center" c="dimmed" fz="sm">
+                {department.company.name}
+              </Text>
+            </Box>
+            <Stack gap={'sm'}>
+              <Group justify='space-between'>
+                <Text size='lg' fw={700}>First Name</Text>
+                <Text size='lg' fw={300}>{first_name}</Text>
+              </Group>
+              <Divider my="md" />
+              <Group justify='space-between'>
+                <Text size='lg' fw={700}>Last Name</Text>
+                <Text size='lg' fw={300}>{last_name}</Text>
+              </Group>
+              <Divider my="md" />
+              <Group justify='space-between'>
+                <Text size='lg' fw={700}>Email</Text>
+                <Text size='lg' fw={300}>{email}</Text>
+              </Group>
+              <Divider my="md" />
+              <Group justify='space-between' onClick={() => stack.open('settings')}>
+                <Text size='lg' fw={700}>Settings</Text>
+                <IconSettings />
+              </Group>
+              <Divider my="md" />
+              <Group justify='space-between' onClick={logout}>
+                <Text size='lg' fw={700} c={'red'}>Logout</Text>
+                <IconLogout color='red' />
+              </Group>
+            </Stack>
+          </Stack>
+        </Drawer>
+        <SettingsDrawer stack={stack} />
+      </Drawer.Stack>
+    </>
+  )
+}
+
 
 const Layout = () => {
   const [opened, { toggle }] = useDisclosure();
   const stack = useDrawersStack(['profile', 'settings'])
-  const { logout } = useContext(AuthenticationContext)
-
-  const handleSubmitBatch = async () => {
-    // try {
-    //   await api.get('/api/company-admin/scheduleBatchFrequency').then((res) => console.log(res))
-    // } catch (error) {
-    //   console.log(error)
-    // }
-    alert('hello')
-  }
-
   return (
-    <AppShell
-      header={{ height: { base: 60, md: 70, lg: 80 } }}
-      navbar={{
-        width: { base: 200, md: 250, lg: 300 },
-        breakpoint: 'sm',
-        collapsed: { mobile: !opened },
-      }}
-      padding="md"
-    >
-      <AppShell.Header>
-        <Drawer.Stack>
-          <Drawer {...stack.register('profile')} position='right'>
-            <Stack gap={'xl'} p={'sm'}>
-              <Box>
-                <Avatar
-                  name='John Laurence Burgos'
-                  size={120}
-                  radius={120}
-                  mx="auto"
-                />
-                <Text ta="center" fz="lg" fw={500} mt="md">
-                  Admin Profile
-                </Text>
-                <Text ta="center" c="dimmed" fz="sm">
-                  Company Name
-                </Text>
-              </Box>
-              <Stack gap={'sm'}>
-                <Group justify='space-between'>
-                  <Text size='lg' fw={700}>First Name</Text>
-                  <Text size='lg' fw={300}>John Laurence</Text>
-                </Group>
-                <Divider my="md" />
-                <Group justify='space-between'>
-                  <Text size='lg' fw={700}>Last Name</Text>
-                  <Text size='lg' fw={300}>Burgos</Text>
-                </Group>
-                <Divider my="md" />
-                <Group justify='space-between'>
-                  <Text size='lg' fw={700}>Role</Text>
-                  <Text size='lg' fw={300}>Admin</Text>
-                </Group>
-                <Divider my="md" />
-                <Group justify='space-between'>
-                  <Text size='lg' fw={700}>Email</Text>
-                  <Text size='lg' fw={300}>laurence@mayan.com.ph</Text>
-                </Group>
-                <Divider my="md" />
-                <Group justify='space-between' onClick={() => stack.open('settings')}>
-                  <Text size='lg' fw={700}>Settings</Text>
-                  <IconSettings />
-                </Group>
-                <Divider my="md" />
-                <Group justify='space-between' onClick={logout}>
-                  <Text size='lg' fw={700} c={'red'}>Logout</Text>
-                  <IconLogout color='red' />
-                </Group>
-              </Stack>
-            </Stack>
-          </Drawer>
-
-          <Drawer {...stack.register('settings')} position='right'>
-            <Stack gap='lg' justify='space-between' h="500px">
-              <Stack gap='md'>
-                <Text fw={200}>Notifications and Alerts</Text>
-                <Flex justify='space-between'>
-                  <Box ms={'md'}>
-                    <Title order={4} fw={500}>Survey reminders</Title>
-                    <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
-                  </Box>
-                  <Switch
-                    defaultChecked={false}
-                    color="teal"
-                  />
-                </Flex>
-              </Stack>
-              <Stack gap='md'>
-                <Text fw={200}>System Preferences</Text>
-                <Stack ms={'md'}>
-                  <Flex align='start'>
-                    <Box>
-                      <Title order={4} fw={500}>Survey reminders</Title>
-                      <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
-                    </Box>
-                    <NativeSelect data={['Daily', 'Weekly', 'Monthly']} />
-                  </Flex>
-                </Stack>
-              </Stack>
-              <Button>Save</Button>
-            </Stack>
-          </Drawer>
-        </Drawer.Stack>
-
-
-
-
-
-
-
-
-
-
-        <Group h="100%" px="md" justify='space-between'>
-          <Box>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
-          </Box>
-          <Group>
-            <BatchButton />
-            <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
+    <>
+      <DrawerComponent stack={stack} />
+      <AppShell
+        header={{ height: { base: 60, md: 70, lg: 80 } }}
+        navbar={{
+          width: { base: 200, md: 250, lg: 300 },
+          breakpoint: 'sm',
+          collapsed: { mobile: !opened },
+        }}
+        padding="md"
+      >
+        <AppShell.Header>
+          <Group h="100%" px="md" justify='space-between'>
+            <Box>
+              <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+              <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
+            </Box>
+            <Group>
+              <BatchButton />
+              <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
+            </Group>
           </Group>
-        </Group>
 
+        </AppShell.Header>
 
+        <AppShell.Navbar p="md" style={{ backgroundColor: '#fff' }}>
+          <NavItems />
+        </AppShell.Navbar>
 
-      </AppShell.Header>
-
-      <AppShell.Navbar p="md" style={{ backgroundColor: '#fff' }}>
-        <NavItems />
-      </AppShell.Navbar>
-
-      <AppShell.Main style={{ backgroundColor: '#F7F8FA' }}>
-        <Outlet />
-      </AppShell.Main>
-    </AppShell>
+        <AppShell.Main style={{ backgroundColor: '#F7F8FA' }}>
+          <Outlet />
+        </AppShell.Main>
+      </AppShell>
+    </>
   );
 };
 export default Layout;
