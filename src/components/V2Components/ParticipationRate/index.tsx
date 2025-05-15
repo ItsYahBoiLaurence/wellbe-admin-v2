@@ -13,16 +13,18 @@ export default function index({ department }) {
             const config = department
                 ? { params: { department } }
                 : {};
-            const { data } = await api.get('participation-rate', config);
-            return data;
+            const res = await api.get('participation-rate', config);
+            return res.data;
         }
     })
 
-    if (isPARTICIPATIONLOADING) return <LoaderComponent />
+    if (noPARTICIPATION) return <Paper h={100} shadow="sm"><Center h={"100%"}><Text >NO AVAILABLE PARTICIPATION DATAs</Text></Center></Paper>
 
-    if (noPARTICIPATION) return <Paper h={100} shadow="sm"><Center h={"100%"}><Text >NO AVAILABLE PARTICIPATION DATA</Text></Center></Paper>
+    if (isPARTICIPATIONLOADING) return <Paper h={100} shadow="sm"><Center h={"100%"}><Text >NO AVAILABLE PARTICIPATION DATA</Text></Center></Paper>
 
+    console.log("=============")
     console.log(PARTICIPATION_RATE)
+    console.log("=============")
 
     const { participation_rate } = PARTICIPATION_RATE
     return (

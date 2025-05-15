@@ -5,6 +5,7 @@ import { ScatterChart } from '@mantine/charts';
 import { Dropzone } from '@mantine/dropzone';
 import {
   Button,
+  Center,
   Drawer,
   Flex,
   Paper,
@@ -27,8 +28,8 @@ const ScatterGraph = () => {
     }
   })
 
-  if (fetchingSCATTERDATA) return <>loading...</>
-  if (noSCATTERDATA) return <>no data...</>
+  if (fetchingSCATTERDATA) return <Paper h={100}><Center h={100}><Text>No data available</Text></Center></Paper>
+  if (noSCATTERDATA) return <Paper h={100}><Center h={100}><Text>No data available</Text></Center></Paper>
 
   const { users_with_data } = SCATTERDATA.scatterData
   console.log(users_with_data)
@@ -40,7 +41,6 @@ const ScatterGraph = () => {
       data: users_with_data
     }
   ]
-
 
   return (
     <Paper p="md" shadow='sm'>

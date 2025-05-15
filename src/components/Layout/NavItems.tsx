@@ -19,11 +19,11 @@ const ITEMS = [
     icon: ClientsIcons,
     href: '/employees',
   },
-  {
-    label: 'Users',
-    icon: UsersIcon,
-    href: '/users',
-  },
+  // {
+  //   label: 'Users',
+  //   icon: UsersIcon,
+  //   href: '/users',
+  // },
   {
     label: 'Workforce Vitality',
     icon: IconChartHistogram,
