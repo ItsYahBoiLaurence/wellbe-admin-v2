@@ -12,8 +12,11 @@ import { useQuery } from 'react-query';
 import LoaderComponent from '../V2Components/LoaderComponent'
 import { useForm } from 'react-hook-form';
 
+const FREQUENCY = ['DAILY', 'WEEKLY', 'EVERY_HOUR', 'EVERY_MINUTE']
 
 const SettingsDrawer = ({ stack }) => {
+
+  
 
   const { register, setValue, handleSubmit, formState: { isLoading, isSubmitSuccessful } } = useForm({
     defaultValues: {
@@ -56,7 +59,11 @@ const SettingsDrawer = ({ stack }) => {
               <Title order={4} fw={500}>Survey reminders</Title>
               <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
             </Box>
-            <NativeSelect {...register('frequency')} data={['DAILY', 'WEEKLY']} />
+            <NativeSelect {...register('frequency')}>
+              {FREQUENCY.map((item)=>(
+                <option value={item} key={item}>{item}</option>
+              ))}
+            </NativeSelect>
           </Group>
           {isSubmitSuccessful && <Text c={'green'}>Update Success!</Text>}
           <Button type='submit' disabled={isLoading}>{isLoading ? "Saving" : "Save"}</Button>
