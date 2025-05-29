@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Logo from '../../assets/dashboard_logo.svg';
 import NavItems from './NavItems';
 import { useDisclosure } from '@mantine/hooks';
-import { IconSettings, IconLogout } from '@tabler/icons-react';
+import { IconSettings, IconLogout, IconUserCircle } from '@tabler/icons-react';
 import { useContext } from 'react';
 import { AuthenticationContext } from '../../context/Authencation';
 import api from '../../api/api';
@@ -96,11 +96,10 @@ const DrawerComponent = ({ stack }) => {
           <Stack gap={'xl'} p={'sm'}>
             <Box>
               <Avatar
-                name={first_name}
                 size={120}
                 radius={120}
                 mx="auto"
-              />
+              ><IconUserCircle size={'72px'} /></Avatar>
               <Text ta="center" fz="lg" fw={500} mt="md">
                 Admin Profile
               </Text>
@@ -166,7 +165,7 @@ const Layout = () => {
             </Box>
             <Group>
               <BatchButton />
-              <Avatar name='John Laurence Burgos' onClick={() => stack.open('profile')} />
+              <Avatar onClick={() => stack.open('profile')} ><IconUserCircle /></Avatar>
             </Group>
           </Group>
 
