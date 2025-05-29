@@ -28,10 +28,12 @@ export default function index({ period }: { period: string }) {
                     <Stack justify="space-between" h={'100%'}>
                         <Group>
                             <Avatar>{name[0]}</Avatar>
-                            <Text>{name}</Text>
+                            <Box w={'80%'}>
+                                <Text size="20px" fw={700}>{name}</Text>
+                            </Box>
                         </Group>
                         {wellbeing === null
-                            ? <Box h={'50%'}>
+                            ? <Box h={'60px'}>
                                 <Text ta={'center'} fw={700}>No Data</Text>
                             </Box>
                             : <Group justify="space-between">

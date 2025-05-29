@@ -1,6 +1,6 @@
 import { ActionIcon, AppShell, Avatar, Box, Burger, Button, Divider, Drawer, Flex, Group, NativeSelect, Stack, Switch, Text, TextInput, Title, useDrawersStack } from '@mantine/core';
 import { Outlet } from 'react-router-dom';
-import Logo from '../../assets/logo.svg';
+import Logo from '../../assets/dashboard_logo.svg';
 import NavItems from './NavItems';
 import { useDisclosure } from '@mantine/hooks';
 import { IconSettings, IconLogout } from '@tabler/icons-react';
@@ -16,7 +16,7 @@ const FREQUENCY = ['DAILY', 'WEEKLY', 'EVERY_HOUR', 'EVERY_MINUTE']
 
 const SettingsDrawer = ({ stack }) => {
 
-  
+
 
   const { register, setValue, handleSubmit, formState: { isLoading, isSubmitSuccessful } } = useForm({
     defaultValues: {
@@ -60,7 +60,7 @@ const SettingsDrawer = ({ stack }) => {
               <Text size='xs' fw={200}>Enable or disable automatic reminders for employees to be sent via email</Text>
             </Box>
             <NativeSelect {...register('frequency')}>
-              {FREQUENCY.map((item)=>(
+              {FREQUENCY.map((item) => (
                 <option value={item} key={item}>{item}</option>
               ))}
             </NativeSelect>
@@ -159,10 +159,10 @@ const Layout = () => {
         padding="md"
       >
         <AppShell.Header>
-          <Group h="100%" px="md" justify='space-between'>
-            <Box>
+          <Group h="100%" px="lg" justify='space-between' align='center'>
+            <Box >
               <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-              <img src={Logo} width={189} height={53} alt="Wellbe Analytics Portal" />
+              <img src={Logo} width={150} height={'100%'} alt="Wellbe Analytics Portal" />
             </Box>
             <Group>
               <BatchButton />

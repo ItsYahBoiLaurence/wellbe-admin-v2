@@ -9,20 +9,19 @@ const Domain = ({ domain_title, score }: { domain_title: string, score: number }
     const stanine = getStanineScore(score)
     const Image = score >= 1 && score <= 22 ? Decreased : score >= 23 && score <= 76 ? Maintained : score >= 77 && score <= 100 ? Increased : "NA"
     return (
-        <Paper p='md'>
+        <Paper px='xxl' py={'xl'} radius={'lg'}>
             <Group justify="space-between">
                 <Box>
                     <Group gap={'lg'}>
                         <Avatar src={Image} size={'lg'} />
-                        <Stack gap={'sm'}>
-                            <Text tt={'capitalize'}>{domain_title}</Text>
+                        <Stack gap={0}>
+                            <Text fw={700} tt={'capitalize'}>{domain_title}</Text>
                             <Title order={2} fw={700}>{getLabel(stanine)}</Title>
-                            <Text>Stanine: {stanine}</Text>
                         </Stack>
                     </Group>
                 </Box>
                 <Box>
-                    <Title>{score}%</Title>
+                    <Title c={'#A2A5B0'}>{score}%</Title>
                 </Box>
             </Group>
         </Paper>
@@ -31,7 +30,7 @@ const Domain = ({ domain_title, score }: { domain_title: string, score: number }
 
 export default function index({ WELLBEING_DATA }) {
     return (
-        <SimpleGrid cols={2}>
+        <SimpleGrid cols={2} spacing={'lg'}>
             <Domain domain_title={"character"} score={WELLBEING_DATA.character} />
             <Domain domain_title={"career"} score={WELLBEING_DATA.career} />
             <Domain domain_title={"connectedness"} score={WELLBEING_DATA.connectedness} />

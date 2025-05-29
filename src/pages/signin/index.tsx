@@ -1,6 +1,6 @@
 import { BackgroundImage, Box, Button, Center, Image, Paper, PasswordInput, Stack, Text, TextInput, Title } from "@mantine/core"
 import BGImage from '../../assets/wellbe.png'
-import Logo from '../../assets/logo.svg'
+import Logo from '../../assets/wellbe-logo.svg'
 import { useForm } from "react-hook-form"
 import { useMutation } from "react-query"
 import { useContext } from "react"
