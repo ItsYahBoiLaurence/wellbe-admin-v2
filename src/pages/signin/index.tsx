@@ -2,18 +2,10 @@ import { BackgroundImage, Box, Button, Center, Image, Paper, PasswordInput, Stac
 import BGImage from '../../assets/wellbe.png'
 import Logo from '../../assets/wellbe-logo.svg'
 import { useForm } from "react-hook-form"
-import { useMutation } from "react-query"
 import { useContext } from "react"
 import { AuthenticationContext } from "../../context/Authencation"
-import { useNavigate } from "react-router-dom"
-
-type Creds = {
-  email: string,
-  password: string
-}
 
 const signin = () => {
-  const navigate = useNavigate()
   const { login } = useContext(AuthenticationContext)
   const {
     register,
@@ -33,6 +25,10 @@ const signin = () => {
     try {
       await login(email, password)
     } catch (error) {
+      setError('email', {
+        type: 'manual',
+        message: 'Invalid Email or Password'
+      })
       throw error
     }
   };
