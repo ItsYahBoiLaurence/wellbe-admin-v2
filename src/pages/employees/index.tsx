@@ -152,7 +152,7 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
                             <Avatar size={'lg'}>{first_name[0]}</Avatar>
                             <Box>
                                 <Text size="xs">{department.name}</Text>
-                                <Text size="md" fw={700}>{`${first_name} ${last_name}`}</Text>
+                                <Text size="sm" fw={700}>{`${first_name} ${last_name}`}</Text>
                             </Box>
                         </Group>
 
