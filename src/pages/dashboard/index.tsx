@@ -86,9 +86,9 @@ const Dashboard = () => {
       <Box>
         <COMPANYWELLBEING WELLBEING_DATA={WELLBEING_DATA} />
       </Box>
-      <Box my={'md'}>
+      {/*<Box my={'md'}>
         <DEPARTMENT period={selectedPeriod} />
-      </Box>
+      </Box>*/}
     </Box>
   );
 };
