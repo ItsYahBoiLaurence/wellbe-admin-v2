@@ -15,6 +15,7 @@ import NORMGRAPH from '../../components/V2Components/NormGraph'
 import api from '../../api/api';
 import WELLBEGRAPH from '../../components/V2Components/WellbeGraph'
 import LoaderComponent from '../../components/V2Components/LoaderComponent'
+import InsightCard from '../../components/Cards/InsightCard';
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -89,6 +90,9 @@ const Dashboard = () => {
       {/*<Box my={'md'}>
         <DEPARTMENT period={selectedPeriod} />
       </Box>*/}
+      <Box my={'md'}>
+        <InsightCard />
+      </Box>
     </Box>
   );
 };
