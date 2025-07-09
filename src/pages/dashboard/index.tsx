@@ -16,6 +16,7 @@ import api from '../../api/api';
 import WELLBEGRAPH from '../../components/V2Components/WellbeGraph'
 import LoaderComponent from '../../components/V2Components/LoaderComponent'
 import InsightCard from '../../components/Cards/InsightCard';
+import { Outlet } from 'react-router-dom';
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -93,6 +94,7 @@ const Dashboard = () => {
       <Box my={'md'}>
         <InsightCard />
       </Box>
+      <Outlet />
     </Box>
   );
 };

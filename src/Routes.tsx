@@ -6,6 +6,7 @@ import Employees from './pages/employees';
 import Users from './pages/users'
 import Scatter from './pages/scatterplot'
 import Signin from './pages/signin'
+import QuestionInsight from './pages/dashboard/question-insight';
 
 function Routes() {
   return useRoutes([
@@ -16,6 +17,10 @@ function Routes() {
         {
           path: '/',
           element: <Dashboard />,
+        },
+        {
+          path: '/question-insight',
+          element: <QuestionInsight />
         },
         {
           path: '/employees',

@@ -14,30 +14,22 @@ import {
     Text,
     TextInput,
     Title,
-    useDrawersStack,
-    useMantineTheme,
 } from '@mantine/core';
-import { IconChevronDown, IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
-import { useEffect, useRef, useState } from 'react';
+import { IconChevronDown } from '@tabler/icons-react';
+import { Suspense } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDisclosure } from '@mantine/hooks';
-import { useMutation, useQuery } from 'react-query';
-import { addDepartment, getAllDepartments, getEmployees, sendEmail } from '../../api/apiService';
-import { Dropzone } from '@mantine/dropzone';
+import { useQuery } from 'react-query';
 import api from '../../api/api';
 import AddDepartment from '../../components/V2Components/AddDepartment'
 import InviteEmployee from '../../components/V2Components/InviteEmployee'
 import PARTICIPATION_RATE from '../../components/V2Components/ParticipationRate'
 import queryClient from '../../queryClient';
+import { ErrorBoundary } from 'react-error-boundary';
 
 
 const EMPLOYEE_CARD = ({ department, department_names }) => {
-
-    const stack = useDrawersStack(['batch-upload'])
     const [opened, { open, close }] = useDisclosure(false);
-
-
-
     const { register, handleSubmit, setValue, reset, formState: { isSubmitting } } = useForm({
         defaultValues: {
             first_name: "",
@@ -46,6 +38,7 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
             department: ""
         }
     })
+
     const details = (first_name, last_name, email, department) => {
         setValue("first_name", first_name)
         setValue("last_name", last_name)
@@ -66,7 +59,7 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
         }
     }
 
-    const { data: EMPLOYEES, isError: noEMPLOYEES, isLoading: isFETCHINGEMPLOYEES, refetch: REFETCH_EMPLOYEES } = useQuery({
+    const { data: EMPLOYEES, isLoading: isFETCHINGEMPLOYEES, refetch: REFETCH_EMPLOYEES } = useQuery({
         queryKey: ['EMPLOYEES', department],
         queryFn: async ({ queryKey: [, department] }) => {
             // Build the request config: either { params: { department } } or empty object
@@ -77,7 +70,9 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
             // Single GET, axios will omit undefined params automatically
             const { data } = await api.get('hr-admin/employees', config);
             return data;
-        }
+        },
+        useErrorBoundary: true,
+        suspense: true,
     })
 
     if (isFETCHINGEMPLOYEES) return (
@@ -90,10 +85,6 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
             loaderProps={{ color: '#515977', type: 'bars' }}
         />
     )
-
-    if (noEMPLOYEES) return <>no employees</>
-
-    if (EMPLOYEES.length === 0) return <Paper h={'100px'} ><Center h={'100%'}><Title order={2} >No employees!</Title></Center></Paper>
 
     console.log(EMPLOYEES)
 
@@ -142,12 +133,9 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
                     </Drawer.Content>
                 </Drawer.Root>
             </Drawer.Stack>
-
-
             <SimpleGrid cols={4} >
                 {EMPLOYEES.map(({ id, first_name, last_name, department, email, }) => (
                     <Paper key={id} radius={'md'} p={'xl'} onClick={() => details(first_name, last_name, email, department.name)}>
-
                         <Group gap={'md'}>
                             <Avatar size={'lg'}>{first_name[0]}</Avatar>
                             <Box>
@@ -155,7 +143,6 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
                                 <Text size="sm" fw={700}>{`${first_name} ${last_name}`}</Text>
                             </Box>
                         </Group>
-
                     </Paper>
                 ))}
             </SimpleGrid>
@@ -164,28 +151,18 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
 }
 
 
-const Employees = () => {
-
+const EmployeePage = () => {
     const { control, watch, setValue: setDepartmentValue } = useForm({ defaultValues: { department: '' } });
     const selectedDepartment = watch('department');
-
-    const { data: DEPARTMENT, isError: noDEPARTMENT, isLoading: isFETCHINGDEPARTMENT, refetch: REFETCH_DEPARTMENT } = useQuery({
+    const { data: DEPARTMENT, refetch: REFETCH_DEPARTMENT } = useQuery({
         queryKey: ['DEPARTMENT'],
         queryFn: async () => {
             const res = await api.get('department')
             return res.data
-        }
+        },
+        useErrorBoundary: true,
+        suspense: true,
     })
-
-    if (isFETCHINGDEPARTMENT) {
-        console.log('fetching...')
-        return
-    }
-
-    if (noDEPARTMENT) {
-        console.log('no department')
-        return
-    }
 
     const DEPARTMENT_NAMES = DEPARTMENT.map(({ name }) => name)
 
@@ -225,10 +202,6 @@ const Employees = () => {
                         </form>
                     </Box>
                     <Flex gap={24} align="center">
-
-                        {/* <Button color="#82BC66" size="md" radius="xl" onClick={openAddDepartment}>
-                            + Department
-                        </Button> */}
                         <InviteEmployee departments={DEPARTMENT_NAMES} />
                         <AddDepartment refetch={REFETCH_DEPARTMENT} />
                     </Flex>
@@ -240,6 +213,26 @@ const Employees = () => {
             </Stack>
         </Box>
     );
+}
+
+const Employees = () => {
+    return (
+        <ErrorBoundary fallback={<>Error...</>}>
+            <Suspense fallback={
+                <Center h={'50vh'}>
+                    <LoadingOverlay
+                        visible={true}
+                        zIndex={1000}
+                        overlayProps={{ radius: 'sm', blur: 2 }}
+                        loaderProps={{ color: 'gray', type: 'bars' }}
+                        pos={'relative'}
+                    />
+                </Center>
+            }>
+                <EmployeePage />
+            </Suspense>
+        </ErrorBoundary>
+    )
 };
 
 export default Employees;
