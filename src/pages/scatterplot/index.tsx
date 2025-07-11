@@ -2,6 +2,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { useQuery } from 'react-query';
 import { Dropzone } from '@mantine/dropzone';
 import {
+  Anchor,
   Button,
   Drawer,
   Flex,
@@ -53,11 +54,11 @@ const ScatterGraph = () => {
     {
       color: 'blue',
       name: 'Data',
-      data: ScatterData?.scatterData,
+      data: ScatterData?.scatterData.users_with_data,
     },
   ];
 
-  console.log(ScatterData)
+  console.log(ScatterData?.scatterData.users_with_data)
 
   return (
     <Paper p="md" shadow="sm">
@@ -203,6 +204,7 @@ const UploadPerformanceData = () => {
             >
               {FILE_SUBMITTING ? 'Uploading...' : 'Upload CSV'}
             </Button>
+            <Anchor href='/performance.csv' download>Download Sample CSV Format</Anchor>
           </Stack>
         </form>
       </Drawer>
