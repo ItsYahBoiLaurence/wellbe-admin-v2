@@ -49,7 +49,9 @@ const Dashboard = () => {
 
   if (noWELLBEING_DATA) return <>no data!</>
 
+  console.log("*******WBDATA*******")
   console.log(WELLBEING_DATA)
+  console.log("**************")
 
   return (
     <Box>
@@ -86,7 +88,7 @@ const Dashboard = () => {
         <WELLBEGRAPH period={selectedPeriod} />
       </SimpleGrid>
       <Box>
-        <COMPANYWELLBEING WELLBEING_DATA={WELLBEING_DATA} />
+        <COMPANYWELLBEING period={selectedPeriod} />
       </Box>
       {/*<Box my={'md'}>
         <DEPARTMENT period={selectedPeriod} />
