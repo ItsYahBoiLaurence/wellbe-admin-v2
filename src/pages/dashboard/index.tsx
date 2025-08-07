@@ -15,6 +15,8 @@ import NORMGRAPH from '../../components/V2Components/NormGraph'
 import api from '../../api/api';
 import WELLBEGRAPH from '../../components/V2Components/WellbeGraph'
 import LoaderComponent from '../../components/V2Components/LoaderComponent'
+import InsightCard from '../../components/Cards/InsightCard';
+import { Outlet } from 'react-router-dom';
 
 const time = [
   { label: 'Quarterly View', value: 'Quarterly' },
@@ -47,7 +49,9 @@ const Dashboard = () => {
 
   if (noWELLBEING_DATA) return <>no data!</>
 
+  console.log("*******WBDATA*******")
   console.log(WELLBEING_DATA)
+  console.log("**************")
 
   return (
     <Box>
@@ -84,11 +88,15 @@ const Dashboard = () => {
         <WELLBEGRAPH period={selectedPeriod} />
       </SimpleGrid>
       <Box>
-        <COMPANYWELLBEING WELLBEING_DATA={WELLBEING_DATA} />
+        <COMPANYWELLBEING period={selectedPeriod} />
       </Box>
       {/*<Box my={'md'}>
         <DEPARTMENT period={selectedPeriod} />
       </Box>*/}
+      <Box my={'md'}>
+        <InsightCard />
+      </Box>
+      <Outlet />
     </Box>
   );
 };

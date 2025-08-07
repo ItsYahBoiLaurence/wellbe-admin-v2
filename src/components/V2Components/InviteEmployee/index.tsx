@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Flex, NativeSelect, Stack, Text, TextInput, useDrawersStack } from "@mantine/core";
+import { Anchor, Box, Button, Drawer, Flex, NativeSelect, Stack, Text, TextInput, useDrawersStack } from "@mantine/core";
 import { Dropzone, DropzoneAccept } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconCloudUpload, IconDownload, IconX } from "@tabler/icons-react";
@@ -128,6 +128,7 @@ export default function index({ departments }: any) {
                             <Button type="submit" variant="filled" color="gray" loading={FILE_SUBMITTING}>
                                 {FILE_SUBMITTING ? "Uploading..." : "Batch Invite"}
                             </Button>
+                            <Anchor href="/sample_invite.csv" download>Download Sample CSV Format</Anchor>
                         </Stack>
                     </form>
                 </Drawer>

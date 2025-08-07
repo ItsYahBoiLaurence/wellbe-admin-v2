@@ -1,13 +1,12 @@
 import { Controller, useForm } from 'react-hook-form';
-import { useState, useRef, useEffect, useCallback } from 'react';
-import { QueryClient, useQuery } from 'react-query';
-import { ScatterChart } from '@mantine/charts';
+import { useQuery } from 'react-query';
 import { Dropzone } from '@mantine/dropzone';
 import {
+  Anchor,
   Button,
-  Center,
   Drawer,
   Flex,
+  LoadingOverlay,
   Paper,
   Stack,
   Text,
@@ -17,35 +16,56 @@ import { IconCloudUpload, IconDownload, IconX } from '@tabler/icons-react';
 import api from '../../api/api';
 import { useDisclosure } from '@mantine/hooks';
 import queryClient from '../../queryClient';
+import { ScatterChart } from '@mantine/charts';
+import { ErrorBoundary } from 'react-error-boundary';
+import { Suspense } from 'react';
 
+const getScatterData = async () => {
+  const url = import.meta.env.VITE_API_URL
+  const token = localStorage.getItem('CLIENT_TOKEN')
+  try {
+    const response = await fetch(`${url}workforce-vitality`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    })
+    if (response.status != 200) throw Error("Fetch Failed!")
+    return response.json()
+  } catch (error) {
+    throw error
+  }
+}
 
 const ScatterGraph = () => {
-  const { data: SCATTERDATA, isError: noSCATTERDATA, isLoading: fetchingSCATTERDATA } = useQuery({
-    queryKey: ['SCATTERPLOT'],
-    queryFn: async () => {
-      const res = await api.get('workforce-vitality')
-      return res.data
-    }
+
+  const { data: ScatterData } = useQuery({
+    queryKey: ['scatterdata'],
+    queryFn: async () => getScatterData(),
+    retry: false,
+    useErrorBoundary: true,
+    suspense: true
   })
 
-  if (fetchingSCATTERDATA) return <Paper h={100}><Center h={100}><Text>No data available</Text></Center></Paper>
-  if (noSCATTERDATA) return <Paper h={100}><Center h={100}><Text>No data available</Text></Center></Paper>
-
-  const { users_with_data } = SCATTERDATA.scatterData
-  console.log(users_with_data)
+  if (!ScatterData) throw new Error("Failed Data!")
 
   const data = [
     {
       color: 'blue',
       name: 'Data',
-      data: users_with_data
-    }
-  ]
+      data: ScatterData?.scatterData.users_with_data,
+    },
+  ];
+
+  console.log(ScatterData?.scatterData.users_with_data)
 
   return (
-    <Paper p="md" shadow='sm'>
-      <Stack gap={'lg'}>
-        <Title order={2} fw={500}>Wellbeing x Performance Scatter Plot</Title>
+    <Paper p="md" shadow="sm">
+      <Stack gap="lg">
+        <Title order={2} fw={500}>
+          Wellbeing x Performance Scatter Plot
+        </Title>
         <ScatterChart
           h={650}
           data={data}
@@ -53,52 +73,60 @@ const ScatterGraph = () => {
           xAxisLabel="Performance"
           yAxisLabel="Wellbeing"
           xAxisProps={{
-            domain: [0, 100], // Fix x-axis range from 0 to 100
-            ticks: [0, 20, 40, 60, 80, 100], // Define x-axis ticks
+            domain: [0, 100],
+            ticks: [0, 20, 40, 60, 80, 100],
           }}
           yAxisProps={{
-            domain: [0, 100], // Adjust y-axis range as needed,
+            domain: [0, 100],
             ticks: [0, 20, 40, 60, 80, 100],
           }}
         />
       </Stack>
     </Paper>
-  )
-}
+  );
+};
 
-
-const Scatterplot = () => {
+const UploadPerformanceData = () => {
   const [opened, { open, close }] = useDisclosure(false);
 
-  const { control: FILE_CONTROL, handleSubmit: FILESUBMIT, reset: RESET_FILE, formState: { isSubmitting: FILE_SUBMITTING, isSubmitSuccessful: isSUCCESS_UPLOAD } } = useForm<{ files: [] }>({
-    defaultValues: { files: [] }
-  })
+  const {
+    control: FILE_CONTROL,
+    handleSubmit: FILESUBMIT,
+    reset: RESET_FILE,
+    formState: {
+      isSubmitting: FILE_SUBMITTING,
+      isSubmitSuccessful: isSUCCESS_UPLOAD,
+    },
+  } = useForm<{ files: File[] }>({
+    defaultValues: { files: [] },
+  });
 
   const onFileSubmit = async (data: { files: File[] }) => {
     const { files } = data;
+
     if (!files || files.length === 0) {
       console.warn('No files to upload');
       return;
     }
 
-    // 1. Build FormData
     const formData = new FormData();
     files.forEach((file) => {
-      // 'file' must match the @UseInterceptors key in your NestJS controller
       formData.append('file', file, file.name);
     });
 
     try {
-      // 2. Send via your preconfigured `api` instance
-      const response = await api.post('workforce-vitality', formData, {
+      const response = await api.post('/workforce-vitality', formData, {
         headers: {
-          // Let the browser set the correct multipart boundary
           'Content-Type': 'multipart/form-data',
         },
       });
+
       console.log('Server parsed rows:', response.data);
-      RESET_FILE()
-      queryClient.removeQueries({ queryKey: 'SCATTERPLOT', exact: true })
+
+      RESET_FILE();
+
+      // ✅ Trigger re-fetch instead of just clearing cache
+      queryClient.invalidateQueries({ queryKey: ['SCATTERPLOTDATA'] });
     } catch (error) {
       console.error('Upload failed:', error);
     }
@@ -113,7 +141,8 @@ const Scatterplot = () => {
               name="files"
               control={FILE_CONTROL}
               rules={{
-                validate: (files) => files.length > 0 || 'Please upload at least one CSV file',
+                validate: (files) =>
+                  files.length > 0 || 'Please upload at least one CSV file',
               }}
               render={({ field: { onChange, value }, fieldState: { error } }) => (
                 <>
@@ -138,13 +167,14 @@ const Scatterplot = () => {
                       </Flex>
                       <Text ta="center" fw={700} size="lg" mt="xl">
                         <Dropzone.Accept>Drop CSV file here</Dropzone.Accept>
-                        <Dropzone.Reject>Only CSV files under 30MB are accepted</Dropzone.Reject>
+                        <Dropzone.Reject>
+                          Only CSV files under 30MB are accepted
+                        </Dropzone.Reject>
                         <Dropzone.Idle>Upload CSV File</Dropzone.Idle>
                       </Text>
                     </div>
                   </Dropzone>
 
-                  {/* Display uploaded file names */}
                   {value.length > 0 && (
                     <Stack mt="sm" gap={4}>
                       {value.map((file, idx) => (
@@ -155,7 +185,6 @@ const Scatterplot = () => {
                     </Stack>
                   )}
 
-                  {/* Validation error */}
                   {error && (
                     <Text color="red" size="sm" mt="xs">
                       {error.message}
@@ -164,21 +193,55 @@ const Scatterplot = () => {
                 </>
               )}
             />
-            {isSUCCESS_UPLOAD && <Text c={'green'}>Upload Success</Text>}
-            <Button type="submit" variant="filled" color="gray" loading={FILE_SUBMITTING}>
-              {FILE_SUBMITTING ? "Uploading..." : "Upload Csv"}
+            {isSUCCESS_UPLOAD && (
+              <Text color="green">Upload Success</Text>
+            )}
+            <Button
+              type="submit"
+              variant="filled"
+              color="gray"
+              loading={FILE_SUBMITTING}
+            >
+              {FILE_SUBMITTING ? 'Uploading...' : 'Upload CSV'}
             </Button>
+            <Anchor href='/performance.csv' download>Download Sample CSV Format</Anchor>
           </Stack>
         </form>
       </Drawer>
-      <Paper radius="sm" shadow="xs" p="md" style={{ display: 'flex', justifyContent: 'flex-end' }} mb='md'>
+
+      <Paper
+        radius="sm"
+        shadow="xs"
+        p="md"
+        style={{ display: 'flex', justifyContent: 'flex-end' }}
+      >
         <Button variant="filled" color="gray" onClick={open}>
           Upload Performance Data
         </Button>
       </Paper>
-      <ScatterGraph />
     </>
   );
+}
+
+const Scatterplot = () => {
+  return (
+    <Stack>
+      <UploadPerformanceData />
+      <ErrorBoundary fallback={<Paper p={'md'} ta={'center'}>No Data Available!</Paper>}>
+        <Suspense fallback={
+          <LoadingOverlay
+            h={'100px'}
+            pos={'relative'}
+            visible={true}
+            zIndex={1000}
+            overlayProps={{ radius: 'sm', blur: 20 }}
+            loaderProps={{ color: '#515977', type: 'bars' }}
+          />}>
+          <ScatterGraph />
+        </Suspense>
+      </ErrorBoundary>
+    </Stack>
+  )
 };
 
 export default Scatterplot;
