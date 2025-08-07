@@ -81,16 +81,8 @@ export default function index({ period }: { period: string }) {
         }
     })
 
-    if (isLoading) return <Paper h={100}><Center h={"100%"}>
-        <LoadingOverlay
-            h={'100px'}
-            pos={'relative'}
-            visible={true}
-            zIndex={1000}
-            overlayProps={{ radius: 'sm', blur: 20 }}
-            loaderProps={{ color: '#515977', type: 'bars' }}
-        />
-    </Center></Paper>
+    if (isLoading) return <Paper h={100}><Center h={"100%"}><Text>NO DATA AVAILABLE</Text></Center></Paper>
+
     if (isError) return <Paper h={100}><Center h={"100%"}><Text>NO DATA AVAILABLE</Text></Center></Paper>
 
     console.log("*****DOMAIN INSIGHT DATA******")

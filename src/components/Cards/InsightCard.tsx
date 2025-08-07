@@ -198,7 +198,7 @@ const SingleInsightCard = () => {
 
 const InsightCard = () => {
     return (
-        <ErrorBoundary fallback={<Paper p={'md'} ta={'center'}>No Data Available!</Paper>}>
+        <ErrorBoundary fallback={<Paper p={'md'} ta={'center'}>NO DATA AVAILABLE</Paper>}>
             <Suspense fallback={
                 <LoadingOverlay
                     h={'100px'}
