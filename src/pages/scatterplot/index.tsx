@@ -60,6 +60,21 @@ const ScatterGraph = () => {
 
   console.log(ScatterData?.scatterData.users_with_data)
 
+  function SetColor(performance: number, wellbeing: number) {
+    if (performance > 50 && wellbeing > 50) {
+      return '#72C450';
+    } else if (performance > 50 && wellbeing < 50) {
+      return '#9C446E'
+    } else if (performance < 50 && wellbeing > 50) {
+      return '#FCB92F'
+    } else if (performance < 50 && wellbeing < 50) {
+      return '#EF742B'
+    } else {
+      return 'black'
+    }
+  }
+
+
   return (
     <Paper p="md" shadow="sm">
       <Stack gap="lg">
@@ -69,9 +84,9 @@ const ScatterGraph = () => {
         <ScatterChart
           h={650}
           data={data}
-          dataKey={{ x: 'performance', y: 'wellbeing' }}
-          xAxisLabel="Performance"
-          yAxisLabel="Wellbeing"
+          dataKey={{ x: 'wellbeing', y: 'performance' }}
+          xAxisLabel="Wellbeing"
+          yAxisLabel="Performance"
           xAxisProps={{
             domain: [0, 100],
             ticks: [0, 20, 40, 60, 80, 100],
@@ -79,6 +94,15 @@ const ScatterGraph = () => {
           yAxisProps={{
             domain: [0, 100],
             ticks: [0, 20, 40, 60, 80, 100],
+          }}
+          scatterProps={{
+            shape: (props) => {
+              const { cx, cy, payload } = props;
+              const color = SetColor(payload.performance, payload.wellbeing);
+              return (
+                <circle cx={cx} cy={cy} r={5} fill={color} />
+              );
+            }
           }}
         />
       </Stack>
