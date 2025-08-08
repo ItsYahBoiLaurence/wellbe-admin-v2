@@ -29,6 +29,15 @@ interface Question {
     domain: string;
 }
 
+enum DomainType {
+    TotalAgreePercentage,
+    TotalDisagreePercentage,
+    StronglyAgreePercentage,
+    AgreePercentage,
+    DisagreePercentage,
+    StronglyDisagreePercentage
+}
+
 const fetchData = async () => {
     const url = import.meta.env.VITE_API_URL
     const token = localStorage.getItem('CLIENT_TOKEN')
@@ -58,6 +67,36 @@ function chunk<T>(array: T[], size: number): T[][] {
     return [head, ...chunk(tail, size)];
 }
 
+function getPercentage(answer: Answer, domainType: DomainType) {
+    const total = answer.SA + answer.A + answer.D + answer.SD;
+
+    switch (domainType) {
+        case DomainType.TotalAgreePercentage:
+            const tap = ((answer.SA + answer.A) / total) * 100
+            return Number(tap.toFixed(2))
+
+        case DomainType.TotalDisagreePercentage:
+            const tdp = ((answer.SD + answer.D) / total) * 100;
+            return Number(tdp.toFixed(2))
+
+        case DomainType.StronglyAgreePercentage:
+            const sap = (answer.SA / total) * 100;
+            return Number(sap.toFixed(2))
+        case DomainType.AgreePercentage:
+            const ap = (answer.A / total) * 100;
+            return Number(ap.toFixed(2))
+
+        case DomainType.DisagreePercentage:
+            const dp = (answer.D / total) * 100;
+            return Number(dp.toFixed(2))
+        case DomainType.StronglyDisagreePercentage:
+            const sdp = (answer.SD / total) * 100;
+            return Number(sdp.toFixed(2))
+        default:
+            return 0
+    }
+}
+
 const PaginatedData = () => {
 
     const tip = "Many employees feel proud to be part of their organization, indicating strong workplace engagement. To build on this, leadership can highlight employee achievements regularly and foster open communication to sustain a positive work environment."
@@ -75,6 +114,9 @@ const PaginatedData = () => {
     if (!data) throw new Error("Failed to fetch Data!")
 
     const chunkedData = chunk(data.results, 9)
+    console.log("********CHUNKDATA******")
+    console.log(chunkedData)
+    console.log("**************")
 
     return (
         <Stack justify="space-between" align="center" p={'md'}>
@@ -88,18 +130,17 @@ const PaginatedData = () => {
                             {activeCard == index ? (
                                 <>
                                     <Box>
-                                        <Text ta={'center'}>{index}</Text>
                                         <Text>{tip}</Text>
                                     </Box>
-                                    <Button fullWidth onClick={() => setActiveCard(null)}>Got it!</Button>
+                                    <Button fullWidth onClick={() => setActiveCard(null)} color="#515977">Got it!</Button>
                                 </>
                             ) : (
                                 <Stack gap={'12px'}>
-                                    <Text size={'28px'} fw={500}>{`${(answer.SA + answer.A) * 100}% Agree`}</Text>
+                                    <Text size={'28px'} fw={500}>{`${getPercentage(answer, DomainType.TotalAgreePercentage)}% Agree`}</Text>
                                     <Stack gap={0}>
                                         <Progress.Root size={24} style={{ borderRadius: '12px' }}>
-                                            <Progress.Section value={(answer.SA + answer.A) * 100} color="#82BC66" />
-                                            <Progress.Section value={(answer.D + answer.SD) * 100} color="#FF5A5A" />
+                                            <Progress.Section value={getPercentage(answer, DomainType.TotalAgreePercentage)} color="#82BC66" />
+                                            <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color="#FF5A5A" />
                                         </Progress.Root>
                                         <Group justify="space-between" >
                                             {(answer.SA + answer.A) > 0 && <Text fw={500} c="#82BC66">Agree</Text>}
@@ -109,19 +150,19 @@ const PaginatedData = () => {
                                     <Stack gap={2} c={'grey'} align="flex-start">
                                         <Group justify="space-between" w={'100%'}>
                                             <Text fw={500}>Strongly Agree</Text>
-                                            <Text fw={500}>{answer.SA * 100}%</Text>
+                                            <Text fw={500}>{getPercentage(answer, DomainType.StronglyAgreePercentage)}%</Text>
                                         </Group>
                                         <Group justify="space-between" w={'100%'}>
                                             <Text fw={500}>Agree</Text>
-                                            <Text fw={500}>{answer.A * 100}%</Text>
+                                            <Text fw={500}>{getPercentage(answer, DomainType.AgreePercentage)}%</Text>
                                         </Group>
                                         <Group justify="space-between" w={'100%'}>
                                             <Text fw={500}>Disagree</Text>
-                                            <Text fw={500}>{answer.D * 100}%</Text>
+                                            <Text fw={500}>{getPercentage(answer, DomainType.DisagreePercentage)}%</Text>
                                         </Group>
                                         <Group justify="space-between" w={'100%'}>
                                             <Text fw={500}>Strongly Disagree</Text>
-                                            <Text fw={500}>{answer.SD * 100}%</Text>
+                                            <Text fw={500}>{getPercentage(answer, DomainType.StronglyDisagreePercentage)}%</Text>
                                         </Group>
                                         <Button mt={8} rightSection={<IconChevronDown />} variant={'filled'} color="#515977" onClick={() => setActiveCard(index)}>Show Insights</Button>
                                     </Stack>

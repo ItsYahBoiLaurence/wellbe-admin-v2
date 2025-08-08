@@ -38,22 +38,43 @@ interface Interpretation {
     score_band: string;
 }
 
-interface OneSingleType {
-    date: string;
-    results: {
-        answer: {
-            SA: number;
-            A: number;
-            D: number;
-            SD: number;
-        },
-        question: {
-            id: number;
-            question: string;
-            domain: string;
-        },
-        respondents: number;
-    }[]
+enum DomainType {
+    TotalAgreePercentage,
+    TotalDisagreePercentage,
+    StronglyAgreePercentage,
+    AgreePercentage,
+    DisagreePercentage,
+    StronglyDisagreePercentage
+}
+
+function getPercentage(answer: Answer, domainType: DomainType) {
+    const total = answer.SA + answer.A + answer.D + answer.SD;
+
+    switch (domainType) {
+        case DomainType.TotalAgreePercentage:
+            const tap = ((answer.SA + answer.A) / total) * 100
+            return Number(tap.toFixed(2))
+
+        case DomainType.TotalDisagreePercentage:
+            const tdp = ((answer.SD + answer.D) / total) * 100;
+            return Number(tdp.toFixed(2))
+
+        case DomainType.StronglyAgreePercentage:
+            const sap = (answer.SA / total) * 100;
+            return Number(sap.toFixed(2))
+        case DomainType.AgreePercentage:
+            const ap = (answer.A / total) * 100;
+            return Number(ap.toFixed(2))
+
+        case DomainType.DisagreePercentage:
+            const dp = (answer.D / total) * 100;
+            return Number(dp.toFixed(2))
+        case DomainType.StronglyDisagreePercentage:
+            const sdp = (answer.SD / total) * 100;
+            return Number(sdp.toFixed(2))
+        default:
+            return 0
+    }
 }
 
 function chunk<T>(array: T[], size: number): T[][] {
@@ -91,11 +112,11 @@ const PaginatedData = ({ dataArray }: { dataArray: QuestionAnswerTally[] }) => {
                         </Stack>
                     ) : (
                         <Stack gap={'16px'}>
-                            <Text size={'28px'} fw={500}>{`${(answer.SA + answer.A) * 100}% Agree`}</Text>
+                            <Text size={'28px'} fw={500}>{`${getPercentage(answer, DomainType.TotalAgreePercentage)}% Agree`}</Text>
                             <Stack gap={0}>
                                 <Progress.Root size={24} style={{ borderRadius: '12px' }}>
-                                    <Progress.Section value={(answer.SA + answer.A) * 100} color="#82BC66" />
-                                    <Progress.Section value={(answer.D + answer.SD) * 100} color="#FF5A5A" />
+                                    <Progress.Section value={getPercentage(answer, DomainType.TotalAgreePercentage)} color="#82BC66" />
+                                    <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color="#FF5A5A" />
                                 </Progress.Root>
                                 <Group justify="space-between" >
                                     {(answer.SA + answer.A) > 0 && <Text fw={500} c="#82BC66">Agree</Text>}
@@ -106,22 +127,22 @@ const PaginatedData = ({ dataArray }: { dataArray: QuestionAnswerTally[] }) => {
                                 <Flex w={'100%'} gap={'lg'}>
                                     <Group flex={.5} justify="space-between" w={'100%'}>
                                         <Text size="sm" fw={500}>Strongly Agree</Text>
-                                        <Text size="sm" fw={500}>{answer.SA * 100}%</Text>
+                                        <Text size="sm" fw={500}>{getPercentage(answer, DomainType.StronglyAgreePercentage)}%</Text>
                                     </Group>
 
                                     <Group justify="space-between" w={'100%'} flex={.5}>
                                         <Text size="sm" fw={500}>Agree</Text>
-                                        <Text size="sm" fw={500}>{answer.A * 100}%</Text>
+                                        <Text size="sm" fw={500}>{getPercentage(answer, DomainType.AgreePercentage)}%</Text>
                                     </Group>
                                 </Flex>
                                 <Flex w={'100%'} gap={'lg'}>
                                     <Group justify="space-between" w={'100%'}>
                                         <Text size="sm" fw={500}>Disagree</Text>
-                                        <Text size="sm" fw={500}>{answer.D * 100}%</Text>
+                                        <Text size="sm" fw={500}>{getPercentage(answer, DomainType.DisagreePercentage)}%</Text>
                                     </Group>
                                     <Group justify="space-between" w={'100%'}>
                                         <Text size="sm" fw={500}>Strongly Disagree</Text>
-                                        <Text size="sm" fw={500}>{answer.SD * 100}%</Text>
+                                        <Text size="sm" fw={500}>{getPercentage(answer, DomainType.StronglyDisagreePercentage)}%</Text>
                                     </Group>
                                 </Flex>
 
