@@ -49,10 +49,6 @@ const Dashboard = () => {
 
   if (noWELLBEING_DATA) return <>no data!</>
 
-  console.log("*******WBDATA*******")
-  console.log(WELLBEING_DATA)
-  console.log("**************")
-
   return (
     <Box>
       <Paper shadow="xs" radius="md" px="lg" py="md">

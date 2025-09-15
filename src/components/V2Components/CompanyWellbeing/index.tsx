@@ -15,14 +15,14 @@ interface WellbeingDomain {
     to_do: string
 }
 
-type StanineLabel = "Very High" | "Above Average" | "Average" | "Below Average" | "Very Low";
+type StanineLabel = "High" | "Above Average" | "Average" | "Below Average" | "Very Low";
 
 const Domain = ({ wellbeingDomain }: { wellbeingDomain: WellbeingDomain }) => {
 
     const [show, setShow] = useState(false)
 
     const imgMap: Record<StanineLabel, string> = {
-        "Very High": Increased,
+        "High": Increased,
         "Above Average": Increased,
         "Below Average": Decreased,
         "Very Low": Decreased,
@@ -77,6 +77,9 @@ export default function index({ period }: { period: string }) {
                 ? { params: { period } }
                 : {}
             const res = await api.get('/wellbeing/domain-insight', config)
+            console.log("111111111111")
+            console.log(res)
+            console.log("111111111111")
             return res.data
         }
     })

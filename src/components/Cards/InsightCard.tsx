@@ -184,12 +184,7 @@ const fetchData = async (): Promise<InsightCardType> => {
     }
 
     const data = await res.json();
-
-    console.log("**************");
-    console.log(data);
-    console.log("**************");
-
-    return data; // ✅ This is the key fix
+    return data;
 };
 
 const SingleInsightCard = () => {
