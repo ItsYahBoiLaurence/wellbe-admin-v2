@@ -77,9 +77,6 @@ export default function index({ period }: { period: string }) {
                 ? { params: { period } }
                 : {}
             const res = await api.get('/wellbeing/domain-insight', config)
-            console.log("111111111111")
-            console.log(res)
-            console.log("111111111111")
             return res.data
         }
     })
