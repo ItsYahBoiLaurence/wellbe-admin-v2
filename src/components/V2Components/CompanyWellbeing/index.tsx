@@ -15,7 +15,7 @@ interface WellbeingDomain {
     to_do: string
 }
 
-type StanineLabel = "High" | "Above Average" | "Average" | "Below Average" | "Very Low";
+type StanineLabel = "High" | "Above Average" | "Average" | "Below Average" | "Low";
 
 const Domain = ({ wellbeingDomain }: { wellbeingDomain: WellbeingDomain }) => {
 
@@ -25,7 +25,7 @@ const Domain = ({ wellbeingDomain }: { wellbeingDomain: WellbeingDomain }) => {
         "High": Increased,
         "Above Average": Increased,
         "Below Average": Decreased,
-        "Very Low": Decreased,
+        "Low": Decreased,
         "Average": Maintained
     }
 

@@ -133,6 +133,7 @@ const EMPLOYEE_CARD = ({ department, department_names }) => {
                     </Drawer.Content>
                 </Drawer.Root>
             </Drawer.Stack>
+
             <SimpleGrid cols={4} >
                 {EMPLOYEES.map(({ id, first_name, last_name, department, email, }) => (
                     <Paper key={first_name} radius={'md'} p={'xl'} onClick={() => details(first_name, last_name, email, department.name)}>

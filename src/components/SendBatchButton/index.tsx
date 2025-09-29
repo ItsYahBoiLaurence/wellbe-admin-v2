@@ -1,9 +1,10 @@
 import { Button, Group, Stack, Text } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import { notifications } from '@mantine/notifications';
-import { useQuery } from 'react-query';
+import { useQuery, useQueryClient } from 'react-query';
 import axios from 'axios';
 import api from '../../api/api';
+import queryClient from '../../queryClient';
 
 // Create an Axios instance with default configurations
 const apiClient = axios.create({
@@ -26,11 +27,14 @@ apiClient.interceptors.request.use(
 );
 
 const Index = () => {
+
+    const client = useQueryClient()
     // Function to send the batch
     const handleSendBatch = async () => {
         try {
             const response = await api.get('batch');
             refetchBATCH()
+            client.invalidateQueries('PARTICIPATION_RATE')
             console.log(response.data);
             notifications.show({
                 title: <Text fw={700} size='md' mb={'sm'}>Survey Batch Released!</Text>,

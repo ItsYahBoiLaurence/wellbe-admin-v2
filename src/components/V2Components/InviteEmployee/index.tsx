@@ -1,10 +1,9 @@
 import { Anchor, Box, Button, Drawer, Flex, NativeSelect, Stack, Text, TextInput, useDrawersStack } from "@mantine/core";
-import { Dropzone, DropzoneAccept } from "@mantine/dropzone";
+import { Dropzone } from "@mantine/dropzone";
 import { useDisclosure } from "@mantine/hooks";
 import { IconChevronDown, IconCloudUpload, IconDownload, IconX } from "@tabler/icons-react";
 import { Controller, useForm } from "react-hook-form";
 import api from "../../../api/api";
-import { useState } from "react";
 
 export default function index({ departments }: any) {
     const [openedEmployeeInvite, { open, close }] = useDisclosure(false);

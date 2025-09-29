@@ -8,12 +8,7 @@ const ParticipationRate = ({ selectedDepartment }) => {
     const [participationLogo, setParticipation] = useState(false)
     const { data: participationData, isLoading: isParticipationDataLoading } = useQuery({
         queryKey: ['participation', selectedDepartment],
-        queryFn: getParticipationRate,
-        onError: (error) => {
-            if (error?.status == 404) {
-                setParticipation(true)
-            }
-        }
+        queryFn: getParticipationRate
     })
 
     useEffect(() => {
@@ -23,11 +18,6 @@ const ParticipationRate = ({ selectedDepartment }) => {
             setParticipation(false)
         }
     }, [selectedDepartment, participationData])
-
-    useEffect(() => {
-
-    },)
-
 
     return (
         <Paper p='md' radius='md' my={'md'}>
