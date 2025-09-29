@@ -5,6 +5,7 @@ import {
   NativeSelect,
   Paper,
   SimpleGrid,
+  Text,
   Title,
 } from '@mantine/core';
 import { IconChevronDown } from '@tabler/icons-react';
@@ -41,7 +42,8 @@ const Dashboard = () => {
       queryFn: async () => {
         const res = await api.get('participation-rate');
         return res.data;
-      }
+      },
+      retry: 0
     },
     {
       queryKey: ['WELLBEING_DATA', selectedPeriod],
@@ -52,16 +54,17 @@ const Dashboard = () => {
 
         const res = await api.get('wellbeing/company', config)
         return res.data
-      }
+      },
+      retry: 0
     }
   ])
   const { data, isLoading, isError } = participation
 
   const { data: WELLBEING_DATA, isError: noWELLBEING_DATA, isLoading: isFETCHING_DATA } = wellbeing
 
-  if (isFETCHING_DATA || isLoading) return <LoaderComponent />
+  if (isLoading || isFETCHING_DATA) return <LoaderComponent />
 
-  if (noWELLBEING_DATA || isError) return <>no data!</>
+  if (noWELLBEING_DATA || isError) return <Center h={"80vh"}><Text fw="bold">No Wellbeing Data!</Text></Center>
 
   return (
     <Box>
