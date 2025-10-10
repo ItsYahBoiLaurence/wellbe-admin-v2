@@ -29,6 +29,7 @@ interface Question {
     question: string;
     domain: string;
     interpretation: Interpretation[]
+    is_flipped: boolean
 }
 
 interface Interpretation {
@@ -115,12 +116,12 @@ const PaginatedData = ({ dataArray }: { dataArray: QuestionAnswerTally[] }) => {
                             <Text size={'28px'} fw={500}>{`${getPercentage(answer, DomainType.TotalAgreePercentage)}% Agree`}</Text>
                             <Stack gap={0}>
                                 <Progress.Root size={24} style={{ borderRadius: '12px' }}>
-                                    <Progress.Section value={getPercentage(answer, DomainType.TotalAgreePercentage)} color="#82BC66" />
-                                    <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color="#FF5A5A" />
+                                    <Progress.Section value={getPercentage(answer, DomainType.TotalAgreePercentage)} color={question.is_flipped ? "#FF5A5A" : "#82BC66"} />
+                                    <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color={question.is_flipped ? "#FF5A5A" : "#82BC66"} />
                                 </Progress.Root>
                                 <Group justify="space-between" >
-                                    {(answer.SA + answer.A) > 0 && <Text fw={500} c="#82BC66">Agree</Text>}
-                                    {(answer.D + answer.SD) > 0 && <Text fw={500} c="#FF5A5A">Disagree</Text>}
+                                    {(answer.SA + answer.A) > 0 && <Text fw={500} c={question.is_flipped ? "#FF5A5A" : "#82BC66"}>Agree</Text>}
+                                    {(answer.D + answer.SD) > 0 && <Text fw={500} c={question.is_flipped ? "#FF5A5A" : "#82BC66"}>Disagree</Text>}
                                 </Group>
                             </Stack>
                             <Stack gap={2} c={'black'} align="flex-start">
