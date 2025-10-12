@@ -23,10 +23,15 @@ interface Answer {
     SD: number;
 }
 
+interface Interpretation {
+    content: string
+}
+
 interface Question {
     id: number;
     question: string;
     domain: string;
+    interpretation: Interpretation[]
 }
 
 enum DomainType {
@@ -98,8 +103,6 @@ function getPercentage(answer: Answer, domainType: DomainType) {
 }
 
 const PaginatedData = () => {
-
-    const tip = "Many employees feel proud to be part of their organization, indicating strong workplace engagement. To build on this, leadership can highlight employee achievements regularly and foster open communication to sustain a positive work environment."
     const [activeCard, setActiveCard] = useState<number | null>(null)
     const [activePage, setPage] = useState(1);
 
@@ -112,12 +115,7 @@ const PaginatedData = () => {
     })
 
     if (!data) throw new Error("Failed to fetch Data!")
-
     const chunkedData = chunk(data.results, 9)
-    console.log("********CHUNKDATA******")
-    console.log(chunkedData)
-    console.log("**************")
-
     return (
         <Stack justify="space-between" align="center" p={'md'}>
             <SimpleGrid cols={3} w={'100%'}>
@@ -130,7 +128,7 @@ const PaginatedData = () => {
                             {activeCard == index ? (
                                 <>
                                     <Box>
-                                        <Text>{tip}</Text>
+                                        <Text>{question.interpretation[0].content}</Text>
                                     </Box>
                                     <Button fullWidth onClick={() => setActiveCard(null)} color="#515977">Got it!</Button>
                                 </>
