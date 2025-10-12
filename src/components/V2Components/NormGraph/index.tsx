@@ -30,17 +30,19 @@ export default function index({ WELLBEING_DATA }: { WELLBEING_DATA: WellbeingDat
             min_norm: 75
         },
         {
-            name: "Contentment",
-            score: contentment,
+            name: "Connectedness",
+            score: connectedness,
+
             max_norm: 75,
             min_norm: 54
         },
         {
-            name: "Connectedness",
-            score: connectedness,
+            name: "Contentment",
+            score: contentment,
             max_norm: 85,
             min_norm: 65
         }
+
     ]
 
     return (

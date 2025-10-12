@@ -44,6 +44,14 @@ export default function index({ period }: { period: string }) {
                     dataKey="date"
                     series={[{ name: 'wellbeing' }]}
                     curveType="monotone"
+                    xAxisProps={{
+                        domain: [0, 100],
+                        ticks: [0, 20, 40, 60, 80, 100],
+                    }}
+                    yAxisProps={{
+                        domain: [0, 100],
+                        ticks: [0, 20, 40, 60, 80, 100],
+                    }}
                 />
             </Stack>
         </Paper>
