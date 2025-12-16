@@ -5,15 +5,6 @@ import { LineChart } from '@mantine/charts';
 import LoaderComponent from '../LoaderComponent';
 
 export default function index({ period }: { period: string }) {
-  // const {} = useQuery({
-  //   queryKey: ['WELLBE_DATA', period],
-  //   queryFn: async () => {
-  //     const config = period ? { params: { period } } : {};
-  //     const res = await api.get('wellbeing/wellbe', config);
-  //     return res.data;
-  //   },
-  // });
-
   const [wellbeingData, wellbeingDataLabel] = useQueries([
     {
       queryKey: ['WELLBE_DATA', period],
@@ -64,11 +55,6 @@ export default function index({ period }: { period: string }) {
       data.push({ date: formatted, wellbeing: wellbeing ?? 0 });
     }
   );
-
-  console.log('**********asdasdasdqwe1234as**********');
-  console.log(WELLBE_DATA_LABEL);
-  console.log('********************');
-
   if (data.length === 0)
     return (
       <Paper h={400}>
@@ -77,10 +63,6 @@ export default function index({ period }: { period: string }) {
         </Center>
       </Paper>
     );
-
-  console.log('!!!!!!!!!!!!!!!');
-  console.log(data);
-  console.log('!!!!!!!!!!!!!!!');
   return (
     <Paper p="xl">
       <Stack gap={'lg'}>
@@ -115,10 +97,6 @@ export default function index({ period }: { period: string }) {
           dataKey="date"
           series={[{ name: 'wellbeing' }]}
           curveType="monotone"
-          //   xAxisProps={{
-          //     domain: [0, 100],
-          //     ticks: [0, 20, 40, 60, 80, 100],
-          //   }}
           yAxisProps={{
             domain: [0, 100],
             ticks: [0, 20, 40, 60, 80, 100],
