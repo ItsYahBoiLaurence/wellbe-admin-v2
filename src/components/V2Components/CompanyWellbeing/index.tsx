@@ -120,10 +120,6 @@ export default function index() {
       </Paper>
     );
 
-  console.log('*****DOMAIN INSIGHT DATA******');
-  console.log(data);
-  console.log('***********');
-
   return (
     <SimpleGrid cols={2} spacing={'lg'}>
       {data?.map((domain, index) => (
