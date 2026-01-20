@@ -1,4 +1,5 @@
 import axios from 'axios'
+import queryClient from "../queryClient";
 
 // API base URL from environment variables
 const BASE_URL = import.meta.env.VITE_API_URL
@@ -22,6 +23,18 @@ api.interceptors.request.use(
     },
     (error) => {
         console.error('Request error:', error);
+        return Promise.reject(error)
+    }
+)
+
+
+api.interceptors.response.use(
+    response => response,
+    error => {
+        if (error.response && error.response.status === 401) {
+            queryClient.clear()
+            localStorage.clear()
+        }
         return Promise.reject(error)
     }
 )
