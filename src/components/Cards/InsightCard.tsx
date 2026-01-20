@@ -117,11 +117,11 @@ const PaginatedData = ({ dataArray }: { dataArray: QuestionAnswerTally[] }) => {
                             <Stack gap={0}>
                                 <Progress.Root size={24} style={{ borderRadius: '12px' }}>
                                     <Progress.Section value={getPercentage(answer, DomainType.TotalAgreePercentage)} color={question.is_flipped ? "#FF5A5A" : "#82BC66"} />
-                                    <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color={question.is_flipped ? "#FF5A5A" : "#82BC66"} />
+                                    <Progress.Section value={getPercentage(answer, DomainType.TotalDisagreePercentage)} color={question.is_flipped ? "#82BC66" :  "#FF5A5A"} />
                                 </Progress.Root>
                                 <Group justify="space-between" >
                                     {(answer.SA + answer.A) > 0 && <Text fw={500} c={question.is_flipped ? "#FF5A5A" : "#82BC66"}>Agree</Text>}
-                                    {(answer.D + answer.SD) > 0 && <Text fw={500} c={question.is_flipped ? "#FF5A5A" : "#82BC66"}>Disagree</Text>}
+                                    {(answer.D + answer.SD) > 0 && <Text fw={500} c={question.is_flipped ? "#82BC66" :  "#FF5A5A"}>Disagree</Text>}
                                 </Group>
                             </Stack>
                             <Stack gap={2} c={'black'} align="flex-start">
