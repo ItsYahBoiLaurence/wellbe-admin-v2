@@ -53,13 +53,13 @@ export default function index({ selectedPeriod }: { selectedPeriod: string }) {
       name: 'Career',
       score: career,
       max_norm: 93,
-      min_norm: 71,
+      min_norm: 75,
     },
     {
       name: 'Character',
       score: character,
       max_norm: 93,
-      min_norm: 75,
+      min_norm: 71,
     },
     {
       name: 'Connectedness',
